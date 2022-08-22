@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  fastapi_finance_app:
+    build: .
+    image: "fastapi_finance_image"
+    container_name: fastapi_finance_con
+    volumes:
+      - .:/app
+    ports:
+      - 9000:9000
+    command: "uvicorn api.main:app --host 0.0.0.0 --port 9000 --reload"
+    env_file:
+      - "./.env"
+    depends_on:
+      - mysql_db
+      - phpmyadmin
+
+  mysql_db:
+    image: mysql:5.7
+    container_name: mysql_db_con
+    volumes:
+      - ./mysql_data_preserved:/var/lib/mysql
+    ports:
+      - 3306:3306
+    env_file:
+      - "./.env"
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin_con
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+
+volumes:
+  mysql_data_preserved:

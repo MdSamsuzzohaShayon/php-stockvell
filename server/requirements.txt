@@ -1,0 +1,10 @@
+wheel==0.37.1
+fastapi==0.79.1
+uvicorn==0.18.2
+python-dotenv==0.20.0
+passlib==1.7.4
+python-jose==3.3.0
+python-multipart==0.0.5
+tortoise-orm
+tortoise-orm[asyncpg]
+aiomysql==0.1.1

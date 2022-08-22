@@ -1,0 +1,9 @@
+max_connection=250
+
+
+# accept connection from any ip address
+bind=address=0.0.0.0
+
+
+# query cache configuration
+max_allowed_packet=32M
