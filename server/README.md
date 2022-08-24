@@ -1,1 +1,0 @@
-Access mysql `mysql -u shayon -p`

@@ -1,0 +1,101 @@
+@import "./variables.scss";
+
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "warning": $warning,
+  "danger": $danger
+);
+
+$btn-border-radius: 0;
+$border-radius: 0;
+// $input-btn-focus-color-opacity: 0;
+$input-btn-padding-y: 0.6rem;
+
+@import "../bootstrap/scss/bootstrap";
+
+// Custom styles
+header {
+  .toggle-menu {
+    width: 3rem;
+  }
+}
+
+.mobile-menu {
+  width: 100%;
+}
+
+.home {
+  .section-1 {
+    min-height: $landing_section_height;
+    .landing-img {
+      width: 100%;
+      z-index: -1;
+      height: $landing_section_height;
+      object-fit: cover;
+      object-position: center;
+    }
+    .content {
+      height: 100%;
+    }
+  }
+
+  .section-2 {
+    margin: $section_gap;
+    .explain-box {
+      width: 30%;
+    }
+  }
+
+  .section-3 {
+    padding: $section_gap;
+    .trust_each_other {
+      width: 100%;
+    }
+  }
+
+  .section-4 {
+    margin: $section_gap;
+    .barchat_graph {
+      width: 100%;
+    }
+  }
+  .section-5 {
+    .social-icon {
+      width: 2rem;
+    }
+    .shape-list {
+      width: 100%;
+      .shape-image {
+        width: 100%;
+      }
+    }
+  }
+
+  @media (max-width: $breakpoint_md) {
+    .section-2 {
+      .explain-box {
+        width: 100% !important;
+      }
+    }
+  }
+}
+
+.signup {
+  .section-1 {
+    margin: $section_gap;
+  }
+}
+.login{
+  min-height: 52vh;
+  .section-1{
+    margin: $section_gap;
+  }
+}
+
+footer {
+  background-color: #0d1321;
+  p {
+    line-height: 0.4rem;
+  }
+}

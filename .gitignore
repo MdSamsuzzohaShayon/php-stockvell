@@ -1,4 +1,5 @@
 /private
-/server/virtual-env
-/server/.env
-/server/mysql_data_preserved
+/.env
+/mysql_data_preserved
+/res
+/public/bootstrap

@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  php_finance_app:
+    build: .
+    image: "php_finance_image"
+    container_name: php_finance_con
+    volumes:
+      - ./:/var/www/html/
+    ports:
+      - 9000:80
+    env_file:
+      - "./.env"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - mysql_db
+      # - phpmyadmin
+
+  mysql_db:
+    image: mysql:5.7
+    container_name: mysql_db_con
+    volumes:
+      - ./mysql_data_preserved:/var/lib/mysql
+    ports:
+      - 3306:3306
+    env_file:
+      - "./.env"
+
+  # phpmyadmin:
+  #   image: phpmyadmin
+  #   container_name: phpmyadmin_con
+  #   restart: always
+  #   ports:
+  #     - 8080:80
+  #   environment:
+  #     - PMA_ARBITRARY=1
+
+volumes:
+  mysql_data_preserved:

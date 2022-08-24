@@ -1,5 +1,14 @@
 # Stockvell credit system
 
+### Development
+ - Display signup error message
+ - Database migration
+ - Signup image upload handler
+ - Remove files like login-con and signup-com
+ - Add Database.classes.php into another file
+ - Create dashboard for members (Multiple tabs for update member profile, add stockvell pack, edit)
+ - Create admin panel for admins (list of stockvell)
+
 ### Planning
 
  - [Design prototype](https://www.figma.com/file/4zCozjL5sxemgv3l5gzmrW/Stockvell-Finance?node-id=0%3A1) Color gold and blue
@@ -20,7 +29,7 @@
  - Single stockvell pack (terms and conditions, detail, leader)
  - List all stockvell pack for an user
  - Individual stockvell pack(details of the pack, add monthly deposit, due date)
- - Admin panel (only accessable to admin), List all stockvell pack for admin(Unapproved and approved stockvell pack)(admin is able to close stockvell pack), see application, assign leader, add or delete member, 
+ - Admin panel (only accessable to admin), List all stockvell pack for admin(Unapproved and approved stockvell pack)(admin is able to close stockvell pack), see application, assign leader, add or delete member,
  - Single stockvell
 
 
@@ -64,6 +73,10 @@ Any member can apply be a Stockvell leader.
  - Set the frequency of withdrawal in the Stockvell group (Monthly or Weekly)
  - Defines next member to withdraw funds (withdrawal can be random or first come, first
 served)
+
+
+
+
 #### D 03 Stokvel Categories (possibility for admin to create new ones)
  1. Social: (Social orientation: Funeral / baptism, communion, etc.)
  2. Professional: (Commercial: They have projects; purchase of land, vehicles, etc.)
@@ -80,7 +93,7 @@ Should be responsive
 ### Choose colors
  1. Choosing a dominant color. [Understands meanings of colors](https://www.color-meanings.com/)
  2. Add [two more colors](https://mycolor.space/) and take black and white as considerations/ [Select pallete, see their tutorial](https://coolors.co/c99127-0d1321-1d2d44-3e5c76-748cab)
-Dominant - #C99127, Complementary - #809130, Accent - #2F4858, white - #ffffff, black - #000000 
+Dominant - #C99127, Complementary - #809130, Accent - #2F4858, white - #ffffff, black - #000000
  3. Apply the 60/30/10 rule
 
 
@@ -91,3 +104,62 @@ Dominant - #C99127, Complementary - #809130, Accent - #2F4858, white - #ffffff, 
  - SQLAlchemy doesn't have compatibility for using await directly,
  - [Ecommerce API with tortoise orm(important)](https://github.com/Princekrampah/learningFastAPI/blob/master/shoppingAPI/models.py)
 
+
+### php functions
+   - filter_var
+
+### MySQL Database
+
+  - Create members table
+  ```
+    CREATE TABLE members(
+      id INT NOT NULL AUTO_INCREMENT,
+      firstname VARCHAR(100) NOT NULL,
+      surname VARCHAR(100) NOT NULL,
+      email VARCHAR(255) NOT NULL,
+      password VARCHAR(255) NOT NULL,
+      country VARCHAR(100) NOT NULL,
+      phone VARCHAR(100) NOT NULL,
+      gender VARCHAR(60) NOT NULL,
+      profession VARCHAR(100) NOT NULL,
+      interest TEXT,
+      govt_id VARCHAR(100) NOT NULL,
+      source TEXT,
+      role VARCHAR(255) NOT NULL DEFAULT 'GENERAL',
+      PRIMARY KEY (id)
+    );
+  ```
+
+  - Create stockvells table
+  ```
+  CREATE TABLE stockvells(
+    id INT  NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    agreement TEXT NOT NULL,
+    goal VARCHAR(100) NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    payment INT NOT NULL,
+    payment_frequency INT NOT NULL,
+    withdraw_member_id INT,
+    withdraw_frequency INT NOT NULL,
+    member_id INT,
+    PRIMARY KEY(id),
+    FOREIGN KEY(member_id) REFERENCES members(id),
+    FOREIGN KEY(withdraw_member_id) REFERENCES members(id),
+    );
+  ```
+
+  - Change table if anything went wrong
+  ```
+  ALTER TABLE members MODIFY role VARCHAR(255) NOT NULL DEFAULT 'GENERAL';
+  ```
+
+  - Enable or disable check for foreign key
+  ```
+  SET FOREIGN_KEY_CHECKS=0; 
+  SET FOREIGN_KEY_CHECKS=1;
+  ```
+  - Get table information
+  ```
+  DESCRIBE tablename;
+  ```
