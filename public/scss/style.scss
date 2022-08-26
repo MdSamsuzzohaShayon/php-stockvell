@@ -11,6 +11,8 @@ $btn-border-radius: 0;
 $border-radius: 0;
 // $input-btn-focus-color-opacity: 0;
 $input-btn-padding-y: 0.6rem;
+$list-group-active-bg: $primary;
+
 
 @import "../bootstrap/scss/bootstrap";
 
@@ -19,6 +21,10 @@ header {
   .toggle-menu {
     width: 3rem;
   }
+}
+
+.w-full{
+  width: 100% !important;
 }
 
 .mobile-menu {
@@ -93,9 +99,42 @@ header {
   }
 }
 
+
+.dashboard{
+  .section-1{
+    .sidebar-menus{
+      min-height: 80vh;
+      .active{
+        color: $secondary;
+        background-color: $primary !important;
+      }
+    }
+  }
+  @media (max-width: $breakpoint_md) {
+    .section-1{
+      .sidebar-menus{
+        min-height: fit-content;
+        .sidebar-menu-items{
+          position: fixed;
+          bottom: 0;
+          .menu-item{
+            width: 25% !important;
+            text-align: center !important;
+            align-items: center !important;
+          }
+        }
+      }
+    }
+  }
+}
+
 footer {
   background-color: #0d1321;
   p {
     line-height: 0.4rem;
   }
+}
+
+.page404{
+  min-height: 60vh;
 }

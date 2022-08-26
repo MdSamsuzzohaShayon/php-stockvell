@@ -1,6 +1,14 @@
 <?php
-require_once("./layouts/header.php");
-require_once("./config/option-list.php");
+session_start(); // In every single page we should start our session at the top of our code
+$member_email = $_SESSION['member_email'];
+if(isset($member_email)){
+   header("Location: /dashboard.php");
+   exit();
+}
+
+$ROOT = $_SERVER['DOCUMENT_ROOT'];
+require_once($ROOT . "/layouts/header.php");
+require_once($ROOT . "/config/option-list.php");
 $errors = [];
 $error = $_GET["error"];
 // echo $error;
@@ -43,7 +51,7 @@ switch ($error) {
         <h1 class="h1">Welcome to stockvell</h1>
         <p>Please enter the followings</p>
       </div>
-      
+
       <?php
       if (count($errors) > 0) {
         echo "<div class='alert alert-danger'>";
@@ -56,8 +64,8 @@ switch ($error) {
         echo "</div>";
       }
       ?>
-      <!-- Form start here  -->
-      <form action="includes/signup.inc.php" method="POST">
+      <!-- Form start  -->
+      <form action="/includes/signup.inc.php" method="POST">
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="firstname" class="form-label">First Name*</label>
@@ -141,8 +149,9 @@ switch ($error) {
 
         <button type="submit" name="submit" class="btn btn-primary">Signup</button>
       </form>
+      <!-- Form end  -->
     </div>
   </section>
 </main>
 
-<?php require_once("./layouts/footer.php"); ?>
+<?php require_once($ROOT . "/layouts/footer.php"); ?>

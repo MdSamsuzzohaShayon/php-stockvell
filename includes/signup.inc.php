@@ -4,6 +4,7 @@ if (isset($_POST["submit"])) {
   /**
    * @var getting all inputs
    */
+  $ROOT = $_SERVER['DOCUMENT_ROOT'];
   $firstname = $_POST["firstname"];
   $surname = $_POST["surname"];
   $email = $_POST["email"];
@@ -36,8 +37,8 @@ if (isset($_POST["submit"])) {
   // exit();
 
 
-  include "../config/database.php";
-  include "../classes/signup.classes.php";
+  include $ROOT . "/config/database.php";
+  include $ROOT . "/classes/signup.classes.php";
 
   $signup = new SignupController($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source);
   $signup->signupMember();

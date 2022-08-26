@@ -34,13 +34,15 @@ class DatabaseMigrations extends Database{
         category VARCHAR(100) NOT NULL,
         payment INT NOT NULL,
         payment_frequency INT NOT NULL,
-        withdraw_member_id INT,
         withdraw_frequency INT NOT NULL,
+        withdraw_member_id INT,
         member_id INT,
+        leader_id INT,
         PRIMARY KEY(id),
         FOREIGN KEY(member_id) REFERENCES members(id),
-        FOREIGN KEY(withdraw_member_id) REFERENCES members(id)
-      );";
+        FOREIGN KEY(leader_id) REFERENCES members(id),
+        FOREIGN KEY(withdraw_member_id) REFERENCES members(id),
+        );";
       $this->createTable($sql_query, "stockvells");
     }
   }

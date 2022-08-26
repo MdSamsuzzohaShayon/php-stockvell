@@ -1,6 +1,5 @@
 <?php
-session_start(); // In every single page we should start our session at the top of our code
-// echo $_SESSION['member_id'];
+$ROOT = $_SERVER['DOCUMENT_ROOT'];
 ?>
 
 <!DOCTYPE html>
@@ -11,9 +10,9 @@ session_start(); // In every single page we should start our session at the top 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stockvell</title>
     <!-- <link href="public/css/bootstrap.min.css" rel="stylesheet"> -->
-    <link href="public/css/style.css" rel="stylesheet">
+    <link href="/public/css/style.css" rel="stylesheet">
 </head>
 <body>
     <header class="custom-header bg-primary py-2 m-0">
-      <?php require_once('./layouts/navbar.php'); ?>
+      <?php require_once($ROOT . '/layouts/navbar.php'); ?>
     </header>

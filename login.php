@@ -1,6 +1,15 @@
 <?php
-require_once("./layouts/header.php");
-require_once("./config/option-list.php");
+session_start(); // In every single page we should start our session at the top of our code
+$member_email = $_SESSION['member_email'];
+if(isset($member_email)){
+   header("Location: /dashboard.php");
+   exit();
+}
+
+
+$ROOT = $_SERVER['DOCUMENT_ROOT'];
+require_once($ROOT . "/layouts/header.php");
+require_once($ROOT . "/config/option-list.php");
 $errors = [];
 $error = $_GET["error"];
 // echo $error;
@@ -48,7 +57,7 @@ switch ($error) {
       }
       ?>
       <!-- Form start here  -->
-      <form action="includes/login.inc.php" method="POST">
+      <form action="/includes/login.inc.php" method="POST">
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="email" class="form-label">Email*</label>
@@ -65,4 +74,4 @@ switch ($error) {
   </section>
 </main>
 
-<?php require_once("./layouts/footer.php"); ?>
+<?php require_once($ROOT . "/layouts/footer.php"); ?>
