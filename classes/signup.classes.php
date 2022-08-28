@@ -27,7 +27,7 @@ class Signup extends Database
     $stmt->bindParam('role', $role, PDO::PARAM_STR);
     if (!$stmt->execute()) {
       $stmt = null;
-      header("Location: ../signup.php?error=stmtfailed");
+      header("Location: /signup.php?error=stmtfailed");
       exit();
     }
     $stmt = null;
@@ -42,7 +42,7 @@ class Signup extends Database
     $stmt->bindParam('email', $email, PDO::PARAM_STR);
     if (!$stmt->execute()) {
       $stmt = null;
-      header("Location: ../signup.php?error=stmtfailed");
+      header("Location: /signup.php?error=stmtfailed");
       exit();
     }
     $resultCheck = null;
@@ -97,27 +97,27 @@ class SignupController extends Signup
   public function signupMember()
   {
     if(empty($this->firstname) || empty($this->email) || empty($this->password) || empty($this->password2) || empty($this->surname) || empty($this->country) || empty($this->phone) || empty($this->gender) || empty($this->profession) || empty($this->interest) || empty($this->govt_id) || empty($this->source)){
-      header("Location: ../signup.php?error=emptyinput");
+      header("Location: /signup.php?error=emptyinput");
       exit();
     }
     if (!preg_match("/^[a-zA-Z0-9]*$/", $this->username) || strlen($this->firstname) <= 1) {
-      header("Location: ../signup.php?error=invalidusername");
+      header("Location: /signup.php?error=invalidusername");
       exit();
     }
     if(!preg_match ("/^[0-9]*$/", $this->phone)){
-      header("Location: ../signup.php?error=invalidphone");
+      header("Location: /signup.php?error=invalidphone");
       exit();      
     }
     if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-      header("Location: ../signup.php?error=invalidemail");
+      header("Location: /signup.php?error=invalidemail");
       exit();
     }
     if ($this->password !== $this->password2) {
-      header("Location: ../signup.php?error=passwordnotmatch");
+      header("Location: /signup.php?error=passwordnotmatch");
       exit();
     }
     if ($this->memberExist($this->email) == true) {
-      header("Location: ../signup.php?error=alreadyexist");
+      header("Location: /signup.php?error=alreadyexist");
       exit();
     }
 

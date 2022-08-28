@@ -93,9 +93,43 @@ header {
   }
 }
 .login{
-  min-height: 52vh;
+  min-height: $min_height_of_the_page ;
   .section-1{
     margin: $section_gap;
+  }
+}
+
+.admin{
+  min-height: $min_height_of_the_page ;
+  .section-1{
+    margin: $section_gap;
+  }
+}
+.admin{
+  .section-2{
+    .sidebar-menus{
+      min-height: 80vh;
+      .active{
+        color: $secondary;
+        background-color: $primary !important;
+      }
+    }
+  }
+  @media (max-width: $breakpoint_md) {
+    .section-2{
+      .sidebar-menus{
+        min-height: fit-content;
+        .sidebar-menu-items{
+          position: fixed;
+          bottom: 0;
+          .menu-item{
+            width: 25% !important;
+            text-align: center !important;
+            align-items: center !important;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -138,3 +172,5 @@ footer {
 .page404{
   min-height: 60vh;
 }
+
+

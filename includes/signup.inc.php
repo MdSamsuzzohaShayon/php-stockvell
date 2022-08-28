@@ -1,6 +1,5 @@
 <?php
-
-if (isset($_POST["submit"])) {
+if (isset($_POST["member_signup_submit"])) {
   /**
    * @var getting all inputs
    */

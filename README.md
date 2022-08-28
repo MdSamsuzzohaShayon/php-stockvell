@@ -1,9 +1,14 @@
 # Stockvell credit system
 
 ### Development
+ - Create all classes according to database table (1. stockvell, 2.members, 3.admins, 4.stockvell_to_member)
+ - Working stock member leader relationship (many to many)
+ - Dynamic input field
+ - Many to many relationship for all members in stockvell
  - Display signup error message
  - Database migration
  - Signup image upload handler
+ - TinyMCE text editor for stockvell agreement pack
  - Remove files like login-con and signup-com
  - Add Database.classes.php into another file
  - Create dashboard for members (Multiple tabs for update member profile, add stockvell pack, edit)
@@ -71,8 +76,7 @@ Any member can apply be a Stockvell leader.
  - Choose The frequency (weekly or monthly) of deposit of funds
  - Generate a share link that members can use to share in their social networks
  - Set the frequency of withdrawal in the Stockvell group (Monthly or Weekly)
- - Defines next member to withdraw funds (withdrawal can be random or first come, first
-served)
+ - Defines next member to withdraw funds (withdrawal can be random or first come, first served)
 
 
 
@@ -117,6 +121,7 @@ Dominant - #C99127, Complementary - #809130, Accent - #2F4858, white - #ffffff, 
       firstname VARCHAR(100) NOT NULL,
       surname VARCHAR(100) NOT NULL,
       email VARCHAR(255) NOT NULL,
+      status VARCHAR(100) NOT NULL DEFAULT 'PENDING',
       password VARCHAR(255) NOT NULL,
       country VARCHAR(100) NOT NULL,
       phone VARCHAR(100) NOT NULL,
@@ -138,6 +143,7 @@ Dominant - #C99127, Complementary - #809130, Accent - #2F4858, white - #ffffff, 
     agreement TEXT NOT NULL,
     goal VARCHAR(100) NOT NULL,
     category VARCHAR(100) NOT NULL,
+    status VARCHAR(100) NOT NULL DEFAULT 'PENDING',
     payment INT NOT NULL,
     payment_frequency INT NOT NULL,
     withdraw_frequency INT NOT NULL,
@@ -165,3 +171,4 @@ Dominant - #C99127, Complementary - #809130, Accent - #2F4858, white - #ffffff, 
   ```
   DESCRIBE tablename;
   ```
+  - [Many to many relationship](https://www.vultr.com/docs/using-many-to-many-sql-relationships-and-intermediate-tables/), [m-to-m](https://stackoverflow.com/questions/2923809/many-to-many-relationships-examples), [m-to-m](https://dba.stackexchange.com/questions/151904/mapping-many-to-many-relationship), 

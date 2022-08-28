@@ -1,6 +1,7 @@
 <?php
 session_start(); // In every single page we should start our session at the top of our code
 $member_email = $_SESSION['member_email'];
+$member_id = $_SESSION['member_id'];
 if (!isset($member_email)) {
    header("Location: /login.php");
    exit();
@@ -10,23 +11,13 @@ require_once($ROOT . '/layouts/header.php');
 // Check for session 
 require_once($ROOT . "/includes/dashboard.inc.php");
 require_once($ROOT . "/config/option-list.php");
-
+require_once($ROOT . "/utils/input-fields.php");
+require_once($ROOT . "/classes/input.classes.php");
 
 $error = $_GET["error"];
-// echo $error;
-$errors = [];
-switch ($error) {
-   case 'stmtfailed': {
-         array_push($errors, "Invalid MySQL query!");
-      }
+$err_handler = new ErrorHandler();
+$err_arr = $err_handler->setCommonErrors($error);
 
-   case 'passwordnotmatch': {
-         array_push($errors, "Password did not match!");
-      }
-   default:
-      # code...
-      break;
-}
 ?>
 
 
@@ -54,146 +45,42 @@ switch ($error) {
                </li>
             </ul>
          </div>
-         <div class="col-md-9">
+         <div class="col-md-9 sidebar-content">
             <div class="content my-4 profile-content d-block">
                <div class="signup-caption text-center">
                   <h1 class="h1">Update your informations!</h1>
                   <p>You can change any field</p>
                </div>
-               <?php
-               if (count($errors) > 0) {
-                  echo "<div class='alert alert-danger'>";
-                  foreach ($errors as $err) {
-                     echo "<div class='err-msg d-flex align-items-center'>
-                              <img src='public/icons/error.svg' width='25' alt='error-message' class='error-message mx-3'>
-                              <p class='m-0'>$err</p>
-                           </div>";
-                  }
-                  echo "</div>";
-               }
-               ?>
+               <?php if (count($err_arr) > 0) echo $err_handler->displayErrors(); ?>
                <!-- Form start  -->
                <form action="/includes/update-member.inc.php" method="POST">
                   <div class="row mb-3">
-                     <div class="col-md-6">
-                        <label for="firstname" class="form-label">First Name</label>
-                        <input type="text" value="<?php echo $result->firstname; ?>" name="firstname" class="form-control text-primary bg-secondary border border-primary" id="firstname">
-                     </div>
-                     <div class="col-md-6">
-                        <label for="surname" class="form-label">Surname</label>
-                        <input type="text" value="<?php echo $result->surname; ?>" name="surname" class="form-control text-primary bg-secondary border border-primary" id="surname">
-                     </div>
+                     <?php echo inputElement('firstname', 'First Name', false, 'text', $result->firstname); ?>
+                     <?php echo inputElement('surname', 'Surname', false, 'text', $result->surname); ?>
                   </div>
                   <div class="row mb-3">
-                     <div class="one-input">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" value="<?php echo $result->email; ?>" name="email" class="form-control text-primary bg-secondary border border-primary" id="email">
-                     </div>
+                     <?php echo inputElement('email', 'Email', true, 'email', $result->email); ?>
                   </div>
                   <div class="row mb-3">
-                     <div class="col-md-6">
-                        <label for="password" class="form-label">Password</label>
-                        <input name="password" type="password" class="form-control text-primary bg-secondary border border-primary" id="password">
-                     </div>
-                     <div class="col-md-6">
-                        <label for="password2" class="form-label">Confirm Password*</label>
-                        <input type="password" name="password2" class="form-control text-primary bg-secondary border border-primary" id="password2">
-                     </div>
+                     <?php echo inputElement('password', 'Password', false, 'password', $result->password); ?>
+                     <?php echo inputElement('password2', 'Confirm Password', false, 'password', $result->password2); ?>
                   </div>
                   <div class="row mb-3">
-                     <div class="col-md-6">
-                        <label for="country" class="form-label">Country</label>
-                        <select name="country" class="form-control text-primary bg-secondary border border-primary" id="country">
-                           <?php
-                           foreach ($countries as $country) {
-                              if ($country === $result->country) {
-                                 echo "<option value='$country' selected class='text-capitalize'> $country </option>";
-                              } else {
-                                 echo "<option value='$country' class='text-capitalize'> $country </option>";
-                              }
-                           }
-                           ?>
-                        </select>
-                     </div>
-                     <div class="col-md-6">
-                        <label for="phone" class="form-label">Phone</label>
-                        <input type="number" value="<?php echo $result->phone; ?>" name="phone" class="form-control text-primary bg-secondary border border-primary" id="phone">
-                     </div>
+                     <?php echo inputElement('country', 'Country', false, 'select', $result->country, null, null, $countries); ?>
+                     <?php echo inputElement('phone', 'Phone Number', false, 'text', $result->phone); ?>
                   </div>
                   <div class="row mb-3">
-                     <div class="col-md-6">
-                        <label for="gender" class="form-label">Select Gender*</label>
-                        <select name="gender" class="form-control text-primary bg-secondary border border-primary" id="gender">
-                           <?php
-                           switch ($result->gender) {
-                              case "male": {
-                                    echo '
-                                       <option selected value="male"> Male </option>
-                                       <option value="female"> Female </option>
-                                       <option value="others"> Others </option>
-                                 ';
-                                    break;
-                                 }
-                              case "female": {
-                                    echo '
-                                       <option value="male"> Male </option>
-                                       <option selected value="female"> Female </option>
-                                       <option value="others"> Others </option>
-                                 ';
-                                    break;
-                                 }
-                              case "others": {
-                                    echo '
-                                       <option value="male"> Male </option>
-                                       <option value="female"> Female </option>
-                                       <option selected value="others"> Others </option>
-                                 ';
-                                    break;
-                                 }
-                              default: {
-                                    echo '
-                                       <option selected value="male"> Male </option>
-                                       <option value="female"> Female </option>
-                                       <option value="others"> Others </option>
-                                 ';
-                                    break;
-                                 }
-                           }
-                           ?>
-                        </select>
-                     </div>
-                     <div class="col-md-6">
-                        <label for="profession" class="form-label">Profession</label>
-                        <select name="profession" class="form-control text-primary bg-secondary border border-primary" id="profession">
-                           <?php
-                           foreach ($professions as $profession) {
-                              if ($profession === $result->profession) {
-                                 echo "<option selected value='$profession'> $profession </option>";
-                              } else {
-                                 echo "<option value='$profession'> $profession </option>";
-                              }
-                           }
-                           ?>
-                        </select>
-                     </div>
+                     <?php echo inputElement('gender', 'Gender', false, 'select', $result->gender, null, "text-capitalize", ["male", "female", "others"]); ?>
+                     <?php echo inputElement('profession', 'Profession', false, 'select', $result->profession, null, "text-capitalize", $professions); ?>
                   </div>
                   <div class="row mb-3">
-                     <div class="col-md-6">
-                        <label for="interest" class="form-label">Interest (Optional comma seperated list)</label>
-                        <input type="text" value="<?php echo $result->interest; ?>" name="interest" class="form-control text-primary bg-secondary border border-primary" id="interest">
-                     </div>
-                     <div class="col-md-6">
-                        <label for="govt_id" class="form-label">Government ID*</label>
-                        <input type="file" value="<?php echo $result->givt_id; ?>" name="govt_id" class="form-control text-primary bg-secondary border border-primary" id="govt_id">
-                     </div>
+                     <?php echo inputElement('interest', 'Interest (comma seperated list)', false, 'text', $result->interest); ?>
+                     <?php echo inputElement('govt_id', 'Government ID', false, 'file', $result->govt_id); ?>
                   </div>
 
 
                   <div class="row mb-3">
-                     <div class="one-input">
-                        <label for="source" class="form-label">How do you hear about the Stockvell platform? (Optional)</label>
-                        <textarea rows="2" name="source" class="form-control text-primary bg-secondary border border-primary" id="source"> <?php echo $result->source; ?> </textarea>
-                     </div>
+                     <?php echo inputElement('source', 'How did you hear about the Stockvell platform?', true, 'textarea', $result->source); ?>
                   </div>
 
                   <button type="submit" name="submit" class="btn btn-primary">Update</button>
@@ -201,8 +88,83 @@ switch ($error) {
                <!-- Form end  -->
             </div>
             <div class="content my-pack-content d-none">My Pack content</div>
-            <div class="content pending-pack-content d-none">Pending pack content</div>
-            <div class="content add-pack-content d-none">Add Pack content</div>
+            <div class="content pending-pack-content d-none">
+               <h1 class="h1">All pending packs!</h1>
+               <p>You can find all the stockvell pack that is made and requested for approvals. N.B. If you can not find a pack that you have created, in that case, the pack is been rejected. Try creating another one with proper informations!</p>
+               <div class="table-responsive">
+                  <table class="table table-bordered border-warning">
+                     <thead class="bg-warning text-white border-primary">
+                        <tr>
+                           <th scope="col">#ID</th>
+                           <th scope="col">Name</th>
+                           <th scope="col">Goal</th>
+                           <th scope="col">Category</th>
+                           <th scope="col">Status</th>
+                           <th scope="col">Payment</th>
+                           <th scope="col">Payment Period</th>
+                           <th scope="col">Leader</th>
+                           <th scope="col">Total Members (u)</th>
+                           <th scope="col">Withdraw Period</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <?php 
+                        // psr = pending stockvell result 
+                        // $psr_result - getting from dashboard.inc.php
+                        if(count($psr_result) <= 0){
+                           echo "<div class='alert alert-warning'>No pack found</div>";
+                        }else{
+                           foreach ($psr_result as $psr_key) {
+                              # code...
+                              echo "
+                                 <tr class='text-lowercase'>
+                                    <th>". $psr_key["id"] ."</th>
+                                    <td>". $psr_key["name"] ."</td>
+                                    <td>". $psr_key["goal"] ."</td>
+                                    <td>". $psr_key["category"] ."</td>
+                                    <td>". $psr_key["status"] ."</td>
+                                    <td>". $psr_key["payment"] ."</td>
+                                    <td>". $psr_key["payment_frequency"] ."</td>
+                                    <td>". $psr_key["leader_id"] ."</td>
+                                    <td> 10 </td>
+                                    <td>". $psr_key["withdraw_frequency"] ."</td>
+                                 </tr>
+                              ";
+                           }
+                        }
+                        ?>
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+            <div class="content add-pack-content d-none my-4">
+               <div class="signup-caption text-center">
+                  <h1 class="h1">Create your own stockvell pack!</h1>
+                  <p>You can create your own stockvell, in order to do that you need to fill all the input fields and once you create your will request of creating new pack will be under our review.</p>
+               </div>
+               <?php if (count($err_arr) > 0) echo $err_handler->displayErrors(); ?>
+               <!-- Form start  -->
+               <form action="/includes/dashboard.inc.php" method="POST">
+                  <div class="row mb-3">
+                     <?php echo inputElement('name', 'Name*', false, 'text'); ?>
+                     <?php echo inputElement('goal', 'goal*', false, 'text'); ?>
+                  </div>
+                  <div class="row mb-3">
+                     <?php echo inputElement('payment', 'payment*', false, 'number'); ?>
+                     <?php echo inputElement('payment_frequency', 'payment frequency(days)*', false, 'number'); ?>
+                  </div>
+                  <div class="row mb-3">
+                     <?php echo inputElement('category', 'Category*', false, 'select', 'social', null, null, ["social", "professional", "investmant"]); ?>
+                     <?php echo inputElement('withdraw_frequency', 'Withdraw frequency(days)*', false, 'number'); ?>
+                  </div>
+                  <div class="row mb-3">
+                     <?php echo inputElement('agreement', 'You muct write agreenment about this stockvell pack*', true, 'textarea', null); ?>
+                  </div>
+
+                  <button type="submit" name="create-stockvell" class="btn btn-primary">Create Stockvell</button>
+               </form>
+               <!-- Form end  -->
+            </div>
          </div>
       </div>
    </section>

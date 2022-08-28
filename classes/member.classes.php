@@ -47,6 +47,9 @@ class MemberController extends Member
 
     public function updateDynamicMember($member_id)
     {
+        if (!empty($this->email)) {
+            $_SESSION["member_email"] = $this->email;
+        }
         if (!empty($this->password)) {
             if ($this->password !== $this->password2) {
                 header('Location: /dashboard.php?error=passwordnotmatch');
@@ -72,8 +75,9 @@ class MemberController extends Member
 
         $cols = array();
 
+        // Remove blank inputs and password2
         foreach ($this->input_list as $key => $val) {
-            if (!empty($val) && $key !== "password2")   $cols[] = "$key = '$val'"; // Remove blank inputs and password2
+            if (!empty($val) && $key !== "password2")   $cols[] = "$key = '$val'"; 
         }
 
         $updateElement = implode(', ', $cols);

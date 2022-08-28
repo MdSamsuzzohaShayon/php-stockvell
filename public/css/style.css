@@ -10483,6 +10483,35 @@ header .toggle-menu {
   margin: 7rem 0;
 }
 
+.admin {
+  min-height: 52vh;
+}
+.admin .section-1 {
+  margin: 7rem 0;
+}
+
+.admin .section-2 .sidebar-menus {
+  min-height: 80vh;
+}
+.admin .section-2 .sidebar-menus .active {
+  color: #DBE3ED;
+  background-color: #1D2D44 !important;
+}
+@media (max-width: 768px) {
+  .admin .section-2 .sidebar-menus {
+    min-height: fit-content;
+  }
+  .admin .section-2 .sidebar-menus .sidebar-menu-items {
+    position: fixed;
+    bottom: 0;
+  }
+  .admin .section-2 .sidebar-menus .sidebar-menu-items .menu-item {
+    width: 25% !important;
+    text-align: center !important;
+    align-items: center !important;
+  }
+}
+
 .dashboard .section-1 .sidebar-menus {
   min-height: 80vh;
 }

@@ -20,6 +20,24 @@ if (isset($_POST["submit"])) {
     $govt_id = $_POST["govt_id"];
     $source = $_POST["source"];
 
+    // $input_list = array(
+    //     'firstname' => $firstname,
+    //     'surname' => $surname,
+    //     'email' => $email,
+    //     'password' => $password,
+    //     'password2' => $password2,
+    //     'country' => $country,
+    //     'phone' => $phone,
+    //     'gender' => $gender,
+    //     'profession' => $profession,
+    //     'interest' => $interest,
+    //     'govt_id' => $govt_id,
+    //     'source' => $source,
+    // );
+
+    // echo json_encode($input_list);
+    // exit();
+
 
 
 
@@ -30,6 +48,6 @@ if (isset($_POST["submit"])) {
     $member->updateDynamicMember($member_id);
 
     header("location: /login.php");
-}else{
+} else {
     header("Location: /dashboard.php");
 }

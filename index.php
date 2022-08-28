@@ -1,4 +1,8 @@
-<?php require_once("./layouts/header.php"); ?>
+<?php 
+session_start(); 
+$ROOT = $_SERVER['DOCUMENT_ROOT'];
+require_once($ROOT . '/layouts/header.php');
+ ?>
 
 
 <main class="home">
@@ -14,7 +18,7 @@
   </section>
   <section class="section-2 text-primary">
     <div class="container d-flex flex-column content justify-content-center">
-      <h2 class="h1 text-center">How does it work?</h2>
+      <h2 class="h1 text-center" id="how-it-work">How does it work?</h2>
       <div class="d-flex justify-content-between flex-column flex-md-row">
         <div class="border border-warning p-3 my-3 my-md-0 explain-box">
           <img src="public/icons/groupsavings.svg" alt="">
@@ -92,4 +96,6 @@
   </section>
 </main>
 
-<?php require_once("./layouts/footer.php"); ?>
+<?php 
+require_once($ROOT . '/layouts/footer.php');
+?>
