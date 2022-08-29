@@ -18,39 +18,53 @@ class ErrorHandler
         // echo $error;
         switch ($error) {
             case 'stmtfailed': {
-                    array_push($this->errors, "Invalid MySQL query!");
+                    $err_msg = __("Invalid MySQL query!");
+                    array_push($this->errors, $err_msg);
                     break;
                 }
             case 'incorrectpassword': {
-                    array_push($this->errors, "Incorrect password!");
+                    $err_msg = __("Incorrect password!");
+                    array_push($this->errors, $err_msg);
                     break;
                 }
             case 'usernotfound': {
-                    array_push($this->errors, "This email address is not in our database. Use a registered email address!");
+                    $err_msg = __("This email address is not in our database. Use a registered email address!");
+                    array_push($this->errors, $err_msg);
                     break;
                 }
             case 'emptyinput': {
-                    array_push($this->errors, "Make sure to fill all the fields!");
+                    $err_msg = __("Make sure to fill in all the fields!");
+                    array_push($this->errors, $err_msg);
                     break;
                 }
             case 'invalidusername': {
-                    array_push($this->errors, "Username should be more than one charecter long!");
+                    $err_msg = __("The username should be more than one character long!");
+                    array_push($this->errors, $err_msg);
                     break;
                 }
             case 'invalidphone': {
-                    array_push($this->errors, "Make sure to use a valid phone number!");
+                    $err_msg = __("Make sure to use a valid phone number!");
+                    array_push($this->errors, $err_msg);
                     break;
                 }
             case 'invalidemail': {
-                    array_push($this->errors, "Make sure to use a valid email address!");
+                    $err_msg = __("Make sure to use a valid email address!");
+                    array_push($this->errors, $err_msg);
                     break;
                 }
             case 'passwordnotmatch': {
-                    array_push($this->errors, "Password did not match!");
+                    $err_msg = __("Password did not match!");
+                    array_push($this->errors, $err_msg);
                     break;
                 }
             case 'alreadyexist': {
-                    array_push($this->errors, "This email address is already exist!");
+                    $err_msg = __("This email address already exists!");
+                    array_push($this->errors, $err_msg);
+                    break;
+                }
+            case 'invalidfile': {
+                    $err_msg = __("Government ID must be less than 2 megabytes and allowed file formats are pdf, png, jpeg, and jpg!");
+                    array_push($this->errors, $err_msg);
                     break;
                 }
             default:

@@ -80,6 +80,9 @@ class StockvellController extends Database
         // exit();
 
 
+        // make many to many relationship
+
+
         try {
             //code...
             if (!$stmt->execute()) {

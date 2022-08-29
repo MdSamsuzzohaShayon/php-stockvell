@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * @database operations
  */
@@ -92,11 +91,16 @@ class SignupController extends Signup
     $this->interest = $interest;
     $this->govt_id = $govt_id;
     $this->source = $source;
+
+    $this->ROOT = $_SERVER['DOCUMENT_ROOT'];
   }
+
 
   public function signupMember()
   {
-    if(empty($this->firstname) || empty($this->email) || empty($this->password) || empty($this->password2) || empty($this->surname) || empty($this->country) || empty($this->phone) || empty($this->gender) || empty($this->profession) || empty($this->interest) || empty($this->govt_id) || empty($this->source)){
+    // echo $this->govt_id["size"];
+    // exit();
+    if (empty($this->firstname) || empty($this->email) || empty($this->password) || empty($this->password2) || empty($this->surname) || empty($this->country) || empty($this->phone) || empty($this->gender) || empty($this->profession) || empty($this->interest)  || empty($this->source)) {
       header("Location: /signup.php?error=emptyinput");
       exit();
     }
@@ -104,9 +108,9 @@ class SignupController extends Signup
       header("Location: /signup.php?error=invalidusername");
       exit();
     }
-    if(!preg_match ("/^[0-9]*$/", $this->phone)){
+    if (!preg_match("/^[0-9]*$/", $this->phone)) {
       header("Location: /signup.php?error=invalidphone");
-      exit();      
+      exit();
     }
     if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
       header("Location: /signup.php?error=invalidemail");
@@ -121,7 +125,39 @@ class SignupController extends Signup
       exit();
     }
 
+    if ($this->memberExist($this->email) == true) {
+      header("Location: /signup.php?error=alreadyexist");
+      exit();
+    }
 
-    $this->setMember($this->firstname, $this->surname, $this->email, $this->password, $this->country, $this->phone, $this->gender, $this->profession, $this->interest, $this->govt_id, $this->source);
+
+
+    // File inputs
+    $target_dir = $this->ROOT . "/uploads/";
+    $target_file = $target_dir . basename($this->govt_id["name"]);
+    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    $unique_file_name = basename(date("Ymd-") . $this->govt_id["name"])  ;
+    // 1kb = 1000, 1 mb = 1000 kb
+    if ($this->govt_id['size'] > (1000 * 1000 * 2)) {
+      header("Location: /signup.php?error=invalidfile");
+      exit();
+    }
+    if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "pdf") {
+      header("Location: /signup.php?error=invalidfile");
+      exit();
+    }
+    if (file_exists($target_dir . $unique_file_name)) {
+      header("Location: /signup.php?error=invalidfile");
+      exit();
+    }
+
+
+    // Upload file
+    if (!move_uploaded_file($this->govt_id["tmp_name"], $unique_file_name)) {
+      header("Location: /signup.php?error=invalidfile");
+      exit();
+    }
+    // move_uploaded_file($this->govt_id["tmp_name"], "uploads/" . $this->govt_id["name"]);
+    $this->setMember($this->firstname, $this->surname, $this->email, $this->password, $this->country, $this->phone, $this->gender, $this->profession, $this->interest, $unique_file_name, $this->source);
   }
 }

@@ -14,8 +14,9 @@ if (isset($_POST["member_signup_submit"])) {
   $gender = $_POST["gender"];
   $profession = $_POST["profession"];
   $interest = $_POST["interest"];
-  $govt_id = $_POST["govt_id"];
+  // $govt_id = $_POST["govt_id"];
   $source = $_POST["source"];
+  $govt_id = $_FILES["govt_id"];
 
   // $input_list = array(
   //   'firstname' => $firstname,
@@ -28,11 +29,11 @@ if (isset($_POST["member_signup_submit"])) {
   //   'gender' => $gender,
   //   'profession' => $profession,
   //   'interest' => $interest,
-  //   'govt_id' => $govt_id,
   //   'source' => $source,
   // );
-
-  // echo json_encode($input_list);
+  
+  // echo "gid - " . $_FILES["govt_id"]["size"];
+  // // echo json_encode($input_list);
   // exit();
 
 

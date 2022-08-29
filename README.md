@@ -1,18 +1,20 @@
 # Stockvell credit system
 
 ### Development
+ - Signup image upload handler
+ - Display all stockvell for publics
  - Create all classes according to database table (1. stockvell, 2.members, 3.admins, 4.stockvell_to_member)
  - Working stock member leader relationship (many to many)
- - Dynamic input field
+ - Dynamic input field 😎
  - Many to many relationship for all members in stockvell
- - Display signup error message
+ - Display signup error message 😎
  - Database migration
- - Signup image upload handler
- - TinyMCE text editor for stockvell agreement pack
- - Remove files like login-con and signup-com
- - Add Database.classes.php into another file
- - Create dashboard for members (Multiple tabs for update member profile, add stockvell pack, edit)
- - Create admin panel for admins (list of stockvell)
+ - TinyMCE || CK Editor text editor for stockvell agreement pack 😎
+ - Remove files like login-con and signup-com 😎
+ - Add Database.classes.php into another file 😎
+ - Create dashboard for members (Multiple tabs for update member profile, add stockvell pack, edit) 😎
+ - Create admin panel for admins (list of stockvell) 😎
+
 
 ### Planning
 
