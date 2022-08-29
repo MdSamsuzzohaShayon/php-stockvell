@@ -16,3 +16,4 @@ $ROOT = $_SERVER['DOCUMENT_ROOT'];
     <header class="custom-header bg-primary py-2 m-0">
       <?php require_once($ROOT . '/layouts/navbar.php'); ?>
     </header>
+

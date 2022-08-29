@@ -7,6 +7,7 @@ if (!isset($member_email)) {
    exit();
 }
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
+require_once($ROOT . "/config/lang.php");
 require_once($ROOT . '/layouts/header.php');
 // Check for session 
 require_once($ROOT . "/includes/dashboard.inc.php");
@@ -29,26 +30,26 @@ $err_arr = $err_handler->setCommonErrors($error);
             <ul class="d-flex justify-content-between sidebar-menu-items flex-md-column bg-secondary position-md-sticky sticky-md-bottom sticky-md-top p-0 m-0 w-full">
                <li role="button" data-item="profile" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row active">
                   <img class="mx-md-4 mx-0" src="/public/icons/profile.svg" alt="">
-                  <p class="m-0 px-3">Profile</p>
+                  <p class="m-0 px-3"><?= __("Profile"); ?></p>
                </li>
                <li role="button" data-item="my-pack" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row" aria-current="true">
                   <img class="mx-md-4 mx-0" src="/public/icons/my-pack.svg" alt="">
-                  <p class="m-0 px-3">My Pack</p>
+                  <p class="m-0 px-3"><?= __("My Pack"); ?></p>
                </li>
                <li role="button" data-item="pending-pack" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row">
                   <img class="mx-md-4 mx-0" src="/public/icons/pending-pack.svg" alt="">
-                  <p class="m-0 px-3">Pending Pack</p>
+                  <p class="m-0 px-3"><?= __("Pending Pack"); ?></p>
                </li>
                <li role="button" data-item="add-pack" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row">
                   <img class="mx-md-4 mx-0" src="/public/icons/add-pack.svg" alt="">
-                  <p class="m-0 px-3">Add Pack</p>
+                  <p class="m-0 px-3"><?= __("Add Pack"); ?></p>
                </li>
             </ul>
          </div>
          <div class="col-md-9 sidebar-content">
             <div class="content my-4 profile-content d-block">
                <div class="signup-caption text-center">
-                  <h1 class="h1">Update your informations!</h1>
+                  <h1 class="h1"><?= __("Update your informations!") ?></h1>
                   <p>You can change any field</p>
                </div>
                <?php if (count($err_arr) > 0) echo $err_handler->displayErrors(); ?>
@@ -89,8 +90,8 @@ $err_arr = $err_handler->setCommonErrors($error);
             </div>
             <div class="content my-pack-content d-none">My Pack content</div>
             <div class="content pending-pack-content d-none">
-               <h1 class="h1">All pending packs!</h1>
-               <p>You can find all the stockvell pack that is made and requested for approvals. N.B. If you can not find a pack that you have created, in that case, the pack is been rejected. Try creating another one with proper informations!</p>
+               <h1 class="h1"><?= __("All pending packs!") ?></h1>
+               <p><?= __("You can find all the stockvell pack that is made and requested for approvals. N.B. If you can not find a pack that you have created, in that case, the pack is been rejected. Try creating another one with proper informations!") ?></p>
                <div class="table-responsive">
                   <table class="table table-bordered border-warning">
                      <thead class="bg-warning text-white border-primary">
@@ -139,8 +140,8 @@ $err_arr = $err_handler->setCommonErrors($error);
             </div>
             <div class="content add-pack-content d-none my-4">
                <div class="signup-caption text-center">
-                  <h1 class="h1">Create your own stockvell pack!</h1>
-                  <p>You can create your own stockvell, in order to do that you need to fill all the input fields and once you create your will request of creating new pack will be under our review.</p>
+                  <h1 class="h1"><?= __("Create your own Stockvell pack!") ?></h1>
+                  <p><?= __("You can create your own stockvell, in order to do that you need to fill in all the input fields and once you create your will request of creating a new pack will be under our review.") ?></p>
                </div>
                <?php if (count($err_arr) > 0) echo $err_handler->displayErrors(); ?>
                <!-- Form start  -->

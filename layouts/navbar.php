@@ -19,20 +19,31 @@ $ROOT = $_SERVER['DOCUMENT_ROOT'];
       if (isset($_SESSION['member_id'])) {
       ?>
         <li class="mx-md-3 list-group-item"><a href="/dashboard.php" class="nav-link text-secondary"><?php echo $_SESSION['member_username']; ?></a></li>
-        <li class="mx-md-3 list-group-item"> <a href="/includes/logout.inc.php" class="btn btn-outline-danger">Logout</a> </li>
+        <li class="mx-md-3 list-group-item"> <a href="/includes/logout.inc.php" class="btn btn-outline-danger"><?= __("Logout") ?> </a> </li>
       <?php
       } elseif (isset($_SESSION['admin_id'])) {
       ?>
         <li class="mx-md-3 list-group-item"><a href="/admin.php" class="nav-link text-secondary"><?php echo $_SESSION['admin_username']; ?></a></li>
-        <li class="mx-md-3 list-group-item"> <a href="/includes/logout.inc.php" class="btn btn-outline-danger">Logout</a> </li>
+        <li class="mx-md-3 list-group-item"> <a href="/includes/logout.inc.php" class="btn btn-outline-danger"><?= __("Logout") ?> </a> </li>
       <?php
       } else {
       ?>
-        <li class="mx-md-3 list-group-item"> <a href="/index.php#how-it-work" class="nav-link text-secondary">How it works?</a> </li>
+        <li class="mx-md-3 list-group-item"> <a href="/index.php#how-it-work" class="nav-link text-secondary"><?= __("How it works?") ?></a> </li>
         <li class="mx-md-3 list-group-item"> <a href="#" class="nav-link text-secondary">Help</a> </li>
-        <li class="mx-md-3 list-group-item"> <a href="/login.php" class="nav-link text-secondary">Login</a> </li>
-        <li class="mx-md-3 list-group-item"> <a href="/signup.php" class="btn btn-outline-secondary">Signup</a> </li>
+        <li class="mx-md-3 list-group-item"> <a href="/login.php" class="nav-link text-secondary"><?= __("Login") ?></a> </li>
+        <li class="mx-md-3 list-group-item"> <a href="/signup.php" class="btn btn-outline-secondary"><?= __("Signup") ?></a> </li>
       <?php } ?>
+      <li class="mx-md-3 list-group-item">
+        <div class="dropdown">
+          <div class="dropdown-toggle text-secondary" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <?= __("Lang") ?>
+          </div>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/index.php?lang=fr">Français</a></li>
+            <li><a class="dropdown-item" href="/index.php?lang=en">English</a></li>
+          </ul>
+        </div>
+      </li>
     </ul>
   </div>
   <div class="mobile-menu d-none d-md-none" id="mobile-expand-menu">
@@ -41,20 +52,31 @@ $ROOT = $_SERVER['DOCUMENT_ROOT'];
       if (isset($_SESSION['member_id'])) {
       ?>
         <li class="my-2 list-group-item"><a href="/dashboard.php" class="nav-link text-secondary"><?php echo $_SESSION['member_username']; ?></a></li>
-        <li class="my-2 list-group-item"> <a href="/includes/logout.inc.php" class="btn btn-outline-danger">Logout</a> </li>
+        <li class="my-2 list-group-item"> <a href="/includes/logout.inc.php" class="btn btn-outline-danger"><?= __("Logout") ?></a> </li>
       <?php
       } elseif (isset($_SESSION['admin_id'])) {
       ?>
         <li class="my-2 list-group-item"><a href="/admin.php" class="nav-link text-secondary"><?php echo $_SESSION['admin_username']; ?></a></li>
-        <li class="my-2 list-group-item"> <a href="/includes/logout.inc.php" class="btn btn-outline-danger">Logout</a> </li>
+        <li class="my-2 list-group-item"> <a href="/includes/logout.inc.php" class="btn btn-outline-danger"><?= __("Logout") ?></a> </li>
       <?php
       } else {
       ?>
-        <li class="my-2 list-group-item"> <a href="#" class="nav-link text-secondary">How it works?</a> </li>
-        <li class="my-2 list-group-item"> <a href="#" class="nav-link text-secondary">Help</a> </li>
-        <li class="my-2 list-group-item"> <a href="login.php" class="nav-link text-secondary">Login</a> </li>
-        <li class="my-2 list-group-item"> <a href="singup.php" class="btn btn-outline-secondary">Signup</a> </li>
+        <li class="my-2 list-group-item"> <a href="#" class="nav-link text-secondary"><?= __("How it works?") ?></a> </li>
+        <li class="my-2 list-group-item"> <a href="#" class="nav-link text-secondary"><?= __("Help") ?></a> </li>
+        <li class="my-2 list-group-item"> <a href="login.php" class="nav-link text-secondary"><?= __("Login") ?></a> </li>
+        <li class="my-2 list-group-item"> <a href="singup.php" class="btn btn-outline-secondary"><?= __("Signup") ?></a> </li>
       <?php } ?>
+      <li class="my-2 list-group-item">
+        <div class="dropdown">
+          <div class="dropdown-toggle text-secondary" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <?= __("Lang") ?>
+          </div>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="index.php?lang=fr">Français</a></li>
+            <li><a class="dropdown-item" href="index.php?lang=en">English</a></li>
+          </ul>
+        </div>
+      </li>
     </ul>
   </div>
 </div>

@@ -2,7 +2,7 @@ const mobileExpandMenuIcon = document.getElementById("mobile-expand-menu-icon");
 const mobileExpandMenu = document.getElementById("mobile-expand-menu");
 
 /**
- * @mobile menu for all pages
+ * @mobile menu for all pages for all pages
  */
 let expanded = false;
 mobileExpandMenuIcon.addEventListener("click", (meme) => {
@@ -26,6 +26,10 @@ mobileExpandMenuIcon.addEventListener("click", (meme) => {
 
   expanded = !expanded;
 });
+
+/**
+ * @language change between french and english for all pages
+ */
 
 /**
  * @page dashboard
@@ -68,10 +72,15 @@ if (window.location.pathname === "/dashboard.php") {
     selectedContent.classList.remove("d-none");
     selectedContent.classList.add("d-block");
   }
+
+  // Work with ck editor
+  ClassicEditor.create(document.querySelector("#agreement")).catch((error) => {
+    console.error(error);
+  });
 }
 
 /**
- * @page dashboard
+ * @page admin
  * Toggle content for dashboard sidebar menu item
  */
 if (window.location.pathname === "/admin.php") {

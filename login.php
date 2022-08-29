@@ -10,6 +10,7 @@ if (isset($member_email)) {
 
 
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
+require_once($ROOT . "/config/lang.php");
 require_once($ROOT . "/layouts/header.php");
 require_once($ROOT . "/config/option-list.php");
 require_once($ROOT . "/classes/input.classes.php");
@@ -27,8 +28,8 @@ $err_arr = $err_handler->setCommonErrors($error);
   <section class="section-1">
     <div class="container">
       <div class="login-caption text-center">
-        <h1 class="h1">Welcome to stockvell</h1>
-        <p>Please enter the followings to login as member</p>
+        <h1 class="h1"><?= __("Welcome to stockvell"); ?></h1>
+        <p><?= __("Please enter the following to login as a member" ); ?> </p>
       </div>
 
       <?php if (count($err_arr) > 0) echo $err_handler->displayErrors(); ?>
@@ -37,9 +38,12 @@ $err_arr = $err_handler->setCommonErrors($error);
       <form action="/includes/login.inc.php" method="POST">
         <div class="row mb-3">
           <?php echo inputElement('email', 'Email*', false, 'email'); ?>
-          <?php echo inputElement('password', 'Password', false, 'password'); ?>
+          <?php 
+          $password = __("Password");
+          echo inputElement('password', $password, false, 'password'); 
+          ?>
         </div>
-        <button type="submit" name="member_login_submit" class="btn btn-primary">login</button>
+        <button type="submit" name="member_login_submit" class="btn btn-primary"><?= __("Login"); ?></button>
       </form>
     </div>
   </section>

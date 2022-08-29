@@ -15,20 +15,22 @@ function inputElement($input_name, $input_text, $single_input, $input_type, $def
     $required_input = "";
     if($required === true) $required_input = "required";
 
+    $translated_text = __($input_text);
+
 
     if ($input_type === "text" || $input_type === "email" || $input_type === "password" || $input_type === "number") {
         return "<div class='$input_con_class'>
-                    <label for='$input_name' class='form-label text-capitalize'>$input_text</label>
+                    <label for='$input_name' class='form-label text-capitalize'>$translated_text</label>
                     <input $required_input type='$input_type' value='$new_default' name='$input_name' class='$input_class' id='$input_name'>
                 </div>";
     } elseif ($input_type === 'file') {
         return "<div class='$input_con_class'>
-                    <label for='$input_name' class='form-label text-capitalize'>$input_text</label>
+                    <label for='$input_name' class='form-label text-capitalize'>$translated_text</label>
                     <input $required_input type='$input_type' value='$new_default' name='$input_name' class='$input_class' id='$input_name'>
                 </div>";
     } elseif ($input_type === 'textarea') {
         return "<div class='$input_con_class'>
-                    <label for='$input_name' class='form-label text-capitalize'>$input_text</label>
+                    <label for='$input_name' class='form-label text-capitalize'>$translated_text</label>
                     <textarea $required_input rows='2' name='$input_name' class='$input_class' id='$input_name'> $new_default </textarea>
                 </div>";
     } elseif ($input_type === 'select') {
@@ -42,7 +44,7 @@ function inputElement($input_name, $input_text, $single_input, $input_type, $def
         }
 
         return "<div class='$input_con_class'>
-                    <label for='$input_name' class='form-label'>$input_text</label>
+                    <label for='$input_name' class='form-label'>$translated_text</label>
                     <select name='$input_name' class='form-control text-primary bg-secondary border border-primary' id='$input_name'>
                           $option_list
                     </select>
