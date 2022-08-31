@@ -10512,6 +10512,13 @@ header .toggle-menu {
   }
 }
 
+.packs {
+  min-height: 52vh;
+}
+.packs .section-1 {
+  margin: 7rem 0;
+}
+
 .dashboard .section-1 .sidebar-menus {
   min-height: 80vh;
 }

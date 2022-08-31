@@ -7,10 +7,11 @@ include $ROOT . "/config/database.php";
 include $ROOT . "/classes/stockvell.classes.php";
 
 
-$foundMember = new DashboardController();
-$foundMember->setCurrentMember($member_email, $member_id ); // Variables getting from dashboard.php
+$foundMember = new Stockvell($member_email, $member_id ); // Variables getting from dashboard.php
 $result = $foundMember->getCurrentMember();
-$psr_result = $foundMember->getAllPendingStockvell("PENDING");
+$psr_result = $foundMember->getAllPendingStockvell("PENDING"); // psr = pending search result
+$asr_result = $foundMember->getAllApprovedStockvell("APPROVED"); // asr = approved search result
+
 
 
 //  Create stockvell pack
@@ -25,9 +26,8 @@ if(isset($_POST['create-stockvell'])){
   $category = $_POST["category"];
   $withdraw_frequency = $_POST["withdraw_frequency"];
   $agreement = $_POST["agreement"];
-
   
-  $stockvell_control = new StockvellController($name, $goal, $payment, $payment_frequency, $category, $withdraw_frequency, $agreement);
+  $stockvell_control = new StockvellForms($name, $goal, $payment, $payment_frequency, $category, $withdraw_frequency, $agreement);
   $stockvell_control->validateAndCreate();
 
 }

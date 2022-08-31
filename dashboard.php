@@ -88,8 +88,57 @@ $err_arr = $err_handler->setCommonErrors($error);
                </form>
                <!-- Form end  -->
             </div>
-            <div class="content my-pack-content d-none">My Pack content</div>
+            <div class="content my-pack-content d-none">
+               <h1 class="h1"><?= __("All of my pack!") ?></h1>
+               <p><?= __("All the pack that you are a member of.") ?></p>
+               <div class="table-responsive">
+                  <table class="table table-bordered border-warning">
+                     <thead class="bg-warning text-white border-primary">
+                        <tr>
+                           <th scope="col">#<?= __("ID")?></th>
+                           <th scope="col"><?= __("Name")?></th>
+                           <th scope="col"><?= __("Goal")?></th>
+                           <th scope="col"><?= __("Category")?></th>
+                           <th scope="col"><?= __("Status")?></th>
+                           <th scope="col"><?= __("Payment")?></th>
+                           <th scope="col"><?= __("Payment Period")?></th>
+                           <th scope="col"><?= __("Leader")?></th>
+                           <th scope="col"><?= __("Total Members")?></th>
+                           <th scope="col"><?= __("Withdraw Period")?></th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <?php
+                        // psr = pending stockvell result 
+                        // $asr_result - getting from dashboard.inc.php
+                        if (count($asr_result) <= 0) {
+                           echo "<div class='alert alert-warning'>No pack found</div>";
+                        } else {
+                           foreach ($asr_result as $asr_key) {
+                              # code...
+                              echo "
+                                 <tr class='text-lowercase'>
+                                    <th>" . $asr_key["id"] . "</th>
+                                    <td>" . $asr_key["name"] . "</td>
+                                    <td>" . $asr_key["goal"] . "</td>
+                                    <td>" . $asr_key["category"] . "</td>
+                                    <td>" . $asr_key["status"] . "</td>
+                                    <td>" . $asr_key["payment"] . "</td>
+                                    <td>" . $asr_key["payment_frequency"] . "</td>
+                                    <td>Leader</td>
+                                    <td>" . $asr_key["totel_members"] . " </td>
+                                    <td>" . $asr_key["withdraw_frequency"] . "</td>
+                                 </tr>
+                              ";
+                           }
+                        }
+                        ?>
+                     </tbody>
+                  </table>
+               </div>
+            </div>
             <div class="content pending-pack-content d-none">
+               Many to many relationship query to list all the member of a stockvell pack
                <h1 class="h1"><?= __("All pending packs!") ?></h1>
                <p><?= __("You can find all the stockvell pack that is made and requested for approvals. N.B. If you can not find a pack that you have created, in that case, the pack is been rejected. Try creating another one with proper informations!") ?></p>
                <div class="table-responsive">
@@ -109,26 +158,26 @@ $err_arr = $err_handler->setCommonErrors($error);
                         </tr>
                      </thead>
                      <tbody>
-                        <?php 
+                        <?php
                         // psr = pending stockvell result 
                         // $psr_result - getting from dashboard.inc.php
-                        if(count($psr_result) <= 0){
+                        if (count($psr_result) <= 0) {
                            echo "<div class='alert alert-warning'>No pack found</div>";
-                        }else{
+                        } else {
                            foreach ($psr_result as $psr_key) {
                               # code...
                               echo "
                                  <tr class='text-lowercase'>
-                                    <th>". $psr_key["id"] ."</th>
-                                    <td>". $psr_key["name"] ."</td>
-                                    <td>". $psr_key["goal"] ."</td>
-                                    <td>". $psr_key["category"] ."</td>
-                                    <td>". $psr_key["status"] ."</td>
-                                    <td>". $psr_key["payment"] ."</td>
-                                    <td>". $psr_key["payment_frequency"] ."</td>
-                                    <td>". $psr_key["leader_id"] ."</td>
+                                    <th>" . $psr_key["id"] . "</th>
+                                    <td>" . $psr_key["name"] . "</td>
+                                    <td>" . $psr_key["goal"] . "</td>
+                                    <td>" . $psr_key["category"] . "</td>
+                                    <td>" . $psr_key["status"] . "</td>
+                                    <td>" . $psr_key["payment"] . "</td>
+                                    <td>" . $psr_key["payment_frequency"] . "</td>
+                                    <td>" . $psr_key["leader_id"] . "</td>
                                     <td> 10 </td>
-                                    <td>". $psr_key["withdraw_frequency"] ."</td>
+                                    <td>" . $psr_key["withdraw_frequency"] . "</td>
                                  </tr>
                               ";
                            }
@@ -161,6 +210,7 @@ $err_arr = $err_handler->setCommonErrors($error);
                   <div class="row mb-3">
                      <?php echo inputElement('agreement', 'You muct write agreenment about this stockvell pack*', true, 'textarea', null); ?>
                   </div>
+
 
                   <button type="submit" name="create-stockvell" class="btn btn-primary">Create Stockvell</button>
                </form>

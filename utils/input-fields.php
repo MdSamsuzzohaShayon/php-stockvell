@@ -49,5 +49,7 @@ function inputElement($input_name, $input_text, $single_input, $input_type, $def
                           $option_list
                     </select>
                 </div>";
+    }elseif($input_class === "hidden"){
+        return "<input type='$input_type' value='$new_default' name='$input_name' class='$input_class' id='$input_name'>";
     }
 }

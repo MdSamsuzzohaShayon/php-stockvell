@@ -6,6 +6,7 @@ $logged_admin = false;
 if (isset($admin_id)) $logged_admin = true;
 
 // Check for session 
+require_once($ROOT . "/config/lang.php");
 require_once($ROOT . "/layouts/header.php");
 require_once($ROOT . "/utils/input-fields.php");
 require_once($ROOT . "/classes/input.classes.php");

@@ -1,7 +1,58 @@
 <?php
-class StockvellController extends Database
+class Stockvell extends Database
 {
-    // PSC = pending stockvell pack 
+    // private $member_email;
+    public function __construct($member_email, $leader_id)
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        $this->member_email = $member_email;
+        $this->leader_id = $leader_id;
+    }
+
+
+    public function getCurrentMember()
+    {
+        $sql = "SELECT id, firstname, surname, email, country, phone, gender, profession, interest, govt_id, source, role FROM members WHERE email=:email";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam('email', $this->member_email);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_OBJ);
+        // var_dump($result);
+        return $result;
+    }
+
+    public function getAllPendingStockvell($status)
+    {
+        // All stockvell of a member
+        $sql = "SELECT * FROM stockvells WHERE leader_id=:leader_id AND status=:status";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam('leader_id', $this->leader_id);
+        $stmt->bindParam('status', $status);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+    public function getAllApprovedStockvell($status)
+    {
+        // All stockvell of a member
+        // $sql = "SELECT * FROM stockvells WHERE leader_id=:leader_id AND status=:status";
+        $sql = "SELECT s.id, s.goal, s.category, s.payment, s.payment_frequency, s.withdraw_frequency, s.name, s.status, sm.stockvell_id, COUNT(sm.stockvell_id) as totel_members FROM stockvell_to_member sm 
+            LEFT JOIN stockvells s ON sm.stockvell_id=s.id 
+            WHERE s.status=:status 
+            GROUP BY sm.stockvell_id";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam('status', $status);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+
+
+    // PSC = pending stockvell pack // relationship query
     public function getPSC($status)
     {
         // All stockvell of a member
@@ -14,6 +65,26 @@ class StockvellController extends Database
         }
         return [];
     }
+}
+
+
+class StockvellForms extends Database
+{
+
+    public function __construct($name, $goal, $payment, $payment_frequency, $category, $withdraw_frequency, $agreement)
+    {
+        // parent::__construct($member_email, $leader_id);
+        $this->leader_id = $_SESSION['member_id'];
+        $this->name = $name;
+        $this->goal = $goal;
+        $this->payment = $payment;
+        $this->payment_frequency = $payment_frequency;
+        $this->category = $category;
+        $this->withdraw_frequency = $withdraw_frequency;
+        $this->agreement = $agreement;
+    }
+
+
 
     public function updateStockvell($stockvell_id, $input_list)
     {

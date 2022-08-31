@@ -133,6 +133,13 @@ header {
   }
 }
 
+.packs{
+  min-height: $min_height_of_the_page ;
+  .section-1{
+    margin: $section_gap;
+  }
+}
+
 
 .dashboard{
   .section-1{

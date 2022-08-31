@@ -35,10 +35,14 @@ $lang = [
     "Create Pack" => "Créer un pack",
     "Profile" => "Profil",
     "Name*" => "Nom*",
+    "Name" => "Nom",
     "My Pack" => "Mon pack",
     "Goal*" => "Objectif*",
+    "Goal" => "Objectif",
     "Category*" => "Catégorie*",
+    "Category" => "Catégorie",
     "payment*" => "Paiement*",
+    "payment" => "Paiement",
     "payment frequency(days)*" => "Fréquence de paiement (jours)*",
     "Withdraw frequency(days)*" => "Fréquence de retrait (jours)*",
     "You Must Write Agreement About This Stockvell Pack*" => "Vous devez écrire un accord à propos de ce pack Stockvell*",
@@ -48,6 +52,12 @@ $lang = [
     "Update your information!" => "Mettez à jour vos informations !",
     "All pending packs!" => "Tous les packs en attente !",
     "You can create your own stockvell, in order to do that you need to fill in all the input fields and once you create your will request of creating a new pack will be under our review." => "Vous pouvez créer votre propre stockvell, pour ce faire, vous devez remplir tous les champs de saisie et une fois que vous aurez créé votre demande de création d'un nouveau pack, nous l'examinerons.",
+    "ID" => "IDENTIFIANT",
+    "Status" => "Statut",
+    "Payment Period" => "Délai de paiement",
+    "Leader" => "Chef",
+    "Total Members" => "Nombre total de membres",
+    "Withdraw Period" => "Période de retrait",
 
     // "Connect to your College Savings" => "Connectez-vous à votre épargne-études",
 
@@ -63,6 +73,10 @@ $lang = [
     "Password did not match!" => "Le mot de passe ne correspond pas!",
     "This email address already exists!" => "Cette adresse email existe déja!",
     "Government ID must be less than 2 megabytes and allowed file formats are pdf, png, jpeg, and jpg!" => "L'identifiant gouvernemental doit être inférieur à 2 mégaoctets et les formats de fichiers autorisés sont pdf, png, jpeg et jpg !",
+    
+    
+    // all pack page -> packs.php
+    "All Stockvell Pack" => "Tous Stockvell Pack",
 ];
 
 
