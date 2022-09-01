@@ -6,6 +6,11 @@ if (isset($member_email)) {
   exit();
 }
 
+if (isset($_SESSION['admin_id'])) {
+  header("Location: /admin.php");
+  exit();
+}
+
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
 require_once($ROOT . "/config/lang.php");
 require_once($ROOT . "/layouts/header.php");

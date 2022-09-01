@@ -2,11 +2,15 @@
 class Stockvell extends Database
 {
     // private $member_email;
-    public function __construct($member_email, $leader_id)
+    public function __construct()
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
+    }
+
+    public function setMember($member_email, $leader_id)
+    {
         $this->member_email = $member_email;
         $this->leader_id = $leader_id;
     }
@@ -23,28 +27,110 @@ class Stockvell extends Database
         return $result;
     }
 
-    public function getAllPendingStockvell($status)
+    public function getAllMembers()
     {
-        // All stockvell of a member
-        $sql = "SELECT * FROM stockvells WHERE leader_id=:leader_id AND status=:status";
+        $sql = "SELECT id, firstname, surname, email, country, phone, gender, profession, interest, govt_id, source, is_verified, role FROM members";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam('leader_id', $this->leader_id);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    public function getAllPendingStockvell($status, $is_admin)
+    {
+        $sql = null;
+        $stmt = null;
+        if ($is_admin) {
+            // All stockvell of a member
+            $sql = "SELECT s.id, s.leader_id, s.name, s.agreement, s.goal, s.category, s.status, s.payment, s.payment_frequency, s.withdraw_frequency, m.firstname, m.surname FROM stockvells s LEFT JOIN members m ON s.leader_id=m.id  WHERE status=:status";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam('status', $status);
+        } else {
+            // All stockvell of a member
+            $sql = "SELECT * FROM stockvells WHERE leader_id=:leader_id AND status=:status";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam('leader_id', $this->leader_id);
+            $stmt->bindParam('status', $status);
+        }
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+    // getAllApprovedStockvellOfAMember - reverse left join and group by of this function
+    public function getASingleStockvell($stockvell_id)
+    {
+        // $stockvell_sql = "SELECT s.id, s.goal, s.leader_id, s.category, s.payment, s.payment_frequency, s.withdraw_frequency, s.name, s.status, sm.stockvell_id, COUNT(sm.stockvell_id) as totel_members FROM stockvell_to_member sm 
+        // LEFT JOIN stockvells s ON sm.stockvell_id=s.id 
+        // WHERE sm.stockvell_id=:stockvell_id
+        // GROUP BY sm.stockvell_id";
+        $stockvell_sql = "SELECT sm.id, sm.stockvell_id, s.agreement, s.goal, s.leader_id, s.category, s.payment, s.payment_frequency, s.withdraw_frequency, s.name, s.status,
+        sm.member_id, m.firstname, m.surname, m.profession, m.country
+        FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id=s.id LEFT JOIN members m ON sm.member_id=m.id WHERE s.id=:stockvell_id;";
+        $stockvell_stmt = $this->connect()->prepare($stockvell_sql);
+        $stockvell_stmt->bindParam('stockvell_id', $stockvell_id);
+        $stockvell_stmt->execute();
+        $stockvell_result = $stockvell_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+
+        $total_members = count($stockvell_result);
+        $members = [];
+        $i = 0;
+        while ($i < $total_members) {
+            $new_single_member = array(
+                "id" => $stockvell_result[$i]['member_id'],
+                "firstname" => $stockvell_result[$i]['firstname'],
+                "surname" => $stockvell_result[$i]['surname'],
+                "profession" => $stockvell_result[$i]['profession'],
+                "country" => $stockvell_result[$i]['country'],
+            );
+            array_push($members, $new_single_member);
+            $i++;
+        }
+
+        $single_stockvell = $stockvell_result[0];
+        $new_result = [
+            'id' => $single_stockvell["stockvell_id"],
+            'name' => $single_stockvell["name"],
+            'agreement' => $single_stockvell["agreement"],
+            'status' => $single_stockvell["status"],
+            'goal' => $single_stockvell["goal"],
+            'leader_id' => $single_stockvell["leader_id"],
+            'category' => $single_stockvell["category"],
+            'payment' => $single_stockvell["payment"],
+            'payment_frequency' => $single_stockvell["payment_frequency"],
+            'withdraw_frequency' => $single_stockvell["withdraw_frequency"],
+            'total_members' => $total_members,
+            'members' => $members,
+        ];
+
+        // echo $new_result['members'];
+        // var_dump($new_result['members']);
+        return $new_result;
+    }
+
+
+    public function getAllApprovedStockvell($status)
+    {
+        $sql = "SELECT s.id, s.goal, s.leader_id, s.category, s.payment, s.payment_frequency, s.withdraw_frequency, s.name, s.status, sm.stockvell_id, COUNT(sm.stockvell_id) as totel_members FROM stockvell_to_member sm 
+        LEFT JOIN stockvells s ON sm.stockvell_id=s.id 
+        WHERE s.status=:status 
+        GROUP BY sm.stockvell_id";
+        $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam('status', $status);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
     }
-    public function getAllApprovedStockvell($status)
+
+    public function getAllApprovedStockvellOfAMember($status, $member_id)
     {
-        // All stockvell of a member
-        // $sql = "SELECT * FROM stockvells WHERE leader_id=:leader_id AND status=:status";
-        $sql = "SELECT s.id, s.goal, s.category, s.payment, s.payment_frequency, s.withdraw_frequency, s.name, s.status, sm.stockvell_id, COUNT(sm.stockvell_id) as totel_members FROM stockvell_to_member sm 
-            LEFT JOIN stockvells s ON sm.stockvell_id=s.id 
-            WHERE s.status=:status 
-            GROUP BY sm.stockvell_id";
+        $sql = "SELECT s.id, s.goal, s.leader_id, s.category, s.payment, s.payment_frequency, s.withdraw_frequency, s.name, s.status, sm.stockvell_id, sm.member_id, m.firstname FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id = s.id LEFT JOIN members m ON sm.member_id=m.id WHERE sm.member_id=:member_id AND status=:status";
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam('status', $status);
+        $stmt->bindParam('member_id', $member_id);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -172,5 +258,51 @@ class StockvellForms extends Database
         }
 
         $this->createStockvellPack();
+    }
+}
+
+
+
+class AdminStockvellForms extends Database
+{
+    public function approveStockvellByAdmin($stockvell_id, $input_list, $leader_id)
+    {
+        // Update stockvell
+        $cols = array();
+        // Remove blank inputs and password2
+        foreach ($input_list as $key => $val) {
+            if (!empty($val) && $key !== "password2")   $cols[] = "$key = '$val'";
+        }
+        $updateElement = implode(', ', $cols);
+
+
+        /// Update element 
+        $sql = "UPDATE stockvells SET $updateElement WHERE id=:stockvell_id";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam('stockvell_id', $stockvell_id);
+
+        if (!$stmt->execute()) {
+            header('Location: /admin.php?error=stmtfailed');
+            exit();
+        }
+
+
+        // make many to many relationship 
+        $this->addMemberToStockvell($stockvell_id, $leader_id);
+
+        header('Location: /admin.php?error=none');
+    }
+
+    public function addMemberToStockvell($stockvell_id, $member_id)
+    {
+        $sql = "INSERT INTO stockvell_to_member(stockvell_id, member_id) VALUES (:stockvell_id, :member_id)";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam('stockvell_id', $stockvell_id);
+        $stmt->bindParam('member_id', $member_id);
+        if (!$stmt->execute()) {
+            header('Location: /admin.php?error=stmtfailed');
+            exit();
+        }
+        header('Location: /admin.php?error=none');
     }
 }

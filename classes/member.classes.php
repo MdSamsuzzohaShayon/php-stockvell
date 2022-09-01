@@ -84,3 +84,20 @@ class MemberController extends Member
         $this->updateMember($updateElement, $member_id);
     }
 }
+
+
+/**
+ * @all type of forms
+*/
+
+class MemberForms extends Database{
+    public function verifyByAdmin($member_id){
+        $sql = "UPDATE members SET is_verified=:is_verified WHERE id=$member_id";
+        $stmt = $this->connect()->prepare($sql);
+        $is_verified = 1;
+        $stmt->bindParam('is_verified', $is_verified);
+        $stmt->execute();
+
+        header('Location: /admin.php');
+    }
+}

@@ -1,6 +1,9 @@
 # Stockvell credit system
 
+ - [Live Preview](stockvell_stockvell.allinone-office.com)
+
 ### Development
+ - Remove all space from agreement while creting stockvell pack
  - Signup image upload handler
  - Display all stockvell for publics
  - Create all classes according to database table (1. stockvell, 2.members, 3.admins, 4.stockvell_to_member)
@@ -238,4 +241,9 @@ SELECT s.name, sm.stockvell_id, COUNT(sm.stockvell_id) as totel_members FROM sto
 
 
 - Sub query or nested query (Works with insert, update, delete, and select query). [tutorial](https://www.youtube.com/watch?v=VxiF_MgePL8&list=PL0b6OzIxLPbzf12lu5etX_vjN-eUxgxnr&index=26)
+
+
+
+ALTER TABLE vendors
+ADD COLUMN vendor_group INT NOT NULL;
 

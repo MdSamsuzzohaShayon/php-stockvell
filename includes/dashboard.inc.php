@@ -7,10 +7,11 @@ include $ROOT . "/config/database.php";
 include $ROOT . "/classes/stockvell.classes.php";
 
 
-$foundMember = new Stockvell($member_email, $member_id ); // Variables getting from dashboard.php
+$foundMember = new Stockvell(); // Variables getting from dashboard.php
+$foundMember->setMember($member_email, $member_id );
 $result = $foundMember->getCurrentMember();
-$psr_result = $foundMember->getAllPendingStockvell("PENDING"); // psr = pending search result
-$asr_result = $foundMember->getAllApprovedStockvell("APPROVED"); // asr = approved search result
+$psr_result = $foundMember->getAllPendingStockvell("PENDING", false); // psr = pending search result
+$asr_result = $foundMember->getAllApprovedStockvellOfAMember("APPROVED", $member_id); // asr = approved search result
 
 
 

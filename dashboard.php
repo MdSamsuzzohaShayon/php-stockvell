@@ -6,6 +6,10 @@ if (!isset($member_email)) {
    header("Location: /login.php");
    exit();
 }
+if (isset($_SESSION['admin_id'])) {
+   header("Location: /admin.php");
+   exit();
+ }
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
 require_once($ROOT . "/config/lang.php");
 require_once($ROOT . '/layouts/header.php');
@@ -89,34 +93,37 @@ $err_arr = $err_handler->setCommonErrors($error);
                <!-- Form end  -->
             </div>
             <div class="content my-pack-content d-none">
-               <h1 class="h1"><?= __("All of my pack!") ?></h1>
-               <p><?= __("All the pack that you are a member of.") ?></p>
-               <div class="table-responsive">
-                  <table class="table table-bordered border-warning">
-                     <thead class="bg-warning text-white border-primary">
-                        <tr>
-                           <th scope="col">#<?= __("ID")?></th>
-                           <th scope="col"><?= __("Name")?></th>
-                           <th scope="col"><?= __("Goal")?></th>
-                           <th scope="col"><?= __("Category")?></th>
-                           <th scope="col"><?= __("Status")?></th>
-                           <th scope="col"><?= __("Payment")?></th>
-                           <th scope="col"><?= __("Payment Period")?></th>
-                           <th scope="col"><?= __("Leader")?></th>
-                           <th scope="col"><?= __("Total Members")?></th>
-                           <th scope="col"><?= __("Withdraw Period")?></th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        <?php
-                        // psr = pending stockvell result 
-                        // $asr_result - getting from dashboard.inc.php
-                        if (count($asr_result) <= 0) {
-                           echo "<div class='alert alert-warning'>No pack found</div>";
-                        } else {
-                           foreach ($asr_result as $asr_key) {
-                              # code...
-                              echo "
+               <h1 class="h1 text-center"><?= __("All of my pack!") ?></h1>
+               <p class="text-center"><?= __("All the pack that you are a member of.") ?></p>
+               <?php
+
+               if (count($asr_result) <= 0) {
+                  echo "<div class='alert alert-warning'>No pack found</div>";
+               } else { ?>
+                  <div class="table-responsive">
+                     <table class="table table-bordered border-warning">
+                        <thead class="bg-warning text-white border-primary">
+                           <tr>
+                              <th scope="col">#<?= __("ID") ?></th>
+                              <th scope="col"><?= __("Name") ?></th>
+                              <th scope="col"><?= __("Goal") ?></th>
+                              <th scope="col"><?= __("Category") ?></th>
+                              <th scope="col"><?= __("Status") ?></th>
+                              <th scope="col"><?= __("Payment") ?></th>
+                              <th scope="col"><?= __("Payment Period") ?></th>
+                              <th scope="col"><?= __("Withdraw Period") ?></th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <?php
+                           // psr = pending stockvell result 
+                           // $asr_result - getting from dashboard.inc.php
+                           if (count($asr_result) <= 0) {
+                              echo "<div class='alert alert-warning'>No pack found</div>";
+                           } else {
+                              foreach ($asr_result as $asr_key) {
+                                 # code...
+                                 echo "
                                  <tr class='text-lowercase'>
                                     <th>" . $asr_key["id"] . "</th>
                                     <td>" . $asr_key["name"] . "</td>
@@ -125,48 +132,52 @@ $err_arr = $err_handler->setCommonErrors($error);
                                     <td>" . $asr_key["status"] . "</td>
                                     <td>" . $asr_key["payment"] . "</td>
                                     <td>" . $asr_key["payment_frequency"] . "</td>
-                                    <td>Leader</td>
-                                    <td>" . $asr_key["totel_members"] . " </td>
                                     <td>" . $asr_key["withdraw_frequency"] . "</td>
                                  </tr>
                               ";
+                              }
                            }
-                        }
-                        ?>
-                     </tbody>
-                  </table>
-               </div>
+                           ?>
+                        </tbody>
+                     </table>
+                  </div>
+               <?php }               ?>
             </div>
             <div class="content pending-pack-content d-none">
-               Many to many relationship query to list all the member of a stockvell pack
                <h1 class="h1"><?= __("All pending packs!") ?></h1>
                <p><?= __("You can find all the stockvell pack that is made and requested for approvals. N.B. If you can not find a pack that you have created, in that case, the pack is been rejected. Try creating another one with proper informations!") ?></p>
-               <div class="table-responsive">
-                  <table class="table table-bordered border-warning">
-                     <thead class="bg-warning text-white border-primary">
-                        <tr>
-                           <th scope="col">#ID</th>
-                           <th scope="col">Name</th>
-                           <th scope="col">Goal</th>
-                           <th scope="col">Category</th>
-                           <th scope="col">Status</th>
-                           <th scope="col">Payment</th>
-                           <th scope="col">Payment Period</th>
-                           <th scope="col">Leader</th>
-                           <th scope="col">Total Members (u)</th>
-                           <th scope="col">Withdraw Period</th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        <?php
-                        // psr = pending stockvell result 
-                        // $psr_result - getting from dashboard.inc.php
-                        if (count($psr_result) <= 0) {
-                           echo "<div class='alert alert-warning'>No pack found</div>";
-                        } else {
-                           foreach ($psr_result as $psr_key) {
-                              # code...
-                              echo "
+               <?php
+               // psr = pending stockvell result 
+               // $psr_result - getting from dashboard.inc.php
+               if (count($psr_result) <= 0) {
+                  echo "<div class='alert alert-warning'>No pack found</div>";
+               } else { ?>
+                  <div class="table-responsive">
+                     <table class="table table-bordered border-warning">
+                        <thead class="bg-warning text-white border-primary">
+                           <tr>
+                              <th scope="col">#ID</th>
+                              <th scope="col">Name</th>
+                              <th scope="col">Goal</th>
+                              <th scope="col">Category</th>
+                              <th scope="col">Status</th>
+                              <th scope="col">Payment</th>
+                              <th scope="col">Payment Period</th>
+                              <th scope="col">Leader</th>
+                              <th scope="col">Total Members (u)</th>
+                              <th scope="col">Withdraw Period</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <?php
+                           // psr = pending stockvell result 
+                           // $psr_result - getting from dashboard.inc.php
+                           if (count($psr_result) <= 0) {
+                              echo "<div class='alert alert-warning'>No pack found</div>";
+                           } else {
+                              foreach ($psr_result as $psr_key) {
+                                 # code...
+                                 echo "
                                  <tr class='text-lowercase'>
                                     <th>" . $psr_key["id"] . "</th>
                                     <td>" . $psr_key["name"] . "</td>
@@ -180,12 +191,14 @@ $err_arr = $err_handler->setCommonErrors($error);
                                     <td>" . $psr_key["withdraw_frequency"] . "</td>
                                  </tr>
                               ";
+                              }
                            }
-                        }
-                        ?>
-                     </tbody>
-                  </table>
-               </div>
+                           ?>
+                        </tbody>
+                     </table>
+                  </div>
+               <?php }                ?>
+
             </div>
             <div class="content add-pack-content d-none my-4">
                <div class="signup-caption text-center">

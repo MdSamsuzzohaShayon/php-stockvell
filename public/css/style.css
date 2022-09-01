@@ -10518,6 +10518,16 @@ header .toggle-menu {
 .packs .section-1 {
   margin: 7rem 0;
 }
+.packs .section-1 .pack-list .pack-item {
+  width: 90%;
+}
+
+.pack_single {
+  min-height: 52vh;
+}
+.pack_single .section-1 {
+  margin: 7rem 0;
+}
 
 .dashboard .section-1 .sidebar-menus {
   min-height: 80vh;

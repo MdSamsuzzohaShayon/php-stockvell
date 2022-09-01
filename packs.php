@@ -2,14 +2,16 @@
 session_start(); // In every single page we should start our session at the top of our code
 $member_email = $_SESSION['member_email'];
 $member_id = $_SESSION['member_id'];
-if (!isset($member_email)) {
+if (!isset($member_email) && !isset($_SESSION['admin_id'])) {
     header("Location: /login.php");
     exit();
 }
+
+// !isset($_SESSION['admin_id'])
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
 require_once($ROOT . "/config/lang.php");
 require_once($ROOT . "/layouts/header.php");
-require_once($ROOT . "/config/option-list.php");
+require_once($ROOT . "/includes/packs.inc.php");
 ?>
 
 
@@ -19,65 +21,40 @@ require_once($ROOT . "/config/option-list.php");
         <div class="container">
             <div class="pack-caption text-center">
                 <h1 class="h1"><?= __("All Stockvell Pack"); ?></h1>
-                <p><?= __("All the pack created by any members and accproved by admin will show here"); ?> </p>
+                <p><?= __("All the packs created by any members and approved by the admin will show here"); ?> </p>
             </div>
 
             <div class="pack-list">
                 <div class="row">
-                    <div class="col-12 col-md-4 bg-secondary">
-                        <div class="d-flex flex-column p-4">
-                            <h4 class="h4">SL#4</h4>
-                            <div class="d-flex justify-content-between w-full">
-                                <p>Monthly deposit</p>
-                                <p>$120</p>
+                    <?php
+                    if (count($asr_result) <= 0) {
+                        echo "<div class='alert alert-warning'>No pack found</div>";
+                    } else {
+                        // psr = pending stockvell result 
+                        foreach ($asr_result as $asr_key) { ?>
+                            <div class="col-12 col-md-4">
+                                <div class="card pack-item">
+                                    <div class="card-body text-bg-secondary text-primary">
+                                        <h4 class="h4">SL#<?= $asr_key['id'] ?></h4>
+                                        <div class="d-flex justify-content-between w-full">
+                                            <p><?= __("Monthly deposit"); ?></p>
+                                            <p>$<?= $asr_key['payment'] ?></p>
+                                        </div>
+                                        <div class="d-flex justify-content-between w-full">
+                                            <p><?= __("Total members"); ?></p>
+                                            <p><?= $asr_key['totel_members'] ?></p>
+                                        </div>
+                                        <div class="d-flex justify-content-between w-full">
+                                            <p><?= __("Goal"); ?></p>
+                                            <p><?= $asr_key['goal'] ?></p>
+                                        </div>
+                                        <a href="/pack_single.php?stockvell_id=<?= $asr_key['id'] ?>" class="btn btn-warning text-decoration-none text-white"><?= __("Details"); ?></a>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="d-flex justify-content-between w-full">
-                                <p>Total members</p>
-                                <p>20</p>
-                            </div>
-                            <div class="d-flex justify-content-between w-full">
-                                <p>Goal</p>
-                                <p>House</p>
-                            </div>
-                            <a href="/packs.php?single_pack_id=3" class="btn btn-warning text-decoration-none text-white">Details</a>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-4 bg-secondary">
-                        <div class="d-flex flex-column p-4">
-                            <h4 class="h4">SL#4</h4>
-                            <div class="d-flex justify-content-between w-full">
-                                <p>Monthly deposit</p>
-                                <p>$120</p>
-                            </div>
-                            <div class="d-flex justify-content-between w-full">
-                                <p>Total members</p>
-                                <p>20</p>
-                            </div>
-                            <div class="d-flex justify-content-between w-full">
-                                <p>Goal</p>
-                                <p>House</p>
-                            </div>
-                            <a href="/packs.php?single_pack_id=3" class="btn btn-warning text-decoration-none text-white">Details</a>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-4 bg-secondary">
-                        <div class="d-flex flex-column p-4">
-                            <h4 class="h4">SL#4</h4>
-                            <div class="d-flex justify-content-between w-full">
-                                <p>Monthly deposit</p>
-                                <p>$120</p>
-                            </div>
-                            <div class="d-flex justify-content-between w-full">
-                                <p>Total members</p>
-                                <p>20</p>
-                            </div>
-                            <div class="d-flex justify-content-between w-full">
-                                <p>Goal</p>
-                                <p>House</p>
-                            </div>
-                            <a href="/packs.php?single_pack_id=3" class="btn btn-warning text-decoration-none text-white">Details</a>
-                        </div>
-                    </div>
+                    <?php }
+                    } ?>
+
                 </div>
             </div>
         </div>

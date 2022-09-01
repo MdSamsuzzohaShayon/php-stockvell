@@ -6,7 +6,10 @@ if (isset($member_email)) {
   exit();
 }
 
-
+if (isset($_SESSION['admin_id'])) {
+  header("Location: /admin.php");
+  exit();
+}
 
 
 $ROOT = $_SERVER['DOCUMENT_ROOT'];

@@ -48,8 +48,6 @@ class DatabaseMigrations extends Database
         );";
       $this->createTable($sql_query, "stockvells");
     }
-
-
     // Junction table for many to many relationship with memeber and stockvells
     if (!$this->checkTableExist("stockvell_to_member")) {
       $sql_query = "CREATE TABLE stockvell_to_member(
@@ -62,9 +60,6 @@ class DatabaseMigrations extends Database
         );";
       $this->createTable($sql_query, "stockvell_to_member");
     }
-
-
-
     if (!$this->checkTableExist("admins")) {
       $sql_query = "CREATE TABLE admins(
         id INT NOT NULL AUTO_INCREMENT, 
@@ -76,9 +71,23 @@ class DatabaseMigrations extends Database
         PRIMARY KEY(id)
         );";
       $this->createTable($sql_query, "admins");
-      $this->addToTheAdminsTable("admins", "stockvell_admin", "mdshayon0@gmail.com", "123", "Test1234");
     }
+    $this->addToTheAdminsTable("admins", "stockvell_admin", "stockvellexample@gmail.com", "1234567", "Test1234");
+
+    // Update or modify specific table
+    $modify_sql = "ALTER TABLE members ADD COLUMN is_verified BOOLEAN NOT NULL DEFAULT false";
+    $this->specificTableModifications($modify_sql, "Added another column to table");
   }
+
+
+
+
+
+
+
+
+
+  
   private function checkTableExist($tablename)
   {
     // $this->connect()->prepare('SELECT * FROM members');
@@ -132,6 +141,18 @@ class DatabaseMigrations extends Database
       exit();
     }
     echo "Added record to " . $tablename . " table successfully <br />";
+  }
+
+
+  private function specificTableModifications($sql, $msg){
+    // ALTER TABLE members ADD COLUMN is_verified BOOLEAN NOT NULL DEFAULT false;
+    
+    $stmt = $this->connect()->prepare($sql);
+    if (!$stmt->execute()) {
+      echo "Got SQL error to modify table";
+      exit();
+    }
+    echo "$msg.<br />";
   }
 }
 

@@ -77,6 +77,10 @@ $lang = [
     
     // all pack page -> packs.php
     "All Stockvell Pack" => "Tous Stockvell Pack",
+    "All the packs created by any members and approved by the admin will show here" => "Tous les packs créés par tous les membres et approuvés par l'administrateur s'afficheront ici",
+    "Monthly deposit" => "Dépôt mensuel",
+    "Total members" => "Membres totaux",
+    "Details" => "Détails",
 ];
 
 
