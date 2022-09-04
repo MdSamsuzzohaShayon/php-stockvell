@@ -1,9 +1,13 @@
-<?php 
-session_start(); 
+<?php
+session_start();
+$is_admin = false;
+$is_member = false;
+if (isset($_SESSION['admin_id'])) $is_admin = true;
+if (isset($_SESSION['member_id'])) $is_member = true;
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
 require_once($ROOT . "/config/lang.php");
 require_once($ROOT . '/layouts/header.php');
- ?>
+?>
 
 
 <main class="home">
@@ -11,9 +15,13 @@ require_once($ROOT . '/layouts/header.php');
     <img src="public/img/landing-bg.jpg" class="position-absolute landing-img top-0 start-0" alt="">
     <div class="container d-flex flex-column content justify-content-center">
       <div class="col-12 col-md-6">
-        <h1 class="h1 text-white"><?= __("Stockvell Makes Saving for Life Easy") ?></h1>
+        <h1 class="h1 text-white heading"><?= __("Stockvell Makes Saving for Life Easy") ?></h1>
         <p class="text-white"><?= __("Families have saved over $1 Billion for college using Stackvell. Receive a $5.29 bonus when you sign up and $25 when you link a 529 plan.") ?></p>
-        <button class="btn btn-warning text-white"><?= __("Join Now") ?></button>
+        <?php if ($is_member) { ?>
+          <a href="/packs.php" class="btn btn-warning text-white"><?= __("Join Now") ?></a>
+        <?php } else { ?>
+          <a href="/signup.php" class="btn btn-warning text-white"><?= __("Join Now") ?></a>
+        <?php } ?>
       </div>
     </div>
   </section>
@@ -97,6 +105,6 @@ require_once($ROOT . '/layouts/header.php');
   </section>
 </main>
 
-<?php 
+<?php
 require_once($ROOT . '/layouts/footer.php');
 ?>

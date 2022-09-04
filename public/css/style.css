@@ -10422,6 +10422,10 @@ header .toggle-menu {
   width: 100% !important;
 }
 
+.w-fit {
+  width: fit-content;
+}
+
 .mobile-menu {
   width: 100%;
 }
@@ -10437,7 +10441,7 @@ header .toggle-menu {
   object-position: center;
 }
 .home .section-1 .content {
-  height: 100%;
+  min-height: 52vh;
 }
 .home .section-2 {
   margin: 7rem 0;
@@ -10475,12 +10479,28 @@ header .toggle-menu {
 .signup .section-1 {
   margin: 7rem 0;
 }
+.signup .section-1 .row-no-input {
+  margin-left: 0.08rem;
+}
 
 .login {
   min-height: 52vh;
 }
 .login .section-1 {
   margin: 7rem 0;
+}
+.login .section-1 .row-no-input {
+  margin-left: 0.08rem;
+}
+
+.forget_password {
+  min-height: 52vh;
+}
+.forget_password .section-1 {
+  margin: 7rem 0;
+}
+.forget_password .section-1 .row-no-input {
+  margin-left: 0.08rem;
 }
 
 .admin {

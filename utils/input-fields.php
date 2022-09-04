@@ -1,6 +1,6 @@
 <?php
 
-function inputElement($input_name, $input_text, $single_input, $input_type, $default_value = null, $additional_con_class = null, $additional_class = null, $item_list = [], $required=false)
+function inputElement($input_name, $input_text, $single_input, $input_type, $default_value = null, $additional_con_class = null, $additional_class = null, $item_list = [], $required = false)
 {
     $input_con_class = "";
     $single_input === false ? $input_con_class .= "col-md-6 " : $input_con_class .= "one-input ";
@@ -10,10 +10,16 @@ function inputElement($input_name, $input_text, $single_input, $input_type, $def
     if (!is_null($additional_class)) $input_class .= $additional_class;
 
     $new_default = "";
-    if (!is_null($default_value)) $new_default = $default_value;
+    if (!is_null($default_value)) {
+        $new_default = $default_value;
+    } else {
+        if ($input_name === 'country') {
+            $new_default = 'Benin (+229)';
+        }
+    }
 
     $required_input = "";
-    if($required === true) $required_input = "required";
+    if ($required === true) $required_input = "required";
 
     $translated_text = __($input_text);
 
@@ -49,7 +55,20 @@ function inputElement($input_name, $input_text, $single_input, $input_type, $def
                           $option_list
                     </select>
                 </div>";
-    }elseif($input_class === "hidden"){
+    } elseif ($input_type === 'phone') {
+        if($new_default){
+            $new_default = substr($new_default, 1);
+        }
+        return "
+            <div class='$input_con_class'>
+                <label for='$input_name' class='form-label'>$translated_text</label>
+                <div class='input-group'>
+                    <span class='input-group-text' id='phone-prefix'>default</span>
+                    <input type='text' $required_input aria-label='phone' id='$input_name-code-input' value='$new_default' class='$input_class'>
+                    <input type='hidden' $required_input name='$input_name' value='$default_value' id='$input_name-hidden-input' aria-label='phone'>
+                </div>
+            </div>";
+    } elseif ($input_type === "hidden") {
         return "<input type='$input_type' value='$new_default' name='$input_name' class='$input_class' id='$input_name'>";
     }
 }

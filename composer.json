@@ -1,0 +1,16 @@
+{
+    "name": "vendor/stockvell",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Vendor\\Stockvell\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Shayon"
+        }
+    ],
+    "require": {}
+}

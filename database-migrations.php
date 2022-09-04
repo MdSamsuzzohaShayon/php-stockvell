@@ -16,12 +16,15 @@ class DatabaseMigrations extends Database
         surname VARCHAR(100) NOT NULL,
         email VARCHAR(255) NOT NULL,
         password VARCHAR(255) NOT NULL,
+        recovery_code INT,
         country VARCHAR(100) NOT NULL,
-        phone VARCHAR(100) NOT NULL,
+        city VARCHAR(255) NOT NULL,
+        phone VARCHAR(255) NOT NULL,
         gender VARCHAR(60) NOT NULL,
         profession VARCHAR(100) NOT NULL,
         interest TEXT,
         govt_id VARCHAR(100) NOT NULL,
+        is_verified BOOLEAN NOT NULL DEFAULT false,
         source TEXT,
         role VARCHAR(255) NOT NULL DEFAULT 'GENERAL',
         PRIMARY KEY (id),
@@ -65,18 +68,21 @@ class DatabaseMigrations extends Database
         id INT NOT NULL AUTO_INCREMENT, 
         name VARCHAR(100) NOT NULL,
         email VARCHAR(255) NOT NULL,
-        phone VARCHAR(100) NOT NULL,
+        phone VARCHAR(255) NOT NULL,
         password VARCHAR(255) NOT NULL,
         role VARCHAR(255) NOT NULL DEFAULT 'SUPER',
         PRIMARY KEY(id)
         );";
       $this->createTable($sql_query, "admins");
+      $this->addToTheAdminsTable("admins", "stockvell_admin", "stockvellexample@gmail.com", "1234567", "Test1234");
     }
-    $this->addToTheAdminsTable("admins", "stockvell_admin", "stockvellexample@gmail.com", "1234567", "Test1234");
 
     // Update or modify specific table
-    $modify_sql = "ALTER TABLE members ADD COLUMN is_verified BOOLEAN NOT NULL DEFAULT false";
-    $this->specificTableModifications($modify_sql, "Added another column to table");
+    // $modify_sql = "ALTER TABLE members MODIFY phone VARCHAR (255) NOT NULL";
+    // $modify_sql = "ALTER TABLE members ADD COLUMN city VARCHAR(255) NOT NULL";
+    // $modify_sql = "ALTER TABLE members ADD COLUMN recovery_code INT";
+    
+    // $this->specificTableModifications($modify_sql, "Added another column to members");
   }
 
 
@@ -87,7 +93,7 @@ class DatabaseMigrations extends Database
 
 
 
-  
+
   private function checkTableExist($tablename)
   {
     // $this->connect()->prepare('SELECT * FROM members');

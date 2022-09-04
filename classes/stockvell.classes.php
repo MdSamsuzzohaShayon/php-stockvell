@@ -18,7 +18,7 @@ class Stockvell extends Database
 
     public function getCurrentMember()
     {
-        $sql = "SELECT id, firstname, surname, email, country, phone, gender, profession, interest, govt_id, source, role FROM members WHERE email=:email";
+        $sql = "SELECT id, firstname, surname, email, country, phone, gender, profession, interest, govt_id, source, city, role FROM members WHERE email=:email";
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam('email', $this->member_email);
         $stmt->execute();

@@ -34,7 +34,7 @@ $err_arr = $err_handler->setCommonErrors($error);
       </div>
 
       <?php if (count($err_arr) > 0) echo $err_handler->displayErrors(); ?>
-      <!-- Form start  -->
+      <!-- Signup Form start  -->
       <form action="/includes/signup.inc.php" method="POST" enctype="multipart/form-data">
         <div class="row mb-3">
           <?php
@@ -44,6 +44,7 @@ $err_arr = $err_handler->setCommonErrors($error);
           $pw= __('Password*');
           $cpw= __('Confirm Password*');
           $cy= __('Country*');
+          $cty= __('City*');
           $pn= __('Phone*');
           $gr= __('Select Gender*');
           $pro= __('Profession*');
@@ -63,26 +64,34 @@ $err_arr = $err_handler->setCommonErrors($error);
           <?php echo inputElement("password2", $cpw, false, 'password', null, null, null, [], true); ?>
         </div>
         <div class="row mb-3">
-          <?php echo inputElement("country", $cy, false, 'select', null, null, null, $countries); ?>
-          <?php echo inputElement("phone", $pn, false, 'number', null, null, null, [], true); ?>
+          <?php echo inputElement("country", $cy, false, 'select', null, null, null, $countries_code); ?>
+          <?php echo inputElement("phone", $pn, false, 'phone'); ?>
         </div>
         <div class="row mb-3">
+          <?php echo inputElement("city", $cty, false, 'text'); ?>
           <?php echo inputElement("gender", $gr, false, 'select', null, null, null, ["male", "female", "others"]); ?>
-          <?php echo inputElement("profession", $pro, false, 'select', null, null, null, $professions); ?>
         </div>
         <div class="row mb-3">
-          <?php echo inputElement("interest", $ist, true, 'text', null, null, null, [], true); ?>
+          <?php echo inputElement("profession", $pro, false, 'select', null, null, null, $professions); ?>
           <?php echo inputElement("govt_id", $gid, false, 'file', null, null, null, [], true); ?>
+        </div>
+        <div class="row mb-3">
+          <?php echo inputElement("interest", $ist, true, 'text', null, null, null, [], false); ?>
         </div>
 
 
         <div class="row mb-3">
           <?php echo inputElement("source", $src, true, 'textarea', null, null, null, [], true); ?>
         </div>
-
-        <button type="submit" name="member_signup_submit" class="btn btn-primary"><?= __("Signup"); ?></button>
+        <div class="row row-no-input mb-3 d-flex justify-content-start">
+          <button type="submit" name="member_signup_submit" class="btn btn-primary w-fit"><?= __("Signup"); ?></button>
+          <a href="/index.php" class="btn btn-danger w-fit ms-3"><?= __("Cancel"); ?></a>
+        </div>
+        <div class="row row-no-input">
+          <a class="p-0" href="/login.php"><?= __("Already have an account?"); ?></a>
+        </div>
       </form>
-      <!-- Form end  -->
+      <!-- Signup Form end  -->
     </div>
   </section>
 </main>

@@ -6,7 +6,7 @@ if(isset($_POST["member_login_submit"])){
   $password = $_POST["password"];
 
   include $ROOT . "/config/database.php";
-  include $ROOT . "/classes/login.classes.php";
+  include $ROOT . "/classes/member.classes.php";
 
   $login = new LoginController($email, $password);
   $login->loginMember();
@@ -19,7 +19,7 @@ if(isset($_POST["login_admin_submit"])){
   $admin_password = $_POST["password"];
 
   include $ROOT . "/config/database.php";
-  include $ROOT . "/classes/login.classes.php";
+  include $ROOT . "/classes/member.classes.php";
 
   $login = new LoginController($admin_email , $admin_password);
   $login->loginAdmin();

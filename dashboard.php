@@ -9,7 +9,7 @@ if (!isset($member_email)) {
 if (isset($_SESSION['admin_id'])) {
    header("Location: /admin.php");
    exit();
- }
+}
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
 require_once($ROOT . "/config/lang.php");
 require_once($ROOT . '/layouts/header.php');
@@ -57,40 +57,59 @@ $err_arr = $err_handler->setCommonErrors($error);
                   <p>You can change any field</p>
                </div>
                <?php if (count($err_arr) > 0) echo $err_handler->displayErrors(); ?>
-               <!-- Form start  -->
-               <form action="/includes/update-member.inc.php" method="POST">
+               <!-- Signup Form start  -->
+               <form action="/includes/dashboard.inc.php" method="POST" enctype="multipart/form-data">
                   <div class="row mb-3">
-                     <?php echo inputElement('firstname', 'First Name', false, 'text', $result->firstname); ?>
-                     <?php echo inputElement('surname', 'Surname', false, 'text', $result->surname); ?>
+                     <?php
+                     $fn = __('Firstname*');
+                     $sn = __('Surname*');
+                     $el = __('Email*');
+                     $pw = __('Password*');
+                     $cpw = __('Confirm Password*');
+                     $cy = __('Country*');
+                     $cty = __('City*');
+                     $pn = __('Phone*');
+                     $gr = __('Select Gender*');
+                     $pro = __('Profession*');
+                     $ist = __("Interest (Optional comma-separated list)");
+                     $gid = __("Government ID*");
+                     $src = __('How did you hear about the Stockvell platform? (Optional)');
+
+                     echo inputElement("firstname", $fn, false, 'text', $cmr_result->firstname);
+                     ?>
+                     <?php echo inputElement("surname", $sn, false, 'text', $cmr_result->surname); ?>
                   </div>
                   <div class="row mb-3">
-                     <?php echo inputElement('email', 'Email', true, 'email', $result->email); ?>
+                     <?php echo inputElement("email", $el, true, 'email', $cmr_result->email); ?>
                   </div>
                   <div class="row mb-3">
-                     <?php echo inputElement('password', 'Password', false, 'password', $result->password); ?>
-                     <?php echo inputElement('password2', 'Confirm Password', false, 'password', $result->password2); ?>
+                     <?php echo inputElement("password", $pw, false, 'password'); ?>
+                     <?php echo inputElement("password2", $cpw, false, 'password'); ?>
                   </div>
                   <div class="row mb-3">
-                     <?php echo inputElement('country', 'Country', false, 'select', $result->country, null, null, $countries); ?>
-                     <?php echo inputElement('phone', 'Phone Number', false, 'text', $result->phone); ?>
+                     <?php echo inputElement("country", $cy, false, 'select', $cmr_result->country, null, null, $countries_code); ?>
+                     <?php echo inputElement("phone", $pn, false, 'phone', $cmr_result->phone); ?>
                   </div>
                   <div class="row mb-3">
-                     <?php echo inputElement('gender', 'Gender', false, 'select', $result->gender, null, "text-capitalize", ["male", "female", "others"]); ?>
-                     <?php echo inputElement('profession', 'Profession', false, 'select', $result->profession, null, "text-capitalize", $professions); ?>
+                     <?php echo inputElement("city", $cty, false, 'text', $cmr_result->city); ?>
+                     <?php echo inputElement("gender", $gr, false, 'select', $cmr_result->gender, null, null, ["male", "female", "others"]); ?>
                   </div>
                   <div class="row mb-3">
-                     <?php echo inputElement('interest', 'Interest (comma seperated list)', false, 'text', $result->interest); ?>
-                     <?php echo inputElement('govt_id', 'Government ID', false, 'file', $result->govt_id); ?>
+                     <?php echo inputElement("profession", $pro, false, 'select', $cmr_result->profession, null, null, $professions); ?>
+                     <?php echo inputElement("govt_id", $gid, false, 'file'); ?>
+                  </div>
+                  <div class="row mb-3">
+                     <?php echo inputElement("interest", $ist, true, 'text', $cmr_result->interest); ?>
                   </div>
 
 
                   <div class="row mb-3">
-                     <?php echo inputElement('source', 'How did you hear about the Stockvell platform?', true, 'textarea', $result->source); ?>
+                     <?php echo inputElement("source", $src, true, 'textarea', $cmr_result->source); ?>
                   </div>
 
-                  <button type="submit" name="submit" class="btn btn-primary">Update</button>
+                  <button type="submit" name="member_update_submit" class="btn btn-primary"><?= __("Update"); ?></button>
                </form>
-               <!-- Form end  -->
+               <!-- Signup Form end  -->
             </div>
             <div class="content my-pack-content d-none">
                <h1 class="h1 text-center"><?= __("All of my pack!") ?></h1>

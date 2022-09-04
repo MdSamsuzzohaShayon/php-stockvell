@@ -26,6 +26,9 @@ header {
 .w-full{
   width: 100% !important;
 }
+.w-fit{
+  width: fit-content;
+}
 
 .mobile-menu {
   width: 100%;
@@ -42,7 +45,7 @@ header {
       object-position: center;
     }
     .content {
-      height: 100%;
+      min-height: $min_height_of_the_page ;
     }
   }
 
@@ -90,14 +93,31 @@ header {
 .signup {
   .section-1 {
     margin: $section_gap;
+    .row-no-input{
+      margin-left: $row_no_input_margin;
+    }
   }
 }
 .login{
   min-height: $min_height_of_the_page ;
   .section-1{
     margin: $section_gap;
+    .row-no-input{
+      margin-left: $row_no_input_margin;
+    }
   }
 }
+
+.forget_password{
+  min-height: $min_height_of_the_page ;
+  .section-1{
+    margin: $section_gap;
+    .row-no-input{
+      margin-left: $row_no_input_margin;
+    }
+  }
+}
+
 
 .admin{
   min-height: $min_height_of_the_page ;

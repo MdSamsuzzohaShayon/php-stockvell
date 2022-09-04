@@ -46,7 +46,14 @@ $err_arr = $err_handler->setCommonErrors($error);
           echo inputElement('password', $password, false, 'password'); 
           ?>
         </div>
-        <button type="submit" name="member_login_submit" class="btn btn-primary"><?= __("Login"); ?></button>
+        <div class="row row-no-input mb-3">
+          <button type="submit" name="member_login_submit" class="btn btn-primary w-fit"><?= __("Login"); ?></button>
+          <a href="/index.php" class="btn btn-danger w-fit ms-3"><?= __("Cancel"); ?></a>
+        </div>
+        <div class="row row-no-input">
+          <a class="p-0" href="/forget_password.php"><?= __("Forgot Password?"); ?></a>
+          <a class="p-0" href="/signup.php"><?= __("Do not have an account?"); ?></a>
+        </div>
       </form>
     </div>
   </section>

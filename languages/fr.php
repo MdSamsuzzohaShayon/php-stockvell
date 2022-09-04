@@ -28,6 +28,19 @@ $lang = [
     "Interest (Optional comma-separated list)" => "Intérêts (liste facultative séparée par des virgules)",
     "Government ID*" => "Pièce d'identité gouvernementale*",
     'How did you hear about the Stockvell platform? (Optional)' => "Comment avez-vous entendu parler de la plateforme Stockvell ? (Optionnel)",
+    "Cancel" => "Annuler",
+    "Already have an account?" => "Vous avez déjà un compte?",
+    "Forgot Password?" => "Mot de passe oublié?",
+    "Do not have an account?" => "Vous n'avez pas de compte?",
+    
+    
+    // Forget password page
+    "Recover your account" => "Récupérer votre compte",
+    "Follow the process and do not reload the page during the process" => "Suivez le processus et ne rechargez pas la page pendant le processus",
+    "Search" => "Chercher",
+    "Use phone number" => "Utiliser le numéro de téléphone",
+    "Use email address" => "Utiliser l'adresse e-mail",
+
 
     // Dashboard page
     "Welcome to stockvell" => "Bienvenue à stockvell",

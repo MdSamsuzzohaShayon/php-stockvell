@@ -6,6 +6,7 @@ $ROOT = $_SERVER['DOCUMENT_ROOT'];
 include $ROOT . "/config/database.php";
 include $ROOT . "/classes/stockvell.classes.php";
 include $ROOT . "/classes/member.classes.php";
+include $ROOT . "/classes/admin.classes.php";
 
 
 $stockvellPack = new Stockvell(null, null);

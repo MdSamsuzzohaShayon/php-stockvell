@@ -1,22 +1,72 @@
 # Stockvell credit system
 
- - [Live Preview](stockvell_stockvell.allinone-office.com)
+ - [Live Preview](stockvell.allinone-office.com)
 
 ### Development
+ - Unique member phone number (signup, database)
  - Remove all space from agreement while creting stockvell pack
- - Signup image upload handler
+ - Signup image upload handler -> rename file
  - Display all stockvell for publics
  - Create all classes according to database table (1. stockvell, 2.members, 3.admins, 4.stockvell_to_member)
  - Working stock member leader relationship (many to many)
  - Dynamic input field 😎
- - Many to many relationship for all members in stockvell
+ - Many to many relationship for all members in stockvell 😎
  - Display signup error message 😎
- - Database migration
+ - Database migration 😎
  - TinyMCE || CK Editor text editor for stockvell agreement pack 😎
  - Remove files like login-con and signup-com 😎
  - Add Database.classes.php into another file 😎
  - Create dashboard for members (Multiple tabs for update member profile, add stockvell pack, edit) 😎
  - Create admin panel for admins (list of stockvell) 😎
+
+### Modifications
+
+Registration Page
+ - City is missing 😎
+ - Country default is Benin 😎
+ - Phone default country code is +229 😎
+ - Government ID (png, jpeg, jpg or PDF only) 😎
+ - Button to cancel is missing
+
+
+Login Page
+ - Use Phone/Email to login (to give both options to members)
+ - Forgot Password link is missing (to reset password)
+
+Member Dashboard :
+Ideally, a simple member can create a Stockvell Pack but he must be approved as Leader of the Pack before the pack become visible to others to join. I am not sure how technically it will be possible, but please suggest some possibilities so that a simple member does not create a Pack (only A LEADER or AN ADMIN can create a Pack). A simple must apply to be a Leader once he creates a Pack. To apply as LEADER, the simple member submit a proof of address, and Government ID.
+And as leader, he will be able to define next member to withdraw funds (withdrawal can be random or first come, first served)
+Define the number of people is missing (can be dropdown from 02 to max 100)
+ - Payment frequency (dropdown ??)
+ - Withdrawal frequency (dropdown ??)
+ - Generate a share link that members can use to share in their social networks 
+
+Error Message
+When member Creates Stockvell page and did NOT fill out all the fields, he got he following error appear:
+Not Found
+The requested URL was not found on this server.
+Additionally, a 404 Not Found error was encountered while trying to use an ErrorDocument to handle the request.
+http://stockvell.allinone-office.com/dasboard.php?error=emptyinput
+
+Can you block the submission when a field is empty so that it does not show that error
+
+Admin Page:
+ - Cannot view Government ID for now
+ - Cannot edit Member details
+Saw 2 leaders for one pack (December pack) ; this pack was created by a member. Normally, it is 1 leader for each Pack. In other words, 01 Pack has only ONE leader
+Add a pack is not working currently
+ - Admin profile is missing (change admin details, and password)
+
+
+Others
+Languages : I can help you for the translation text in French for some parts. Just let me know how to do that
+
+
+These are the general remarks we have for now.
+Overall, we are satisfied with your work and please let’s open the new contract as we agree. I will accept and send the payment for the second part so that you can continue.
+
+
+Many thanks
 
 
 ### Planning
@@ -54,8 +104,8 @@ He fills in the registration form with the following information:
  - Gender (male or female)
  - Profession
  - Interest
- - City
  - Country (default Benin Republic)
+ - City
  - Government ID (file upload)
  - How do you hear about the Stockvell platform? (Text area)
  - Terms and conditions and Privacy policy: (check box to accept the terms)
@@ -112,6 +162,10 @@ Dominant - #C99127, Complementary - #809130, Accent - #2F4858, white - #ffffff, 
 ### Async database
  - SQLAlchemy doesn't have compatibility for using await directly,
  - [Ecommerce API with tortoise orm(important)](https://github.com/Princekrampah/learningFastAPI/blob/master/shoppingAPI/models.py)
+
+### Composer
+ - [docs](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos)
+ - [Packagist got get all packages](https://packagist.org/)
 
 
 ### php functions
@@ -179,65 +233,65 @@ Dominant - #C99127, Complementary - #809130, Accent - #2F4858, white - #ffffff, 
   - [Many to many relationship](https://www.vultr.com/docs/using-many-to-many-sql-relationships-and-intermediate-tables/), [m-to-m](https://stackoverflow.com/questions/2923809/many-to-many-relationships-examples), [m-to-m](https://dba.stackexchange.com/questions/151904/mapping-many-to-many-relationship), 
 #### Stockvell relationship 
  - Insert a member and a stockvell (create a stockvell and add a member to it)
- ```
- INSERT INTO stockvell_to_member(stockvell_id, member_id) VALUES (5, 9);
- INSERT INTO stockvell_to_member(stockvell_id, member_id) VALUES (6, 9);
- ```
+  ```
+  INSERT INTO stockvell_to_member(stockvell_id, member_id) VALUES (5, 9);
+  INSERT INTO stockvell_to_member(stockvell_id, member_id) VALUES (6, 9);
+  ```
  - Populate from relational table. Get all the members of a stockvell pack. [Tutorial wds](https://www.youtube.com/watch?v=p3qvj9hO_Bo), [tutorial traversy media](https://www.youtube.com/watch?v=9ylj9NR0Lcg&t=3640s)
- ```
- SELECT members.id, members.firstname FROM stockvell_to_member LEFT JOIN members
- ON stockvell_to_member.member_id = members.id
- WHERE stockvell_to_member.stockvell_id = '6';
- ```
+  ```
+  SELECT members.id, members.firstname FROM stockvell_to_member LEFT JOIN members
+  ON stockvell_to_member.member_id = members.id
+  WHERE stockvell_to_member.stockvell_id = '6';
+  ```
 
  - Get all the stockvell that a person member of
- ```
- SELECT stockvells.id, stockvells.name, stockvells.status, stockvells.category FROM stockvell_to_member 
- LEFT JOIN stockvells
- ON stockvell_to_member.stockvell_id = stockvells.id
- WHERE stockvell_to_member.member_id = 6;
- ```
+  ```
+  SELECT stockvells.id, stockvells.name, stockvells.status, stockvells.category FROM stockvell_to_member 
+  LEFT JOIN stockvells
+  ON stockvell_to_member.stockvell_id = stockvells.id
+  WHERE stockvell_to_member.member_id = 6;
+  ```
  - Get all collumns of both table - **Get stockvell with leader**, [tutorial](https://www.youtube.com/watch?v=bPeQHlmfPPk&list=PL0b6OzIxLPbzf12lu5etX_vjN-eUxgxnr&index=21)
- ```
- // INNER JOIN and JOIN both are same
- // Where both table has same properties we could "ON" to join table
- SELECT * FROM stockvells INNER JOIN members ON stockvells.leader_id = members.id;
- // Using name allies
- SELECT * FROM stockvells s INNER JOIN members m ON s.leader_id = m.id;
- // Select specific collumns from both table
- SELECT s.id, s.name, s.goal, s.category, m.firstname, m.email FROM stockvells s INNER JOIN members m ON s.leader_id = m.id;
- // We can also use WHERE clause here
- SELECT s.id, s.name, s.goal, s.category, m.firstname, m.email, m.gender FROM stockvells s INNER JOIN members m ON s.leader_id = m.id WHERE gender='male';
- // Order by for making it ascending or descending order according to specific column 
- SELECT s.id, s.name, s.goal, s.category, m.firstname, m.email, m.gender FROM stockvells s JOIN members m ON s.leader_id = m.id WHERE gender='male' ORDER BY m.firstname;
- ```
+  ```
+  // INNER JOIN and JOIN both are same
+  // Where both table has same properties we could "ON" to join table
+  SELECT * FROM stockvells INNER JOIN members ON stockvells.leader_id = members.id;
+  // Using name allies
+  SELECT * FROM stockvells s INNER JOIN members m ON s.leader_id = m.id;
+  // Select specific collumns from both table
+  SELECT s.id, s.name, s.goal, s.category, m.firstname, m.email FROM stockvells s INNER JOIN members m ON s.leader_id = m.id;
+  // We can also use WHERE clause here
+  SELECT s.id, s.name, s.goal, s.category, m.firstname, m.email, m.gender FROM stockvells s INNER JOIN members m ON s.leader_id = m.id WHERE gender='male';
+  // Order by for making it ascending or descending order according to specific column 
+  SELECT s.id, s.name, s.goal, s.category, m.firstname, m.email, m.gender FROM stockvells s JOIN members m ON s.leader_id = m.id WHERE gender='male' ORDER BY m.firstname;
+  ```
  - Left join returns all records from the left table and the match record from the right table [tutorial](https://www.youtube.com/watch?v=sEjnXJOytzc&list=PL0b6OzIxLPbzf12lu5etX_vjN-eUxgxnr&index=22)
 
-```
-// bring all records from stockvell_to_member (left table), does not matter it matches with foreign key member id or not.
-SELECT * FROM stockvell_to_member LEFT JOIN members ON stockvell_to_member.member_id = members.id;
-// here left table is stockvell_to_member
-SELECT sm.id, sm.stockvell_id, sm.member_id, m.firstname, m.email FROM stockvell_to_member sm LEFT JOIN members m ON sm.member_id = m.id;
-// here right table is members - this will display all the columns of right table (no matter stockvell_to_member has a relationship or not)
-SELECT sm.id, sm.stockvell_id, sm.member_id, m.firstname, m.email FROM stockvell_to_member sm RIGHT JOIN members m ON sm.member_id = m.id;
-```
+  ```
+  // bring all records from stockvell_to_member (left table), does not matter it matches with foreign key member id or not.
+  SELECT * FROM stockvell_to_member LEFT JOIN members ON stockvell_to_member.member_id = members.id;
+  // here left table is stockvell_to_member
+  SELECT sm.id, sm.stockvell_id, sm.member_id, m.firstname, m.email FROM stockvell_to_member sm LEFT JOIN members m ON sm.member_id = m.id;
+  // here right table is members - this will display all the columns of right table (no matter stockvell_to_member has a relationship or not)
+  SELECT sm.id, sm.stockvell_id, sm.member_id, m.firstname, m.email FROM stockvell_to_member sm RIGHT JOIN members m ON sm.member_id = m.id;
+  ```
 - MySQL JOIN Multiple Tables - **Get stockvells with all of their members**. [Tutorial](https://www.youtube.com/watch?v=dkY-KvFtNFM&list=PL0b6OzIxLPbzf12lu5etX_vjN-eUxgxnr&index=24)
-```
-// Getting all records from stockvell_to_member
-SELECT sm.id, s.name, m.firstname FROM stockvell_to_member sm INNER JOIN members m ON sm.member_id = m.id INNER JOIN stockvells s ON sm.stockvell_id=s.id;
-```
+  ```
+  // Getting all records from stockvell_to_member
+  SELECT sm.id, s.name, m.firstname FROM stockvell_to_member sm INNER JOIN members m ON sm.member_id = m.id INNER JOIN stockvells s ON sm.stockvell_id=s.id;
+  ```
 
 - "GROUP BY" clause is used in conjuction with the select statement and aggregate functions to group together by common column value.
-```
-// get all stockvells and their total member
-SELECT member_id, COUNT(member_id) FROM stockvell_to_member GROUP BY member_id;
-// Change table header name
-SELECT member_id, COUNT(member_id) AS total_members  FROM stockvell_to_member GROUP BY member_id;
-// Use where and "join" before "group by" and "order by" after "group by"
-SELECT s.name, COUNT(sm.member_id) AS total_members  FROM stockvell_to_member sm INNER JOIN stockvells s ON sm.member_id = s.id WHERE s.payment <= 200 GROUP BY sm.member_id ORDER BY COUNT(sm.member_id) DESC;
-// approved Working query
-SELECT s.name, sm.stockvell_id, COUNT(sm.stockvell_id) as totel_members FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id=s.id GROUP BY sm.stockvell_id;
-```
+  ```
+  // get all stockvells and their total member
+  SELECT member_id, COUNT(member_id) FROM stockvell_to_member GROUP BY member_id;
+  // Change table header name
+  SELECT member_id, COUNT(member_id) AS total_members  FROM stockvell_to_member GROUP BY member_id;
+  // Use where and "join" before "group by" and "order by" after "group by"
+  SELECT s.name, COUNT(sm.member_id) AS total_members  FROM stockvell_to_member sm INNER JOIN stockvells s ON sm.member_id = s.id WHERE s.payment <= 200 GROUP BY sm.member_id ORDER BY COUNT(sm.member_id) DESC;
+  // approved Working query
+  SELECT s.name, sm.stockvell_id, COUNT(sm.stockvell_id) as totel_members FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id=s.id GROUP BY sm.stockvell_id;
+  ```
 
 
 - Sub query or nested query (Works with insert, update, delete, and select query). [tutorial](https://www.youtube.com/watch?v=VxiF_MgePL8&list=PL0b6OzIxLPbzf12lu5etX_vjN-eUxgxnr&index=26)

@@ -27,7 +27,6 @@ mobileExpandMenuIcon.addEventListener("click", (meme) => {
   expanded = !expanded;
 });
 
-
 /**
  * @click event for changing sidebar element on click
  */
@@ -109,13 +108,23 @@ function sidebarElementToggle(allMenuItems, allContent) {
 }
 
 /**
+ * @page signup
+ * Select mobile number
+ */
+if (window.location.pathname === "/signup.php" || window.location.pathname === "/signup/") {
+  countryCodePrefixForPhone();
+}
+
+/**
  * @page dashboard
  * Toggle content for dashboard sidebar menu item
  */
-if (window.location.pathname === "/dashboard.php") {
+if (window.location.pathname === "/dashboard.php" || window.location.pathname === "/dashboard/") {
   const allMenuItems = document.querySelectorAll(".menu-item");
   const allContent = document.querySelectorAll(".content");
   if (allMenuItems && allContent) sidebarElementToggle(allMenuItems, allContent);
+
+  countryCodePrefixForPhone();
 
   // Work with ck editor
   ClassicEditor.create(document.querySelector("#agreement")).catch((error) => {
@@ -127,11 +136,82 @@ if (window.location.pathname === "/dashboard.php") {
  * @page admin
  * Toggle content for dashboard sidebar menu item
  */
-if (window.location.pathname === "/admin.php") {
+if (window.location.pathname === "/admin.php" || window.location.pathname === "/admin/") {
   const logedinContent = document.querySelector(".section-2");
   if (logedinContent) {
     const allMenuItems = document.querySelectorAll(".menu-item");
     const allContent = document.querySelectorAll(".content");
     if (allMenuItems && allContent) sidebarElementToggle(allMenuItems, allContent);
   }
+}
+
+// recover-via-email
+/**
+ * @page admin
+ * Toggle content for email and phone recover form
+ */
+if (window.location.pathname === "/forget_password.php" || window.location.pathname === "/forget_password/") {
+  const recoverBtnEmail = document.getElementById("recover-via-email");
+  const recoverBtnPhone = document.getElementById("recover-via-phone");
+  const recoverPhoneForm = document.querySelector(".phone-form");
+  const recoverEmailForm = document.querySelector(".email-form");
+  const allFormContent = document.querySelectorAll(".form-content");
+
+  recoverBtnEmail.addEventListener("click", (rbee) => toggleForm(rbee, "email"));
+  recoverBtnPhone.addEventListener("click", (rbee) => toggleForm(rbee, "phone"));
+
+  function toggleForm(tfe, content) {
+    tfe.preventDefault();
+    allFormContent.forEach((afc) => {
+      if (afc.classList.contains("d-block")) {
+        afc.classList.remove("d-block");
+        afc.classList.add("d-none");
+      }
+    });
+    if (content === "email") {
+      if (recoverEmailForm.classList.contains("d-none")) {
+        recoverEmailForm.classList.remove("d-none");
+        recoverEmailForm.classList.add("d-block");
+      }
+    } else if (content === "phone") {
+      if (recoverPhoneForm.classList.contains("d-none")) {
+        recoverPhoneForm.classList.remove("d-none");
+        recoverPhoneForm.classList.add("d-block");
+      }
+    }
+  }
+}
+
+/**
+ * @extra function 1
+ */
+function countryCodePrefixForPhone() {
+  const phonePrefix = document.getElementById("phone-prefix");
+  const countryCodeInput = document.getElementById("phone-code-input");
+  const phoneInput = document.getElementById("phone-hidden-input");
+  const countryInput = document.getElementById("country");
+
+  const selectedCountry = countryInput.querySelector("[selected]");
+
+  const pattern = /\W\d+/;
+  let country_code = selectedCountry.value.toString().match(pattern)[0];
+  phonePrefix.textContent = country_code;
+  let formattedPhone = null;
+  let phoneBase = countryCodeInput.value;
+
+  // Changing code
+  countryInput.addEventListener("change", (cie) => {
+    country_code = cie.currentTarget.value.toString().match(pattern)[0];
+    phonePrefix.textContent = country_code;
+    if (phoneBase) {
+      formattedPhone = country_code.slice(-1);
+      phoneInput.value = formattedPhone + phoneBase;
+    }
+  });
+
+  countryCodeInput.addEventListener("change", (ccie) => {
+    formattedPhone = country_code.slice(-1);
+    phoneBase = ccie.currentTarget.value;
+    phoneInput.value = formattedPhone + phoneBase;
+  });
 }
