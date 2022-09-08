@@ -1,8 +1,8 @@
 <?php
 session_start(); // In every single page we should start our session at the top of our code
-$member_email = $_SESSION['member_email'];
-$member_id = $_SESSION['member_id'];
-if (!isset($member_email) && !isset($_SESSION['admin_id'])) {
+// $member_email = $_SESSION['member_email'];
+// $member_id = $_SESSION['member_id'];
+if (!isset($_SESSION['member_id']) && !isset($_SESSION['admin_id'])) {
     header("Location: /login.php");
     exit();
 }

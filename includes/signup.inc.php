@@ -1,9 +1,15 @@
 <?php
+$ROOT = $_SERVER['DOCUMENT_ROOT'];
+require_once($ROOT . "/vendor/autoload.php");
+use Models\Signup;
+
 if (isset($_POST["member_signup_submit"])) {
   /**
    * @var getting all inputs
    */
-  $ROOT = $_SERVER['DOCUMENT_ROOT'];
+  // require_once($ROOT . '/vendor/autoload.php');
+
+
 
   $firstname = $_POST["firstname"];
   $surname = $_POST["surname"];
@@ -33,18 +39,15 @@ if (isset($_POST["member_signup_submit"])) {
   //   'source' => $source,
   // );
 
-  // echo "gid - " . $_FILES["govt_id"]["size"];
-  // // echo json_encode($input_list);
+  // // echo "gid - " . $_FILES["govt_id"]["size"];
+  // echo json_encode($input_list);
   // exit();
 
+  // require_once($ROOT . '/config/Database.php');
+  // require_once($ROOT . '/Models/Signup.php');
 
-  include $ROOT . "/config/database.php";
-  include $ROOT . "/classes/member.classes.php";
-
-  $signup = new SignupController($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city);
+  $signup = new Signup($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city);
   $signup->signupMember();
 
-  header("location: ../login.php");
+  header("location: /login.php");
 }
-
-

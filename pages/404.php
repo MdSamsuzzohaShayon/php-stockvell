@@ -1,5 +1,7 @@
 <?php
+session_start(); // In every single page we should start our session at the top of our code
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
+require_once($ROOT . "/config/lang.php");
 require_once($ROOT."/layouts/header.php");
 ?>
 

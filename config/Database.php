@@ -1,4 +1,5 @@
 <?php
+namespace Config;
 
 class Database{
   protected function connect(){
@@ -6,12 +7,12 @@ class Database{
       $username = "shayon";
       $password = "Test1234";
       $db_name = "stockvell_finance_db";
-      $db_host= "mysql_db";
-      $conn = new PDO("mysql:host=$db_host;dbname=$db_name", $username, $password);
+      $db_host= "localhost";
+      $conn = new \PDO("mysql:host=$db_host;dbname=$db_name", $username, $password);
       // echo $conn;
       // exit();
       return $conn;
-    } catch (PDOException $e) {
+    } catch (\PDOException $e) {
       echo "Error: " . $e->getMessage(). "<br />";
       die();
     }

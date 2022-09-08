@@ -1,4 +1,5 @@
 <?php
+namespace Utils;
 
 /**
  * @validate all inputs and show all errors
@@ -80,7 +81,7 @@ class ErrorHandler
         if (count($this->errors) > 0) {
             foreach ($this->errors as $err) {
                 $err_msg .= "<div class='err-msg d-flex align-items-center'>
-                <img src='public/icons/error.svg' width='25' alt='error-message' class='error-message mx-3'>
+                <img src='/public/icons/error.svg' width='25' alt='error-message' class='error-message mx-3'>
                 <p class='m-0'>$err</p>
                 </div>";
             }

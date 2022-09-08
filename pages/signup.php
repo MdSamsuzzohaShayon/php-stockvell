@@ -1,7 +1,6 @@
 <?php
 session_start(); // In every single page we should start our session at the top of our code
-$member_email = $_SESSION['member_email'];
-if (isset($member_email)) {
+if (isset($_SESSION['member_email'])) {
   header("Location: /dashboard.php");
   exit();
 }
@@ -11,17 +10,25 @@ if (isset($_SESSION['admin_id'])) {
   exit();
 }
 
+
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
+require_once($ROOT . "/vendor/autoload.php");
 require_once($ROOT . "/config/lang.php");
 require_once($ROOT . "/layouts/header.php");
 require_once($ROOT . "/config/option-list.php");
-require_once($ROOT . "/classes/input.classes.php"); // Error handler
+// require_once($ROOT . "/Models/input.classes.php");
 require_once($ROOT . "/utils/input-fields.php");
 
-$error = $_GET["error"];
+use Utils\ErrorHandler;
+
+$err_arr = [];
 $err_handler = new ErrorHandler();
-$err_arr = $err_handler->setCommonErrors($error);
+if(isset($_GET["error"])){
+  $err_arr = $err_handler->setCommonErrors($_GET["error"]);
+}
+
 ?>
+
 
 
 
@@ -85,10 +92,10 @@ $err_arr = $err_handler->setCommonErrors($error);
         </div>
         <div class="row row-no-input mb-3 d-flex justify-content-start">
           <button type="submit" name="member_signup_submit" class="btn btn-primary w-fit"><?= __("Signup"); ?></button>
-          <a href="/index.php" class="btn btn-danger w-fit ms-3"><?= __("Cancel"); ?></a>
+          <a href="/" class="btn btn-danger w-fit ms-3"><?= __("Cancel"); ?></a>
         </div>
         <div class="row row-no-input">
-          <a class="p-0" href="/login.php"><?= __("Already have an account?"); ?></a>
+          <a class="p-0" href="/login"><?= __("Already have an account?"); ?></a>
         </div>
       </form>
       <!-- Signup Form end  -->

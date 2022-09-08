@@ -2,11 +2,15 @@
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
 
 
+require_once($ROOT . "/vendor/autoload.php");
+// include $ROOT . "/config/database.php";
+// include $ROOT . "/classes/stockvell.classes.php";
+// include $ROOT . "/classes/member.classes.php";
+// include $ROOT . "/classes/admin.classes.php";
 
-include $ROOT . "/config/database.php";
-include $ROOT . "/classes/stockvell.classes.php";
-include $ROOT . "/classes/member.classes.php";
-include $ROOT . "/classes/admin.classes.php";
+use Models\Stockvell\Stockvell;
+use Models\Stockvell\AdminStockvellForms;
+use Models\Member\MemberForms;
 
 
 $stockvellPack = new Stockvell(null, null);
@@ -33,8 +37,10 @@ if(isset($_POST["approve_stockvell"])){
 
 
 if(isset($_POST["verify_member"])){
-    $stockvell_form = new MemberForms();
+    $member_form = new MemberForms();
     $member_id= $_GET["member_id"];
-    // verify
-    $stockvell_form->verifyByAdmin($member_id);
+    // echo ($member_id);
+    // exit();
+    // // verify
+    $member_form->verifyByAdmin($member_id);
 }

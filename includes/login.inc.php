@@ -1,14 +1,18 @@
 <?php
+
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
+require_once($ROOT . "/vendor/autoload.php");
+use Models\Login;
+
 
 if(isset($_POST["member_login_submit"])){
   $email = $_POST["email"];
   $password = $_POST["password"];
 
-  include $ROOT . "/config/database.php";
-  include $ROOT . "/classes/member.classes.php";
+  // include $ROOT . "/config/Database.php";
+  // include $ROOT . "/Models/Login.php";
 
-  $login = new LoginController($email, $password);
+  $login = new Login($email, $password);
   $login->loginMember();
 
   header("location: /dashboard.php");
@@ -18,10 +22,10 @@ if(isset($_POST["login_admin_submit"])){
   $admin_email = $_POST["email"];
   $admin_password = $_POST["password"];
 
-  include $ROOT . "/config/database.php";
-  include $ROOT . "/classes/member.classes.php";
+  // include $ROOT . "/config/Database.php";
+  // include $ROOT . "/Models/Login.php";
 
-  $login = new LoginController($admin_email , $admin_password);
+  $login = new Login($admin_email , $admin_password);
   $login->loginAdmin();
 
   header("location: /dashboard.php");

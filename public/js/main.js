@@ -111,7 +111,7 @@ function sidebarElementToggle(allMenuItems, allContent) {
  * @page signup
  * Select mobile number
  */
-if (window.location.pathname === "/signup.php" || window.location.pathname === "/signup/") {
+if (window.location.pathname === "/signup.php" || window.location.pathname === "/signup/" || window.location.pathname === "/signup") {
   countryCodePrefixForPhone();
 }
 
@@ -119,24 +119,27 @@ if (window.location.pathname === "/signup.php" || window.location.pathname === "
  * @page dashboard
  * Toggle content for dashboard sidebar menu item
  */
-if (window.location.pathname === "/dashboard.php" || window.location.pathname === "/dashboard/") {
+if (window.location.pathname === "/dashboard.php" || window.location.pathname === "/dashboard/" || window.location.pathname === "/dashboard") {
   const allMenuItems = document.querySelectorAll(".menu-item");
   const allContent = document.querySelectorAll(".content");
   if (allMenuItems && allContent) sidebarElementToggle(allMenuItems, allContent);
 
   countryCodePrefixForPhone();
 
-  // Work with ck editor
-  ClassicEditor.create(document.querySelector("#agreement")).catch((error) => {
-    console.error(error);
-  });
+  const agreement = document.getElementById('agreement');
+  if(agreement){
+    // Work with ck editor
+    ClassicEditor.create(agreement).catch((error) => {
+      console.error(error);
+    });
+  }
 }
 
 /**
  * @page admin
  * Toggle content for dashboard sidebar menu item
  */
-if (window.location.pathname === "/admin.php" || window.location.pathname === "/admin/") {
+if (window.location.pathname === "/admin.php" || window.location.pathname === "/admin/" || window.location.pathname === "/admin") {
   const logedinContent = document.querySelector(".section-2");
   if (logedinContent) {
     const allMenuItems = document.querySelectorAll(".menu-item");
@@ -150,7 +153,7 @@ if (window.location.pathname === "/admin.php" || window.location.pathname === "/
  * @page admin
  * Toggle content for email and phone recover form
  */
-if (window.location.pathname === "/forget_password.php" || window.location.pathname === "/forget_password/") {
+if (window.location.pathname === "/forget_password.php" || window.location.pathname === "/forget_password/" || window.location.pathname === "/forget_password") {
   const recoverBtnEmail = document.getElementById("recover-via-email");
   const recoverBtnPhone = document.getElementById("recover-via-phone");
   const recoverPhoneForm = document.querySelector(".phone-form");

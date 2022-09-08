@@ -18,21 +18,21 @@ $ROOT = $_SERVER['DOCUMENT_ROOT'];
       <?php
       if (isset($_SESSION['member_id'])) {
       ?>
-        <li class="mx-md-3 list-group-item"> <a href="/packs.php" class="nav-link text-secondary"><?= __("Packs"); ?></a> </li>
-        <li class="mx-md-3 list-group-item"><a href="/dashboard.php" class="nav-link text-secondary"><?php echo $_SESSION['member_username']; ?></a></li>
+        <li class="mx-md-3 list-group-item"> <a href="/packs" class="nav-link text-secondary"><?= __("Packs"); ?></a> </li>
+        <li class="mx-md-3 list-group-item"><a href="/dashboard" class="nav-link text-secondary"><?php echo $_SESSION['member_username']; ?></a></li>
         <li class="mx-md-3 list-group-item"> <a href="/includes/logout.inc.php" class="btn btn-outline-danger"><?= __("Logout") ?> </a> </li>
       <?php
       } elseif (isset($_SESSION['admin_id'])) {
       ?>
-        <li class="mx-md-3 list-group-item"> <a href="/packs.php" class="nav-link text-secondary"><?= __("Packs"); ?></a> </li>
-        <li class="mx-md-3 list-group-item"><a href="/admin.php" class="nav-link text-secondary"><?php echo $_SESSION['admin_username']; ?></a></li>
+        <li class="mx-md-3 list-group-item"> <a href="/packs" class="nav-link text-secondary"><?= __("Packs"); ?></a> </li>
+        <li class="mx-md-3 list-group-item"><a href="/admin" class="nav-link text-secondary"><?php echo $_SESSION['admin_username']; ?></a></li>
         <li class="mx-md-3 list-group-item"> <a href="/includes/logout.inc.php" class="btn btn-outline-danger"><?= __("Logout") ?> </a> </li>
       <?php
       } else {
       ?>
-        <li class="mx-md-3 list-group-item"> <a href="/index.php#how-it-work" class="nav-link text-secondary"><?= __("How it works?") ?></a> </li>
-        <li class="mx-md-3 list-group-item"> <a href="/login.php" class="nav-link text-secondary"><?= __("Login") ?></a> </li>
-        <li class="mx-md-3 list-group-item"> <a href="/signup.php" class="btn btn-outline-secondary"><?= __("Signup") ?></a> </li>
+        <li class="mx-md-3 list-group-item"> <a href="/#how-it-work" class="nav-link text-secondary"><?= __("How it works?") ?></a> </li>
+        <li class="mx-md-3 list-group-item"> <a href="/login" class="nav-link text-secondary"><?= __("Login") ?></a> </li>
+        <li class="mx-md-3 list-group-item"> <a href="/signup" class="btn btn-outline-secondary"><?= __("Signup") ?></a> </li>
       <?php } ?>
       <li class="mx-md-3 list-group-item">
         <div class="dropdown">
@@ -40,8 +40,8 @@ $ROOT = $_SERVER['DOCUMENT_ROOT'];
           <?= __("Lang") ?>
           </div>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/index.php?lang=fr">Français</a></li>
-            <li><a class="dropdown-item" href="/index.php?lang=en">English</a></li>
+            <li><a class="dropdown-item" href="/?lang=fr">Français</a></li>
+            <li><a class="dropdown-item" href="/?lang=en">English</a></li>
           </ul>
         </div>
       </li>

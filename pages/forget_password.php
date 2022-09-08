@@ -1,7 +1,6 @@
 <?php
 session_start(); // In every single page we should start our session at the top of our code
-$member_email = $_SESSION['member_email'];
-if (isset($member_email)) {
+if (isset($_SESSION['member_email'])) {
     header("Location: /dashboard.php");
     exit();
 }
@@ -15,12 +14,14 @@ if (isset($_SESSION['admin_id'])) {
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
 require_once($ROOT . "/config/lang.php");
 require_once($ROOT . "/layouts/header.php");
-require_once($ROOT . "/classes/input.classes.php");
+require_once($ROOT . "/Models/input.classes.php");
 require_once($ROOT . "/utils/input-fields.php");
 
-$error = $_GET["error"];
-$err_handler = new ErrorHandler();
-$err_arr = $err_handler->setCommonErrors($error);
+$err_arr = [];
+if (isset($_GET["error"])) {
+    $err_handler = new ErrorHandler();
+    $err_arr = $err_handler->setCommonErrors($_GET["error"]);
+}
 
 ?>
 
@@ -52,7 +53,7 @@ $err_arr = $err_handler->setCommonErrors($error);
             <form class="d-block email-form form-content" action="/includes/forget_password.inc.php" method="POST">
                 <div class="row mb-3">
                     <?php
-                        echo inputElement('email', 'Email*', true, 'email');
+                    echo inputElement('email', 'Email*', true, 'email');
                     ?>
                 </div>
                 <div class="row row-no-input mb-3">

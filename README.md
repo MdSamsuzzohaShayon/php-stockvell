@@ -26,7 +26,7 @@ Registration Page
  - Country default is Benin 😎
  - Phone default country code is +229 😎
  - Government ID (png, jpeg, jpg or PDF only) 😎
- - Button to cancel is missing
+ - Button to cancel is missing 😎
 
 
 Login Page
@@ -164,12 +164,13 @@ Dominant - #C99127, Complementary - #809130, Accent - #2F4858, white - #ffffff, 
  - [Ecommerce API with tortoise orm(important)](https://github.com/Princekrampah/learningFastAPI/blob/master/shoppingAPI/models.py)
 
 ### Composer
- - [docs](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos)
+ - [docs](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos), [tutorial](https://www.youtube.com/watch?v=xWgtKALpx9E)
  - [Packagist got get all packages](https://packagist.org/)
 
 
 ### php functions
    - filter_var
+   - [PHP Namespace Tutorial - Full PHP 8 Tutorial](https://www.youtube.com/watch?v=Jni9c0-NjrY), [Php OOP namespace](https://www.youtube.com/watch?v=YgUOSY581Wg)
 
 ### MySQL Database
 
@@ -300,4 +301,28 @@ Dominant - #C99127, Complementary - #809130, Accent - #2F4858, white - #ffffff, 
 
 ALTER TABLE vendors
 ADD COLUMN vendor_group INT NOT NULL;
+
+
+
+
+### Htaccess
+ - [htaccess file not works in LAMP](https://stackoverflow.com/questions/28217272/htaccess-file-not-works-in-lamp)
+ - [Redirect all to index.php using htaccess](https://stackoverflow.com/questions/18406156/redirect-all-to-index-php-using-htaccess)
+ - [The server encountered an internal error or misconfiguration and was unable to complete your request](https://stackoverflow.com/questions/6438475/the-server-encountered-an-internal-error-or-misconfiguration-and-was-unable-to-c)
+
+ - Change some code in `sudo nano /etc/apache2/sites-available/000-default.conf` to use htaccess
+  ```
+    <VirtualHost *:80>
+      ServerAdmin webmaster@localhost
+      DocumentRoot /var/www/html
+      ErrorLog ${APACHE_LOG_DIR}/error.log
+      CustomLog ${APACHE_LOG_DIR}/access.log combined
+      <Directory /var/www/html>
+        AllowOverride All
+      </Directory>
+    </VirtualHost>
+  ```
+
+
+  
 

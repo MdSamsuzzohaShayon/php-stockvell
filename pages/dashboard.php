@@ -1,8 +1,7 @@
 <?php
 session_start(); // In every single page we should start our session at the top of our code
-$member_email = $_SESSION['member_email'];
-$member_id = $_SESSION['member_id'];
-if (!isset($member_email)) {
+
+if (!isset($_SESSION['member_id'])) {
    header("Location: /login.php");
    exit();
 }
@@ -11,17 +10,30 @@ if (isset($_SESSION['admin_id'])) {
    exit();
 }
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
+
+$member_email = $_SESSION['member_email'];
+$member_id = $_SESSION['member_id'];
+
+
+require_once($ROOT . "/vendor/autoload.php");
 require_once($ROOT . "/config/lang.php");
 require_once($ROOT . '/layouts/header.php');
 // Check for session 
 require_once($ROOT . "/includes/dashboard.inc.php");
 require_once($ROOT . "/config/option-list.php");
-require_once($ROOT . "/utils/input-fields.php");
-require_once($ROOT . "/classes/input.classes.php");
+// require_once($ROOT . "/utils/input-fields.php");
+// require_once($ROOT . "/classes/input.classes.php");
 
-$error = $_GET["error"];
+use Utils\ErrorHandler;
+use Utils\InputField;
+
+$err_arr = [];
 $err_handler = new ErrorHandler();
-$err_arr = $err_handler->setCommonErrors($error);
+if (isset($_GET["error"])) {
+   $err_arr = $err_handler->setCommonErrors($_GET["error"]);
+}
+
+$input_field = new InputField();
 
 ?>
 
@@ -75,36 +87,55 @@ $err_arr = $err_handler->setCommonErrors($error);
                      $gid = __("Government ID*");
                      $src = __('How did you hear about the Stockvell platform? (Optional)');
 
-                     echo inputElement("firstname", $fn, false, 'text', $cmr_result->firstname);
+                     echo $input_field->inputText("firstname", $fn, false, "text", false, $cmr_result->firstname);
+                     echo $input_field->inputText("surname", $sn, false, "text", false, $cmr_result->surname);
                      ?>
-                     <?php echo inputElement("surname", $sn, false, 'text', $cmr_result->surname); ?>
                   </div>
                   <div class="row mb-3">
-                     <?php echo inputElement("email", $el, true, 'email', $cmr_result->email); ?>
+                     <?php
+                     echo $input_field->inputText("email", $el, true, "email", false, $cmr_result->email);
+                     ?>
                   </div>
                   <div class="row mb-3">
-                     <?php echo inputElement("password", $pw, false, 'password'); ?>
-                     <?php echo inputElement("password2", $cpw, false, 'password'); ?>
+                     <?php
+                     echo $input_field->inputText("password", $pw, false, "password", false);
+                     echo $input_field->inputText("password2", $pw, false, "password", false);
+                     ?>
+
                   </div>
                   <div class="row mb-3">
-                     <?php echo inputElement("country", $cy, false, 'select', $cmr_result->country, null, null, $countries_code); ?>
-                     <?php echo inputElement("phone", $pn, false, 'phone', $cmr_result->phone); ?>
+                     <?php
+                     echo $input_field->inputSelect("country", $cy, false, $cmr_result->country, $countries_code);
+                     echo $input_field->inputPhone("phone", $pn, false, false, $cmr_result->phone);
+                     ?>
                   </div>
                   <div class="row mb-3">
-                     <?php echo inputElement("city", $cty, false, 'text', $cmr_result->city); ?>
-                     <?php echo inputElement("gender", $gr, false, 'select', $cmr_result->gender, null, null, ["male", "female", "others"]); ?>
+                     <?php
+                     echo $input_field->inputText("city", $cty, false, "text", false, $cmr_result->city);
+                     echo $input_field->inputSelect("gender", $gr, false, $cmr_result->gender, ["male", "female", "others"]);
+                     ?>
                   </div>
                   <div class="row mb-3">
-                     <?php echo inputElement("profession", $pro, false, 'select', $cmr_result->profession, null, null, $professions); ?>
-                     <?php echo inputElement("govt_id", $gid, false, 'file'); ?>
+                     <?php
+                     echo $input_field->inputSelect("profession", $pro, false, $cmr_result->profession, $professions);
+                     // echo $input_field->inputFile("govt_id", $gid, false);
+                     ?>
+                     <div class="col-md-6 ">
+                        <label for="govt_id" class="form-label text-capitalize">Government ID*</label>
+                        <input type="file" name="govt_id" class="form-control text-primary bg-secondary border border-primary " id="govt_id">
+                     </div>
                   </div>
                   <div class="row mb-3">
-                     <?php echo inputElement("interest", $ist, true, 'text', $cmr_result->interest); ?>
+                     <?php
+                     echo $input_field->inputTextarea("interest", $ist, true, false, $cmr_result->interest);
+                     ?>
                   </div>
 
 
                   <div class="row mb-3">
-                     <?php echo inputElement("source", $src, true, 'textarea', $cmr_result->source); ?>
+                     <?php
+                     echo $input_field->inputTextarea("source", $src, true, false, $cmr_result->source);
+                     ?>
                   </div>
 
                   <button type="submit" name="member_update_submit" class="btn btn-primary"><?= __("Update"); ?></button>
@@ -228,19 +259,35 @@ $err_arr = $err_handler->setCommonErrors($error);
                <!-- Form start  -->
                <form action="/includes/dashboard.inc.php" method="POST">
                   <div class="row mb-3">
-                     <?php echo inputElement('name', 'Name*', false, 'text'); ?>
-                     <?php echo inputElement('goal', 'goal*', false, 'text'); ?>
+                     <?php // echo inputElement('name', 'Name*', false, 'text'); 
+                     $nm = __("Name*");
+                     $gl = __("Goal*");
+                     $pyt = __("Payment*");
+                     $pytf = __("Payment Frequency(days)*");
+                     $wdf = __("Withdraw Frequency(days)*");
+                     $ct = __("Category*");
+                     $agmt = __("You Must Write Agreement About This Stockvell Pack*");
+                     echo $input_field->inputText("name", $nm, false, "text", true);
+                     echo $input_field->inputText("goal", $gl, false, "text", true);
+                     ?>
+
                   </div>
                   <div class="row mb-3">
-                     <?php echo inputElement('payment', 'payment*', false, 'number'); ?>
-                     <?php echo inputElement('payment_frequency', 'payment frequency(days)*', false, 'number'); ?>
+                     <?php
+                     echo $input_field->inputText('payment', $pyt, false, 'number', true);
+                     echo $input_field->inputSelect("payment_frequency", $pytf, false, null, $freq_days);
+                     ?>
                   </div>
                   <div class="row mb-3">
-                     <?php echo inputElement('category', 'Category*', false, 'select', 'social', null, null, ["social", "professional", "investmant"]); ?>
-                     <?php echo inputElement('withdraw_frequency', 'Withdraw frequency(days)*', false, 'number'); ?>
+                     <?php
+                     echo $input_field->inputSelect("category", $ct, false, null, ["social", "professional", "investmant"]);
+                     echo $input_field->inputSelect("withdraw_frequency", $wdf, false, null, $freq_days);
+                     ?>
                   </div>
                   <div class="row mb-3">
-                     <?php echo inputElement('agreement', 'You muct write agreenment about this stockvell pack*', true, 'textarea', null); ?>
+                     <?php 
+                     echo $input_field->inputTextarea("agreement", $agmt, true, true)
+                     ?>
                   </div>
 
 

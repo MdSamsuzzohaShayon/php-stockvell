@@ -1,8 +1,8 @@
 <?php
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
 
-include $ROOT . "/config/database.php";
-include $ROOT . "/classes/member.classes.php";
+require_once($ROOT . "/vendor/autoload.php");
+use Models\Member\MemberForms;
 
 
 if(isset($_POST["recover_via_email_submit"])){

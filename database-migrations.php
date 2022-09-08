@@ -1,6 +1,6 @@
 <?php
 // Delete this file in production
-include('./config/database.php');
+include('config/Database.php');
 
 class DatabaseMigrations extends Database
 {

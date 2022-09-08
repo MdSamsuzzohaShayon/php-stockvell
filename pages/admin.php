@@ -1,6 +1,6 @@
 <?php
 session_start(); // In every single page we should start our session at the top of our code
-if(isset($_SESSION['member_id'])){
+if (isset($_SESSION['member_id'])) {
    header("Location: /dashboard.php");
    exit();
 }
@@ -10,14 +10,23 @@ $logged_admin = false;
 if (isset($admin_id)) $logged_admin = true;
 
 // Check for session 
+require_once($ROOT . "/vendor/autoload.php");
 require_once($ROOT . "/config/lang.php");
 require_once($ROOT . "/layouts/header.php");
-require_once($ROOT . "/utils/input-fields.php");
-require_once($ROOT . "/classes/input.classes.php");
+// require_once($ROOT . "/utils/input-fields.php");
+// require_once($ROOT . "/classes/input.classes.php");
 
-$error = $_GET["error"];
+use Utils\ErrorHandler;
+use Utils\InputField;
+
+$err_arr = [];
 $err_handler = new ErrorHandler();
-$err_arr = $err_handler->setCommonErrors($error);
+if (isset($_GET["error"])) {
+   $err_arr = $err_handler->setCommonErrors($_GET["error"]);
+}
+
+
+$input_field = new InputField();
 ?>
 
 
@@ -87,10 +96,11 @@ $err_arr = $err_handler->setCommonErrors($error);
                               // id, firstname, surname, email, country, phone, gender, profession, interest, govt_id, source, role
 
                               foreach ($amr_result as $amr_key) {
-                                 # code...
+                                 # If not verified add a form to verify
                                  $verified_content = "<form class='p-0 m-0' action='/includes/admin.inc.php?member_id=" . $amr_key["id"] . "' method='post'>
-                                                         <button type='submit' name='verify_member' class='btn btn-primary'>Approve</button>  
+                                                         <button type='submit' name='verify_member' class='btn btn-warning'>Approve</button>  
                                                       </form>";
+                                 // If already verified show the text verified
                                  if (intval($amr_key['is_verified']) === 1) {
                                     $verified_content = "Verified";
                                  }
@@ -143,6 +153,7 @@ $err_arr = $err_handler->setCommonErrors($error);
                                  <th scope="col">Leader</th>
                                  <th scope="col">Total Members</th>
                                  <th scope="col">Withdraw Period</th>
+                                 <th scope="col">Action</th>
                               </tr>
                            </thead>
                            <tbody>
@@ -163,6 +174,7 @@ $err_arr = $err_handler->setCommonErrors($error);
                                           <td>" . $aasr_key["leader_id"] . "</td>
                                           <td>" . $aasr_key["totel_members"] . " </td>
                                           <td>" . $aasr_key["withdraw_frequency"] . "</td>
+                                          <td><a href='/pack_single/?stockvell_id=" . $aasr_key["id"] . "' class='btn btn-primary'>View</a></td>
                                        </tr>
                                     ";
                               }
@@ -248,8 +260,11 @@ $err_arr = $err_handler->setCommonErrors($error);
             <?php if (count($err_arr) > 0) echo $err_handler->displayErrors(); ?>
             <form action="/includes/login.inc.php" method="POST">
                <div class="row mb-3">
-                  <?php echo inputElement('email', 'Email', false, 'email'); ?>
-                  <?php echo inputElement('password', 'Password', false, 'password'); ?>
+                  <?php
+                  $password = __("Password");
+                  echo $input_field->inputText("email", "Email", false, "email", true);
+                  echo $input_field->inputText("password", $password, false, "password", true);
+                  ?>
                </div>
                <button type="submit" name="login_admin_submit" class="btn btn-primary">login</button>
             </form>

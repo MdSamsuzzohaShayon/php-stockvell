@@ -1,4 +1,6 @@
 <?php
+namespace Models\Stockvell;
+use Config\Database;
 class Stockvell extends Database
 {
     // private $member_email;
@@ -22,7 +24,7 @@ class Stockvell extends Database
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam('email', $this->member_email);
         $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_OBJ);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ);
         // var_dump($result);
         return $result;
     }
@@ -32,7 +34,7 @@ class Stockvell extends Database
         $sql = "SELECT id, firstname, surname, email, country, phone, gender, profession, interest, govt_id, source, is_verified, role FROM members";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $result;
     }
 
@@ -53,7 +55,7 @@ class Stockvell extends Database
             $stmt->bindParam('status', $status);
         }
         $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         return $result;
     }
@@ -70,7 +72,7 @@ class Stockvell extends Database
         $stockvell_stmt = $this->connect()->prepare($stockvell_sql);
         $stockvell_stmt->bindParam('stockvell_id', $stockvell_id);
         $stockvell_stmt->execute();
-        $stockvell_result = $stockvell_stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stockvell_result = $stockvell_stmt->fetchAll(\PDO::FETCH_ASSOC);
 
 
 
@@ -120,7 +122,7 @@ class Stockvell extends Database
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam('status', $status);
         $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         return $result;
     }
@@ -132,7 +134,7 @@ class Stockvell extends Database
         $stmt->bindParam('status', $status);
         $stmt->bindParam('member_id', $member_id);
         $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         return $result;
     }
@@ -146,7 +148,7 @@ class Stockvell extends Database
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam('status', $status);
         if ($stmt->execute()) {
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             return $result;
         }
         return [];
@@ -154,155 +156,8 @@ class Stockvell extends Database
 }
 
 
-class StockvellForms extends Database
-{
-
-    public function __construct($name, $goal, $payment, $payment_frequency, $category, $withdraw_frequency, $agreement)
-    {
-        // parent::__construct($member_email, $leader_id);
-        $this->leader_id = $_SESSION['member_id'];
-        $this->name = $name;
-        $this->goal = $goal;
-        $this->payment = $payment;
-        $this->payment_frequency = $payment_frequency;
-        $this->category = $category;
-        $this->withdraw_frequency = $withdraw_frequency;
-        $this->agreement = $agreement;
-    }
-
-
-
-    public function updateStockvell($stockvell_id, $input_list)
-    {
-        $cols = array();
-        // Remove blank inputs and password2
-        foreach ($input_list as $key => $val) {
-            if (!empty($val) && $key !== "password2")   $cols[] = "$key = '$val'";
-        }
-        $updateElement = implode(', ', $cols);
-
-
-        /// Update element 
-        $sql = "UPDATE stockvells SET $updateElement WHERE id=:stockvell_id";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam('stockvell_id', $stockvell_id);
-
-        if (!$stmt->execute()) {
-            header('Location: /admin.php?error=stmtfailed');
-            exit();
-        }
-
-        header('Location: /admin.php?error=none');
-    }
 
 
 
 
-    private function createStockvellPack()
-    {
-        $sql = "INSERT INTO stockvells(name, agreement, goal, category, status, payment, payment_frequency, withdraw_frequency, leader_id) VALUES (:name, :agreement, :goal, :category, :status, :payment, :payment_frequency, :withdraw_frequency, :leader_id)";
-        $stmt = $this->connect()->prepare($sql);
 
-        $stmt->bindParam('name', $this->name, PDO::PARAM_STR);
-        $stmt->bindParam('agreement', $this->agreement);
-        $stmt->bindParam('goal', $this->goal, PDO::PARAM_STR);
-        $stmt->bindParam('category', $this->category, PDO::PARAM_STR);
-        $status = "PENDING";
-        $stmt->bindParam('status', $status, PDO::PARAM_STR);
-        $stmt->bindParam('payment', intval($this->payment, 10), PDO::PARAM_INT);
-        $stmt->bindParam('payment_frequency', intval($this->payment_frequency, 10), PDO::PARAM_INT);
-        $stmt->bindParam('withdraw_frequency', intval($this->withdraw_frequency, 10), PDO::PARAM_INT);
-        $stmt->bindParam('leader_id', intval($this->leader_id, 10), PDO::PARAM_INT);
-
-        // echo json_encode(array(
-        //     "name" => $this->name,
-        //     "agreement" => $this->agreement,
-        //     "goal" => $this->goal,
-        //     "category" => $this->category,
-        //     "payment" => intval($this->payment, 10),
-        //     "payment_frequency" => intval($this->payment_frequency, 10),
-        //     "category" => $this->category,
-        //     "withdraw_frequency" => intval($this->withdraw_frequency, 10),
-        //     "leader_id" => intval($this->leader_id, 10),
-        // ));
-        // exit();
-
-
-        // make many to many relationship
-
-
-        try {
-            //code...
-            if (!$stmt->execute()) {
-                $stmt = null;
-                header("Location: /dashboard.php?error=stmtfailed");
-                exit();
-            }
-            // $stmt->execute();
-            // $stmt = null;
-            header("Location: /dashboard.php?error=none");
-        } catch (PDOException $e) {
-            //throw $th;
-            echo $e->getMessage();
-            exit();
-            header("Location: /dashboard.php?error=stmtfailed");
-        }
-    }
-
-    public function validateAndCreate()
-    {
-
-        if (empty($this->name) || empty($this->goal) || empty($this->payment) || empty($this->payment_frequency) || empty($this->category) || empty($this->withdraw_frequency) || empty($this->agreement)) {
-            header("Location: /dasboard.php?error=emptyinput");
-            exit();
-        }
-
-        $this->createStockvellPack();
-    }
-}
-
-
-
-class AdminStockvellForms extends Database
-{
-    public function approveStockvellByAdmin($stockvell_id, $input_list, $leader_id)
-    {
-        // Update stockvell
-        $cols = array();
-        // Remove blank inputs and password2
-        foreach ($input_list as $key => $val) {
-            if (!empty($val) && $key !== "password2")   $cols[] = "$key = '$val'";
-        }
-        $updateElement = implode(', ', $cols);
-
-
-        /// Update element 
-        $sql = "UPDATE stockvells SET $updateElement WHERE id=:stockvell_id";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam('stockvell_id', $stockvell_id);
-
-        if (!$stmt->execute()) {
-            header('Location: /admin.php?error=stmtfailed');
-            exit();
-        }
-
-
-        // make many to many relationship 
-        $this->addMemberToStockvell($stockvell_id, $leader_id);
-
-        header('Location: /admin.php?error=none');
-    }
-
-    public function addMemberToStockvell($stockvell_id, $member_id)
-    {
-        $sql = "INSERT INTO stockvell_to_member(stockvell_id, member_id) VALUES (:stockvell_id, :member_id)";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam('stockvell_id', $stockvell_id);
-        $stmt->bindParam('member_id', $member_id);
-        if (!$stmt->execute()) {
-            header('Location: /admin.php?error=stmtfailed');
-            exit();
-        }
-        header('Location: /admin.php?error=none');
-    }
-}

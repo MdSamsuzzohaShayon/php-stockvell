@@ -1,15 +1,19 @@
 {
-    "name": "vendor/stockvell",
+    "name": "shayon/stockvell",
     "type": "project",
     "license": "MIT",
     "autoload": {
+        "classmap": ["Models/Member.php"],
         "psr-4": {
-            "Vendor\\Stockvell\\": "src/"
+            "Models\\": "Models/",
+            "Config\\": "config/",
+            "Utils\\": "utils/"
         }
     },
     "authors": [
         {
-            "name": "Shayon"
+            "name": "Md Samsuzzoha",
+            "email": "mdshayon0@gmail.com"
         }
     ],
     "require": {}

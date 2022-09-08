@@ -5,6 +5,7 @@ services:
     build: .
     image: "php_finance_image"
     container_name: php_finance_con
+    # command: composer update
     volumes:
       - ./:/var/www/html/
     ports:
