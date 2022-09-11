@@ -1,40 +1,9 @@
 <?php
 
-
-/*
-require('vendor/autoload.php');
-
-
-use App\Main;
-
-$obj = new Main;
-$obj->display();
-
-
-use App\Router;
-use View\Header;
-
-
-$router = new Router();
-$router->route();
-$router->get('/', function(){
-    echo "home page";
-});
-$router->get('/signup', function(){
-    echo "signup page";
-});
-$router->run();
-
-$head = new Header();
-$head->view();
-*/
-
-
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
 
 $full_router = $_SERVER['REQUEST_URI'];
 $router = strtok($full_router, '?');
-echo $router;
 
 if ($router === '/' || $router === '/home' || $router === '/index.php' || $router === '/home.php' || $router === '/home/') {
     include($ROOT . '/pages/home.php');

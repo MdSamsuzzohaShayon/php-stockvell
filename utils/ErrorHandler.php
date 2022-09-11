@@ -1,4 +1,5 @@
 <?php
+
 namespace Utils;
 
 /**
@@ -68,6 +69,12 @@ class ErrorHandler
                     array_push($this->errors, $err_msg);
                     break;
                 }
+            case 'invalidcode': {
+                    $err_msg = __("Recovery code is not valid please try again!");
+                    array_push($this->errors, $err_msg);
+                    break;
+                }
+
             default:
                 # code...
                 break;

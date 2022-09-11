@@ -1,7 +1,7 @@
 <?php
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
 require_once($ROOT . "/vendor/autoload.php");
-use Models\Signup;
+use Models\Member\Signup;
 
 if (isset($_POST["member_signup_submit"])) {
   /**

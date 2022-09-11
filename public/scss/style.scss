@@ -30,8 +30,23 @@ header {
   width: fit-content;
 }
 
+
+.phone-input-group {
+  .option-list {
+    flex-basis: 20%;
+  }
+}
+
 .mobile-menu {
   width: 100%;
+}
+
+@media (max-width: $breakpoint_md) {
+  .phone-input-group {
+    .option-list {
+      flex-basis: 25%;
+    }
+  }
 }
 
 .home {

@@ -17,15 +17,19 @@ require_once($ROOT . "/config/lang.php");
 require_once($ROOT . "/layouts/header.php");
 require_once($ROOT . "/config/option-list.php");
 // require_once($ROOT . "/Models/input.classes.php");
-require_once($ROOT . "/utils/input-fields.php");
+// require_once($ROOT . "/utils/input-fields.php");
+
 
 use Utils\ErrorHandler;
+use Utils\InputField;
 
 $err_arr = [];
 $err_handler = new ErrorHandler();
-if(isset($_GET["error"])){
+if (isset($_GET["error"])) {
   $err_arr = $err_handler->setCommonErrors($_GET["error"]);
 }
+
+$input_field = new InputField();
 
 ?>
 
@@ -37,7 +41,7 @@ if(isset($_GET["error"])){
     <div class="container">
       <div class="signup-caption text-center">
         <h1 class="h1"><?= __("Welcome to stockvell"); ?></h1>
-        <p><?= __("Please enter the followings" ); ?></p>
+        <p><?= __("Please enter the followings"); ?></p>
       </div>
 
       <?php if (count($err_arr) > 0) echo $err_handler->displayErrors(); ?>
@@ -47,48 +51,64 @@ if(isset($_GET["error"])){
           <?php
           $fn = __('Firstname*');
           $sn = __('Surname*');
-          $el= __('Email*');
-          $pw= __('Password*');
-          $cpw= __('Confirm Password*');
-          $cy= __('Country*');
-          $cty= __('City*');
-          $pn= __('Phone*');
-          $gr= __('Select Gender*');
-          $pro= __('Profession*');
-          $ist= __("Interest (Optional comma-separated list)");
-          $gid= __("Government ID*");
-          $src= __('How did you hear about the Stockvell platform? (Optional)');
+          $el = __('Email*');
+          $pw = __('Password*');
+          $cpw = __('Confirm Password*');
+          $cy = __('Country*');
+          $cty = __('City*');
+          $pn = __('Phone*');
+          $gr = __('Select Gender*');
+          $pro = __('Profession*');
+          $ist = __("Interest (Optional comma-separated list)");
+          $gid = __("Government ID*");
+          $src = __('How did you hear about the Stockvell platform? (Optional)');
 
-          echo inputElement("firstname", $fn, false, 'text', null, null, null, [], true);
+          //echo inputElement("firstname", $fn, false, 'text', null, null, null, [], true);
+          echo $input_field->inputText("firstname", $fn, false, "text", true);
+          echo $input_field->inputText("surname", $sn, false, "text", true);
           ?>
-          <?php echo inputElement("surname", $sn, false, 'text', null, null, null, [], true); ?>
         </div>
         <div class="row mb-3">
-          <?php echo inputElement("email", $el, true, 'email', null, null, null, [], true); ?>
+          <?php
+          echo $input_field->inputText("email", $el, true, "email", true);
+          ?>
         </div>
         <div class="row mb-3">
-          <?php echo inputElement("password", $pw, false, 'password', null, null, null, [], true); ?>
-          <?php echo inputElement("password2", $cpw, false, 'password', null, null, null, [], true); ?>
+          <?php
+          echo $input_field->inputText("password", $pw, false, "password", true);
+          echo $input_field->inputText("password2", $pw, false, "password", true);
+          ?>
+
         </div>
         <div class="row mb-3">
-          <?php echo inputElement("country", $cy, false, 'select', null, null, null, $countries_code); ?>
-          <?php echo inputElement("phone", $pn, false, 'phone'); ?>
+          <?php
+          echo $input_field->inputSelect("country", $cy, false, "Benin (+229)", $countries_code);
+          echo $input_field->inputPhone("phone", $pn, false, true, $phone_code, "+229");
+          ?>
         </div>
         <div class="row mb-3">
-          <?php echo inputElement("city", $cty, false, 'text'); ?>
-          <?php echo inputElement("gender", $gr, false, 'select', null, null, null, ["male", "female", "others"]); ?>
+          <?php
+          echo $input_field->inputText("city", $cty, false, "text", true);
+          echo $input_field->inputSelect("gender", $gr, false, $cmr_result->gender, ["male", "female", "others"]);
+          ?>
         </div>
         <div class="row mb-3">
-          <?php echo inputElement("profession", $pro, false, 'select', null, null, null, $professions); ?>
-          <?php echo inputElement("govt_id", $gid, false, 'file', null, null, null, [], true); ?>
+          <?php
+          echo $input_field->inputSelect("profession", $pro, false, null, $professions);
+          echo $input_field->inputFile("govt_id", $gid, false);
+          ?>
         </div>
         <div class="row mb-3">
-          <?php echo inputElement("interest", $ist, true, 'text', null, null, null, [], false); ?>
+          <?php
+          echo $input_field->inputTextarea("interest", $ist, true);
+          ?>
         </div>
 
 
         <div class="row mb-3">
-          <?php echo inputElement("source", $src, true, 'textarea', null, null, null, [], true); ?>
+          <?php
+          echo $input_field->inputTextarea("source", $src, true);
+          ?>
         </div>
         <div class="row row-no-input mb-3 d-flex justify-content-start">
           <button type="submit" name="member_signup_submit" class="btn btn-primary w-fit"><?= __("Signup"); ?></button>

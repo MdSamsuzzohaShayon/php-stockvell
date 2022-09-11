@@ -1,5 +1,5 @@
 <?php 
-namespace Models;
+namespace Models\Member;
 use Config\Database;
 class Signup extends Database
 {
@@ -64,7 +64,11 @@ class Signup extends Database
             header("Location: /signup/?error=invalidusername");
             exit();
         }
-        if (!preg_match("/^[0-9]*$/", $this->phone)) {
+        // if (!preg_match("/^[0-9]*$/", $this->phone)) {
+        //     header("Location: /signup/?error=invalidphone");
+        //     exit();
+        // }
+        if (strlen($this->phone) < 6) {
             header("Location: /signup/?error=invalidphone");
             exit();
         }

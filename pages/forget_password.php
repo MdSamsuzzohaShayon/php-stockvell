@@ -12,16 +12,25 @@ if (isset($_SESSION['admin_id'])) {
 
 
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
+require_once($ROOT . "/vendor/autoload.php");
 require_once($ROOT . "/config/lang.php");
 require_once($ROOT . "/layouts/header.php");
-require_once($ROOT . "/Models/input.classes.php");
-require_once($ROOT . "/utils/input-fields.php");
+require_once($ROOT . "/config/option-list.php");
+// require_once($ROOT . "/Models/input.classes.php");
+// require_once($ROOT . "/utils/input-fields.php");
+
+use Utils\ErrorHandler;
+use Utils\InputField;
+
 
 $err_arr = [];
+$err_handler = new ErrorHandler();
 if (isset($_GET["error"])) {
-    $err_handler = new ErrorHandler();
     $err_arr = $err_handler->setCommonErrors($_GET["error"]);
 }
+$segment = $_GET["segment"];
+
+$input_field = new InputField();
 
 ?>
 
@@ -37,33 +46,77 @@ if (isset($_GET["error"])) {
 
             <?php if (count($err_arr) > 0) echo $err_handler->displayErrors(); ?>
 
-            <!-- Form start here  -->
-            <form class="d-none phone-form form-content" action="/includes/forget_password.inc.php" method="POST">
-                <div class="row mb-3">
-                    <?php echo inputElement('phone', 'Phone*', true, 'text'); ?>
-                </div>
-                <div class="row row-no-input mb-3">
-                    <button type="submit" name="recover_via_phone_submit" class="btn btn-primary w-fit"><?= __("Search"); ?></button>
-                    <a href="/index.php" class="btn btn-danger w-fit ms-3"><?= __("Cancel"); ?></a>
-                </div>
-                <div class="row row-no-input">
-                    <a class="p-0" id="recover-via-email" href="#"><?= __("Use email address"); ?></a>
-                </div>
-            </form>
-            <form class="d-block email-form form-content" action="/includes/forget_password.inc.php" method="POST">
-                <div class="row mb-3">
-                    <?php
-                    echo inputElement('email', 'Email*', true, 'email');
-                    ?>
-                </div>
-                <div class="row row-no-input mb-3">
-                    <button type="submit" name="recover_via_email_submit" class="btn btn-primary w-fit"><?= __("Search"); ?></button>
-                    <a href="/index.php" class="btn btn-danger w-fit ms-3"><?= __("Cancel"); ?></a>
-                </div>
-                <div class="row row-no-input">
-                    <a class="p-0" id="recover-via-phone" href="#"><?= __("Use phone number"); ?></a>
-                </div>
-            </form>
+            <?php if ($segment === "verify_code") { ?>
+                <form class="verify-code" action="/includes/forget_password.inc.php" method="POST">
+                    <div class="row mb-3">
+                        <?php
+                        $rc = "Recovery Code*";
+                        echo $input_field->inputText("recovery_code", $rc, true, 'number', true);
+                        ?>
+                    </div>
+                    <div class="row row-no-input mb-3">
+                        <button type="submit" name="recover_code_submit" class="btn btn-primary w-fit"><?= __("Verify"); ?></button>
+                        <a href="/login" class="btn btn-danger w-fit ms-3"><?= __("Cancel"); ?></a>
+                    </div>
+                </form>
+            <?php } elseif ($segment === "reset_password") { ?>
+                <!-- Form start here  -->
+                <!-- Validate the user -->
+                <?php
+                if (isset($_GET['user_id'])) { ?>
+                    <form class="d-block email-form form-content" action="/includes/forget_password.inc.php" method="POST">
+                        <div class="row mb-3">
+                            <?php
+                            $pw = __("Password*");
+                            $pw2 = __("Confirm Password*");
+                            echo $input_field->inputHidden("id", $_GET['user_id']);
+                            echo $input_field->inputText("password", $pw, false, "password", true);
+                            echo $input_field->inputText("password2", $pw2, false, "password", true);
+                            ?>
+                        </div>
+                        <div class="row row-no-input mb-3">
+                            <button type="submit" name="reset_password_submit" class="btn btn-primary w-fit"><?= __("Reset Password"); ?></button>
+                            <a href="/index.php" class="btn btn-danger w-fit ms-3"><?= __("Cancel"); ?></a>
+                        </div>
+                    </form>
+                <?php } ?>
+
+                <!-- Form ends here  -->
+            <?php } else { ?>
+                <!-- Form start here  -->
+                <form class="d-none phone-form form-content" action="/includes/forget_password.inc.php" method="POST">
+                    <div class="row mb-3">
+                        <?php
+                        $pn = "Phone*";
+                        // echo $input_field->inputPhone("phone", $pn, true, true);
+                        echo $input_field->inputPhone("phone", $pn, true, true, $phone_code, "+229");
+                        ?>
+                    </div>
+                    <div class="row row-no-input mb-3">
+                        <button type="submit" name="recover_via_phone_submit" class="btn btn-primary w-fit"><?= __("Search"); ?></button>
+                        <a href="/index.php" class="btn btn-danger w-fit ms-3"><?= __("Cancel"); ?></a>
+                    </div>
+                    <div class="row row-no-input">
+                        <a class="p-0" id="recover-via-email" href="#"><?= __("Use email address"); ?></a>
+                    </div>
+                </form>
+                <form class="d-block email-form form-content" action="/includes/forget_password.inc.php" method="POST">
+                    <div class="row mb-3">
+                        <?php
+                        echo $input_field->inputText("email", "Email*", true, "email");
+                        ?>
+                    </div>
+                    <div class="row row-no-input mb-3">
+                        <button type="submit" name="recover_via_email_submit" class="btn btn-primary w-fit"><?= __("Search"); ?></button>
+                        <a href="/index.php" class="btn btn-danger w-fit ms-3"><?= __("Cancel"); ?></a>
+                    </div>
+                    <div class="row row-no-input">
+                        <a class="p-0" id="recover-via-phone" href="#"><?= __("Use phone number"); ?></a>
+                    </div>
+                </form>
+                <!-- Form ends here  -->
+            <?php } ?>
+
         </div>
     </section>
 </main>

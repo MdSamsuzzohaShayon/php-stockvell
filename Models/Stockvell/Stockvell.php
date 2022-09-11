@@ -1,6 +1,9 @@
 <?php
+
 namespace Models\Stockvell;
+
 use Config\Database;
+
 class Stockvell extends Database
 {
     // private $member_email;
@@ -109,7 +112,26 @@ class Stockvell extends Database
 
         // echo $new_result['members'];
         // var_dump($new_result['members']);
+        // exit();
         return $new_result;
+    }
+
+
+    public function isMemberBelongToStockvell($stockvell_id, $member_id)
+    {
+        // echo $stockvell_id . $member_id;
+        // exit();
+        $mpSql = "SELECT * FROM stockvell_to_member WHERE stockvell_id=:stockvell_id AND member_id=:member_id";
+        $mpStmt = $this->connect()->prepare($mpSql);
+        // $tmid = 4;
+        $mpStmt->bindParam("member_id", $member_id);
+        $mpStmt->bindParam("stockvell_id", $stockvell_id);
+        $mpStmt->execute();
+        $mp_result = $mpStmt->fetch(\PDO::FETCH_OBJ);
+        if (empty($mp_result->id)) {
+            return false;
+        }
+        return true;
     }
 
 
@@ -154,10 +176,3 @@ class Stockvell extends Database
         return [];
     }
 }
-
-
-
-
-
-
-

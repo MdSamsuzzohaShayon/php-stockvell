@@ -10,8 +10,12 @@ use Config\Database;
  */
 class Member extends Database
 {
-    public function __construct($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city)
+    public function __construct()
     {
+        $this->ROOT = $_SERVER['DOCUMENT_ROOT'];
+    }
+
+    public function setMember($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city){
         $this->firstname = $firstname;
         $this->surname = $surname;
         $this->email = $email;
@@ -25,11 +29,10 @@ class Member extends Database
         $this->govt_id = $govt_id;
         $this->source = $source;
         $this->city = $city;
-
-        $this->ROOT = $_SERVER['DOCUMENT_ROOT'];
     }
 
 
+    // Delete this function leter and use the below one
     protected function findMember($email)
     {
         $stmt = $this->connect()->prepare("SELECT id, firstname, surname email  FROM members WHERE email = :email ");
@@ -54,22 +57,64 @@ class Member extends Database
     }
 
 
-
-
-
-
-    protected function updateMember($updateElement, $member_id)
+    protected function findMemberByEmail($email, $redirect_url)
     {
+        $stmt = $this->connect()->prepare("SELECT id, firstname, surname, email  FROM members WHERE email = :email ");
+
+        if (!$stmt->execute(array(':email' => $email))) {
+            $stmt = null;
+            header("Location: /$redirect_url?error=stmtfailed");
+            exit();
+        }
+        $member_found = $stmt->fetch(\PDO::FETCH_OBJ);
+        if (!$member_found) {
+            $stmt = null;
+            header("Location: /$redirect_url?error=usernotfound");
+            exit();
+        }
+        return $member_found;
+    }
+
+
+    protected function findMemberByPhone($phone, $redirect_url)
+    {
+        // echo $phone . "<br>";
+        $stmt = $this->connect()->prepare("SELECT id, firstname, phone, email  FROM members WHERE phone = :phone;");
+
+        if (!$stmt->execute(array("phone"=> $phone))) {
+            $stmt = null;
+            header("Location: /$redirect_url?error=stmtfailed");
+            exit();
+        }
+        $member_found = $stmt->fetch(\PDO::FETCH_OBJ);
+        // var_dump($member_found);
+        // exit();
+        if (!$member_found) {
+            $stmt = null;
+            header("Location: /$redirect_url?error=usernotfound");
+            exit();
+        }
+        return $member_found;
+    }
+
+
+
+
+
+
+    protected function updateMember($cols, $member_id, $redirect_url)
+    {
+        $updateElement = implode(', ', $cols);
         $sql = "UPDATE members SET $updateElement WHERE id=$member_id";
         $stmt = $this->connect()->prepare($sql);
         // $stmt->bindParam('updateElement', $updateElement,\PDO::PARAM_STR); // Not working
         try {
             if ($stmt->execute()) {
-                header('Location: /dashboard.php?error=none');
+                header("Location: $redirect_url?error=none");
             }
         } catch (\PDOException $e) {
             //throw $th;
-            header('Location: /dashboard.php?error=stmtfailed');
+            header("Location: $redirect_url?error=stmtfailed");
         }
     }
 
@@ -172,8 +217,7 @@ class Member extends Database
             if (!empty($val) && $key !== "password2")   $cols[] = "$key = '$val'";
         }
 
-        $updateElement = implode(', ', $cols);
-        $this->updateMember($updateElement, $member_id);
+        $this->updateMember($cols, $member_id, "/dashboard.php");
     }
 }
 

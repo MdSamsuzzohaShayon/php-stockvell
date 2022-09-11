@@ -2,7 +2,8 @@
 
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
 require_once($ROOT . "/vendor/autoload.php");
-use Models\Login;
+use Models\Member\Login;
+use Models\Admin\AdminLogin;
 
 
 if(isset($_POST["member_login_submit"])){
@@ -15,7 +16,7 @@ if(isset($_POST["member_login_submit"])){
   $login = new Login($email, $password);
   $login->loginMember();
 
-  header("location: /dashboard.php");
+  header("location: /dashboard");
 }
 
 if(isset($_POST["login_admin_submit"])){
@@ -25,10 +26,10 @@ if(isset($_POST["login_admin_submit"])){
   // include $ROOT . "/config/Database.php";
   // include $ROOT . "/Models/Login.php";
 
-  $login = new Login($admin_email , $admin_password);
+  $login = new AdminLogin($admin_email , $admin_password);
   $login->loginAdmin();
 
-  header("location: /dashboard.php");
+  header("location: /dashboard");
 }
 
  ?>

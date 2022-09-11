@@ -3,6 +3,7 @@
  - [Live Preview](stockvell.allinone-office.com)
 
 ### Development
+ - Make phone number full including country code and plus sign (modify database)
  - Unique member phone number (signup, database)
  - Remove all space from agreement while creting stockvell pack
  - Signup image upload handler -> rename file
@@ -298,9 +299,10 @@ Dominant - #C99127, Complementary - #809130, Accent - #2F4858, white - #ffffff, 
 - Sub query or nested query (Works with insert, update, delete, and select query). [tutorial](https://www.youtube.com/watch?v=VxiF_MgePL8&list=PL0b6OzIxLPbzf12lu5etX_vjN-eUxgxnr&index=26)
 
 
-
-ALTER TABLE vendors
-ADD COLUMN vendor_group INT NOT NULL;
+### Send message with twilio api using curl and twillio
+ - [Twilio Send an SMS using the Programmable SMS API](https://www.twilio.com/docs/sms/api)
+ - [URL Library ¶](https://www.php.net/manual/en/book.curl.php#book.curl)
+ - [Request example](https://stackoverflow.com/questions/2138527/php-curl-and-http-post-example)
 
 
 

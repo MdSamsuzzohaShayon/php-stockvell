@@ -10426,10 +10426,19 @@ header .toggle-menu {
   width: fit-content;
 }
 
+.phone-input-group .option-list {
+  flex-basis: 20%;
+}
+
 .mobile-menu {
   width: 100%;
 }
 
+@media (max-width: 768px) {
+  .phone-input-group .option-list {
+    flex-basis: 25%;
+  }
+}
 .home .section-1 {
   min-height: 70vh;
 }

@@ -79,7 +79,8 @@ if (isset($_POST["member_update_submit"])) {
 
 
 
-  $member = new Member($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city);
+  $member = new Member();
+  $member->setMember($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city);
   $member->updateDynamicMember($member_id);
 }
 

@@ -40,6 +40,7 @@ $lang = [
     "Search" => "Chercher",
     "Use phone number" => "Utiliser le numéro de téléphone",
     "Use email address" => "Utiliser l'adresse e-mail",
+    "Recovery Code*" => "Code de récupération*",
 
 
     // Dashboard page

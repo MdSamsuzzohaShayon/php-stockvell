@@ -106,7 +106,8 @@ $input_field = new InputField();
                   <div class="row mb-3">
                      <?php
                      echo $input_field->inputSelect("country", $cy, false, $cmr_result->country, $countries_code);
-                     echo $input_field->inputPhone("phone", $pn, false, false, $cmr_result->phone);
+                     // echo $input_field->inputPhone("phone", $pn, false, false, $cmr_result->phone);
+                     echo $input_field->inputPhone("phone", $pn, false, true, $phone_code, $cmr_result->phone);
                      ?>
                   </div>
                   <div class="row mb-3">
@@ -118,12 +119,8 @@ $input_field = new InputField();
                   <div class="row mb-3">
                      <?php
                      echo $input_field->inputSelect("profession", $pro, false, $cmr_result->profession, $professions);
-                     // echo $input_field->inputFile("govt_id", $gid, false);
+                     echo $input_field->inputFile("govt_id", $gid, false);
                      ?>
-                     <div class="col-md-6 ">
-                        <label for="govt_id" class="form-label text-capitalize">Government ID*</label>
-                        <input type="file" name="govt_id" class="form-control text-primary bg-secondary border border-primary " id="govt_id">
-                     </div>
                   </div>
                   <div class="row mb-3">
                      <?php

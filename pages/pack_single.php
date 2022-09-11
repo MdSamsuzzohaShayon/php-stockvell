@@ -1,17 +1,20 @@
 <?php
 session_start(); // In every single page we should start our session at the top of our code
-$member_email = $_SESSION['member_email'];
-$member_id = $_SESSION['member_id'];
-if (!isset($member_email) && !isset($_SESSION['admin_id'])) {
+if (!isset($_SESSION['member_id']) && !isset($_SESSION['admin_id'])) {
     header("Location: /login.php");
     exit();
 }
 
-$stockvell_id = $_GET['stockvell_id'];
-if (!isset($stockvell_id)) {
+if (!isset($_GET['stockvell_id'])) {
     header("Location: /index.php");
 }
-// !isset($_SESSION['admin_id'])
+
+$member_email = $_SESSION['member_email'];
+$member_id = $_SESSION['member_id'];
+$stockvell_id = $_GET['stockvell_id'];
+
+$is_admin = false;
+if (isset($_SESSION['admin_id'])) $is_admin = true;
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
 require_once($ROOT . "/config/lang.php");
 require_once($ROOT . "/layouts/header.php");
@@ -34,7 +37,15 @@ require_once($ROOT . "/includes/pack_single.inc.php");
                     <h1 class="h1"><?= $ssr_result['name']; ?></h1>
                     <p>Description</p>
                     <p><?= $ssr_result['category']; ?></p>
-                    <a href="" class="btn btn-warning">Join Pack</a>
+                    <?php 
+                    if($is_admin === false){
+                        if($is_mos) {
+                            echo "<a href='' class='btn btn-warning'>Leave Pack</a>";
+                        }else{
+                            echo "<a href='' class='btn btn-warning'>Join Pack</a>";    
+                        }
+                    }
+                    ?>
                 </div>
                 <div class="col-md-6 text-md-end">
                     <div class="row">

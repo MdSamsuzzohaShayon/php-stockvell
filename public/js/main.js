@@ -111,23 +111,31 @@ function sidebarElementToggle(allMenuItems, allContent) {
  * @page signup
  * Select mobile number
  */
-if (window.location.pathname === "/signup.php" || window.location.pathname === "/signup/" || window.location.pathname === "/signup") {
-  countryCodePrefixForPhone();
+if (
+  window.location.pathname === "/signup.php" ||
+  window.location.pathname === "/signup/" ||
+  window.location.pathname === "/signup"
+) {
+  countryCodePrefixForPhone(true);
 }
 
 /**
  * @page dashboard
  * Toggle content for dashboard sidebar menu item
  */
-if (window.location.pathname === "/dashboard.php" || window.location.pathname === "/dashboard/" || window.location.pathname === "/dashboard") {
+if (
+  window.location.pathname === "/dashboard.php" ||
+  window.location.pathname === "/dashboard/" ||
+  window.location.pathname === "/dashboard"
+) {
   const allMenuItems = document.querySelectorAll(".menu-item");
   const allContent = document.querySelectorAll(".content");
   if (allMenuItems && allContent) sidebarElementToggle(allMenuItems, allContent);
 
-  countryCodePrefixForPhone();
+  countryCodePrefixForPhone(true);
 
-  const agreement = document.getElementById('agreement');
-  if(agreement){
+  const agreement = document.getElementById("agreement");
+  if (agreement) {
     // Work with ck editor
     ClassicEditor.create(agreement).catch((error) => {
       console.error(error);
@@ -139,7 +147,11 @@ if (window.location.pathname === "/dashboard.php" || window.location.pathname ==
  * @page admin
  * Toggle content for dashboard sidebar menu item
  */
-if (window.location.pathname === "/admin.php" || window.location.pathname === "/admin/" || window.location.pathname === "/admin") {
+if (
+  window.location.pathname === "/admin.php" ||
+  window.location.pathname === "/admin/" ||
+  window.location.pathname === "/admin"
+) {
   const logedinContent = document.querySelector(".section-2");
   if (logedinContent) {
     const allMenuItems = document.querySelectorAll(".menu-item");
@@ -153,7 +165,11 @@ if (window.location.pathname === "/admin.php" || window.location.pathname === "/
  * @page admin
  * Toggle content for email and phone recover form
  */
-if (window.location.pathname === "/forget_password.php" || window.location.pathname === "/forget_password/" || window.location.pathname === "/forget_password") {
+if (
+  window.location.pathname === "/forget_password.php" ||
+  window.location.pathname === "/forget_password/" ||
+  window.location.pathname === "/forget_password"
+) {
   const recoverBtnEmail = document.getElementById("recover-via-email");
   const recoverBtnPhone = document.getElementById("recover-via-phone");
   const recoverPhoneForm = document.querySelector(".phone-form");
@@ -183,38 +199,55 @@ if (window.location.pathname === "/forget_password.php" || window.location.pathn
       }
     }
   }
+
+
+  countryCodePrefixForPhone(false);
 }
 
 /**
  * @extra function 1
  */
-function countryCodePrefixForPhone() {
-  const phonePrefix = document.getElementById("phone-prefix");
-  const countryCodeInput = document.getElementById("phone-code-input");
-  const phoneInput = document.getElementById("phone-hidden-input");
-  const countryInput = document.getElementById("country");
+function countryCodePrefixForPhone(hasCountry) {
+  const phoneMainHidden = document.getElementById("phone");
+  const phoneRawInput = document.getElementById("phone-raw-input");
+  const phonePrefixSelect = document.getElementById("phone-select");
+  
+  
+  let country_code = "+229"; // default
 
-  const selectedCountry = countryInput.querySelector("[selected]");
+  if(hasCountry){
+    const countryInput = document.getElementById("country");
+    // Changing code
+    countryInput.addEventListener("change", (cie) => {
+      // cie.preventDefault();
+      // country_code = cie.currentTarget.value.toString().match(pattern)[0];
+      // phonePrefix.textContent = country_code;
+      const pattern = /\W\d+/;
+      country_code = cie.currentTarget.value.toString().match(pattern)[0];
+      phonePrefixSelect.value = country_code;
+  
+      let formatted_code = `${country_code}_${phoneRawInput.value}`;
+      if (phoneRawInput.value === "") {
+        formatted_code = country_code;
+      }
+      phoneMainHidden.value = formatted_code;
+    });
+  }
 
-  const pattern = /\W\d+/;
-  let country_code = selectedCountry.value.toString().match(pattern)[0];
-  phonePrefix.textContent = country_code;
-  let formattedPhone = null;
-  let phoneBase = countryCodeInput.value;
-
-  // Changing code
-  countryInput.addEventListener("change", (cie) => {
-    country_code = cie.currentTarget.value.toString().match(pattern)[0];
-    phonePrefix.textContent = country_code;
-    if (phoneBase) {
-      formattedPhone = country_code.slice(-1);
-      phoneInput.value = formattedPhone + phoneBase;
-    }
+  phoneRawInput.addEventListener("change", (ccie) => {
+    // ccie.preventDefault();
+    phoneMainHidden.value = `${country_code}_${ccie.currentTarget.value}`;
+    phonePrefixSelect.value = country_code;
   });
 
-  countryCodeInput.addEventListener("change", (ccie) => {
-    formattedPhone = country_code.slice(-1);
-    phoneBase = ccie.currentTarget.value;
-    phoneInput.value = formattedPhone + phoneBase;
+  phonePrefixSelect.addEventListener("change", (ppse) => {
+    // ppse.preventDefault();
+    if (phoneRawInput.value !== "") {
+      // phonePrefixSelect.value = country_code;
+      phoneMainHidden.value = `${ppse.currentTarget.value}_${phoneRawInput.value}`;
+    } else {
+      phoneMainHidden.value = `${ppse.currentTarget.value}`;
+    }
+    country_code = ppse.currentTarget.value;
   });
 }

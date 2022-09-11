@@ -1,6 +1,31 @@
 <?php
 // Delete this file in production
-include('config/Database.php');
+$ROOT = $_SERVER['DOCUMENT_ROOT'];
+require_once($ROOT . "/vendor/autoload.php");
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->safeLoad();
+
+
+class Database{
+  protected function connect(){
+    try {
+      $username = $_ENV["MYSQL_USER"];
+      $password =  $_ENV["MYSQL_PASSWORD"];
+      $db_name =  $_ENV["MYSQL_DATABASE"];
+      $db_host= $_ENV["MYSQL_HOST"];
+      $conn = new \PDO("mysql:host=$db_host;dbname=$db_name", $username, $password);
+      // echo $conn;
+      // exit();
+      return $conn;
+    } catch (\PDOException $e) {
+      echo "Error: " . $e->getMessage(). "<br />";
+      die();
+    }
+
+  }
+}
+
 
 class DatabaseMigrations extends Database
 {
@@ -16,7 +41,7 @@ class DatabaseMigrations extends Database
         surname VARCHAR(100) NOT NULL,
         email VARCHAR(255) NOT NULL,
         password VARCHAR(255) NOT NULL,
-        recovery_code INT,
+        recovery_code VARCHAR(100),
         country VARCHAR(100) NOT NULL,
         city VARCHAR(255) NOT NULL,
         phone VARCHAR(255) NOT NULL,
@@ -80,7 +105,7 @@ class DatabaseMigrations extends Database
     // Update or modify specific table
     // $modify_sql = "ALTER TABLE members MODIFY phone VARCHAR (255) NOT NULL";
     // $modify_sql = "ALTER TABLE members ADD COLUMN city VARCHAR(255) NOT NULL";
-    // $modify_sql = "ALTER TABLE members ADD COLUMN recovery_code INT";
+    // $modify_sql = "ALTER TABLE members ADD COLUMN recovery_code VARCHAR(100)";
     
     // $this->specificTableModifications($modify_sql, "Added another column to members");
   }
