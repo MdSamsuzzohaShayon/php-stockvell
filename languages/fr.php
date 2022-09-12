@@ -32,6 +32,7 @@ $lang = [
     "Already have an account?" => "Vous avez déjà un compte?",
     "Forgot Password?" => "Mot de passe oublié?",
     "Do not have an account?" => "Vous n'avez pas de compte?",
+    "An account with this phone number already exists. please use another one!" => "Un compte avec ce numéro de téléphone existe déjà. veuillez en utiliser un autre !",
     
     
     // Forget password page
@@ -95,6 +96,42 @@ $lang = [
     "Monthly deposit" => "Dépôt mensuel",
     "Total members" => "Membres totaux",
     "Details" => "Détails",
+    
+    
+    
+    
+    // Login page
+    "Use Phone to Login" => "Utiliser le téléphone pour se connecter",
+    "Use Email to Login" => "Utiliser l'e-mail pour se connecter",
+
+
+    // Admin page
+    "All members" => "Tous les membres",
+    "Approved Pack" => "Pack approuvé",
+    'Phone' => "Téléphoner",
+    "Password" => "Mot de passe",
+    'Confirm Password' => "Confirmez le mot de passe",
+    "All member's pieces of information which are verified or not" => "Toutes les informations du membre vérifiées ou non",
+    "No pack found" => "Aucun pack trouvé",
+
+    "Firstname" => "Prénom",
+    "Surname" => "Nom de famille",
+    "Password" => "Mot de passe",
+    'Confirm Password' => "Confirmez le mot de passe",
+    'Country' => "Pays",
+    'Phone' => "Téléphoner",
+    'Gender' => "Le genre",
+    'Interest' => "Intérêt",
+    'Source' => "La source",
+    'Role' => "Rôle",
+    'Government ID' => "ID du gouvernement",
+    'Verification' => "Vérification",
+    'Approve' => "Approuver",
+    'View' => "Voir",
+    'Verified' => "Vérifié",
+    'All approved packs' => "Tous les packs approuvés",
+    "You can find all the stockvell pack that is made and requested for approvals. N.B. If you can not find a pack that you have created, in that case, the pack is been rejected. Try creating another one with proper pieces of information." => "Vous pouvez trouver tous les packs stockvell qui sont fabriqués et demandés pour les approbations. N.B. Si vous ne trouvez pas un pack que vous avez créé, dans ce cas, le pack est rejeté. Essayez d'en créer un autre avec des informations appropriées.",
+    'Add or Update stockvell' => "Ajouter ou mettre à jour stockvell",
 ];
 
 

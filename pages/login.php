@@ -22,11 +22,14 @@ require_once($ROOT . "/config/option-list.php");
 use Utils\ErrorHandler;
 use Utils\InputField;
 
-$err_arr = [];
+$has_error = false;
+$err_msg = null;
 $err_handler = new ErrorHandler();
-if(isset($_GET["error"])){
-  $err_arr = $err_handler->setCommonErrors($_GET["error"]);
+if (isset($_GET["error"])) {
+    $has_error = true;
+    $err_handler->setCommonErrors($_GET["error"]);
 }
+
 
 $input_field = new InputField();
 
@@ -39,25 +42,43 @@ $input_field = new InputField();
     <div class="container">
       <div class="login-caption text-center">
         <h1 class="h1"><?= __("Welcome to stockvell"); ?></h1>
-        <p><?= __("Please enter the following to login as a member" ); ?> </p>
+        <p><?= __("Please enter the following to login as a member"); ?> </p>
       </div>
 
-      <?php if (count($err_arr) > 0) echo $err_handler->displayErrors(); ?>
+      <?php if ($has_error) echo $err_handler->displayErrors(); ?>
 
       <!-- Form start here  -->
-      <form action="/includes/login.inc.php" method="POST">
+      <form action="/includes/login.inc.php" class="email-login-form d-block" method="POST">
         <div class="row mb-3">
-          <?php // echo inputElement('email', 'Email*', false, 'email'); 
-          echo $input_field->inputText("email", "Email", false, "email", true);
-          ?>
-          <?php 
-          $password = __("Password");
-          // echo inputElement('password', $password, false, 'password'); 
+          <?php
+          $em = __("Email*");
+          $password = __("Password*");
+          echo $input_field->inputText("email", $em, false, "email", true);
           echo $input_field->inputText("password", $password, false, "password", true);
           ?>
         </div>
         <div class="row row-no-input mb-3">
-          <button type="submit" name="member_login_submit" class="btn btn-primary w-fit"><?= __("Login"); ?></button>
+          <button type="submit" name="member_email_login" class="btn btn-primary w-fit"><?= __("Login"); ?></button>
+          <button class="btn btn-primary use-phone-btn w-fit ms-3" ><?= __("Use Phone to Login"); ?></button>
+          <a href="/index" class="btn btn-danger w-fit ms-3"><?= __("Cancel"); ?></a>
+        </div>
+        <div class="row row-no-input">
+          <a class="p-0" href="/forget_password"><?= __("Forgot Password?"); ?></a>
+          <a class="p-0" href="/signup"><?= __("Do not have an account?"); ?></a>
+        </div>
+      </form>
+      <form action="/includes/login.inc.php" class="phone-login-form d-none" method="POST">
+        <div class="row mb-3">
+          <?php
+          $pn = __("Phone");
+          $password = __("Password*");
+          echo $input_field->inputPhone("phone", $pn, false, true, $phone_code, "+229");
+          echo $input_field->inputText("password", $password, false, "password", true);
+          ?>
+        </div>
+        <div class="row row-no-input mb-3">
+          <button type="submit" name="member_phone_login" class="btn btn-primary w-fit"><?= __("Login"); ?></button>
+          <button class="btn btn-primary use-email-btn w-fit ms-3" ><?= __("Use Email to Login"); ?></button>
           <a href="/index" class="btn btn-danger w-fit ms-3"><?= __("Cancel"); ?></a>
         </div>
         <div class="row row-no-input">

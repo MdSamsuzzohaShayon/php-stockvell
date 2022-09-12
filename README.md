@@ -3,13 +3,20 @@
  - [Live Preview](stockvell.allinone-office.com)
 
 ### Development
- - Make phone number full including country code and plus sign (modify database)
- - Unique member phone number (signup, database)
+ - Join pack
+ - refer link 
+ - monthly payment made
+ - Edit admin profile details
+ - Edit all member details by admin
+ - Single pack page design
+ - Login with phone and email 😎
+ - Make phone number full including country code and plus sign (modify database) 😎
+ - Unique member phone number (signup, database) 😎
  - Remove all space from agreement while creting stockvell pack
- - Signup image upload handler -> rename file
+ - Signup image upload handler -> rename file 😎
  - Display all stockvell for publics
  - Create all classes according to database table (1. stockvell, 2.members, 3.admins, 4.stockvell_to_member)
- - Working stock member leader relationship (many to many)
+ - Working stock member leader relationship (many to many) 😎
  - Dynamic input field 😎
  - Many to many relationship for all members in stockvell 😎
  - Display signup error message 😎
@@ -19,6 +26,15 @@
  - Add Database.classes.php into another file 😎
  - Create dashboard for members (Multiple tabs for update member profile, add stockvell pack, edit) 😎
  - Create admin panel for admins (list of stockvell) 😎
+
+### Deployment Instructions
+ - Install all packages of Composer
+ - Install php curl `sudo apt-get install php7.4-curl`
+ - Setup `.htaccess` file for redirecting 
+ - Change all `.env` variables
+ - All file owner change `sudo chown -R www-data:www-data project-name`
+ - All file previlages change `sudo chmod -R 775 project-name`
+ - Database Migrations (Delete database and create database once again)
 
 ### Modifications
 
@@ -31,11 +47,15 @@ Registration Page
 
 
 Login Page
- - Use Phone/Email to login (to give both options to members)
- - Forgot Password link is missing (to reset password)
+ - Use Phone/Email to login (to give both options to members) 😎
+ - Forgot Password link is missing (to reset password) 😎
 
 Member Dashboard :
-Ideally, a simple member can create a Stockvell Pack but he must be approved as Leader of the Pack before the pack become visible to others to join. I am not sure how technically it will be possible, but please suggest some possibilities so that a simple member does not create a Pack (only A LEADER or AN ADMIN can create a Pack). A simple must apply to be a Leader once he creates a Pack. To apply as LEADER, the simple member submit a proof of address, and Government ID.
+
+A simple member can create a Stockvell Pack 
+but he must be approved as Leader of the Pack before the pack become visible to others to join. 
+I am not sure how technically it will be possible, 
+but please suggest some possibilities so that a simple member does not create a Pack (only A LEADER or AN ADMIN can create a Pack). A simple must apply to be a Leader once he creates a Pack. To apply as LEADER, the simple member submit a proof of address, and Government ID.
 And as leader, he will be able to define next member to withdraw funds (withdrawal can be random or first come, first served)
 Define the number of people is missing (can be dropdown from 02 to max 100)
  - Payment frequency (dropdown ??)
@@ -52,7 +72,7 @@ http://stockvell.allinone-office.com/dasboard.php?error=emptyinput
 Can you block the submission when a field is empty so that it does not show that error
 
 Admin Page:
- - Cannot view Government ID for now
+ - Cannot view Government ID for now  😎
  - Cannot edit Member details
 Saw 2 leaders for one pack (December pack) ; this pack was created by a member. Normally, it is 1 leader for each Pack. In other words, 01 Pack has only ONE leader
 Add a pack is not working currently

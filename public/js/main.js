@@ -108,6 +108,46 @@ function sidebarElementToggle(allMenuItems, allContent) {
 }
 
 /**
+ * @page login
+ * Toggle content for dashboard sidebar menu item
+ */
+ if (
+  window.location.pathname === "/login.php" ||
+  window.location.pathname === "/login/" ||
+  window.location.pathname === "/login"
+) {
+  const phoneLoginBtn = document.querySelector('.use-phone-btn');
+  const emailLoginBtn = document.querySelector('.use-email-btn');
+  
+  const phoneLoginForm = document.querySelector('.phone-login-form');
+  const emailLoginForm = document.querySelector('.email-login-form');
+
+
+  phoneLoginBtn.addEventListener("click", (plbe)=>{
+    if(emailLoginForm.classList.contains('d-block')){
+      emailLoginForm.classList.remove('d-block');
+      emailLoginForm.classList.add('d-none');
+
+      phoneLoginForm.classList.remove('d-none');
+      phoneLoginForm.classList.add('d-block');
+    }
+  });
+
+
+  emailLoginBtn.addEventListener("click", (elbe)=>{
+    if(phoneLoginForm.classList.contains('d-block')){
+      phoneLoginForm.classList.remove('d-block');
+      phoneLoginForm.classList.add('d-none');
+      
+      emailLoginForm.classList.remove('d-none');
+      emailLoginForm.classList.add('d-block');
+    }
+  });
+
+  countryCodePrefixForPhone(false);
+}
+
+/**
  * @page signup
  * Select mobile number
  */
@@ -162,7 +202,7 @@ if (
 
 // recover-via-email
 /**
- * @page admin
+ * @page forget_password
  * Toggle content for email and phone recover form
  */
 if (
@@ -201,6 +241,19 @@ if (
   }
 
 
+  countryCodePrefixForPhone(false);
+}
+
+
+
+/**
+ * @page edit member
+ */
+ if (
+  window.location.pathname === "/edit_member.php" ||
+  window.location.pathname === "/edit_member/" ||
+  window.location.pathname === "/edit_member"
+) {
   countryCodePrefixForPhone(false);
 }
 

@@ -53,7 +53,7 @@ class DatabaseMigrations extends Database
         source TEXT,
         role VARCHAR(255) NOT NULL DEFAULT 'GENERAL',
         PRIMARY KEY (id),
-        UNIQUE (email)
+        UNIQUE (email, phone)
         );";
       $this->createTable($sql_query, "members");
     }
@@ -99,13 +99,14 @@ class DatabaseMigrations extends Database
         PRIMARY KEY(id)
         );";
       $this->createTable($sql_query, "admins");
-      $this->addToTheAdminsTable("admins", "stockvell_admin", "stockvellexample@gmail.com", "1234567", "Test1234");
+      $this->addToTheAdminsTable("admins", "stockvell_admin", "stockvellexample@gmail.com", "+880_1785208590", "Test1234");
     }
 
     // Update or modify specific table
-    // $modify_sql = "ALTER TABLE members MODIFY phone VARCHAR (255) NOT NULL";
     // $modify_sql = "ALTER TABLE members ADD COLUMN city VARCHAR(255) NOT NULL";
     // $modify_sql = "ALTER TABLE members ADD COLUMN recovery_code VARCHAR(100)";
+    // $modify_sql = "ALTER TABLE members MODIFY phone VARCHAR(150) UNIQUE NOT NULL";
+    // $modify_sql = "UPDATE admins SET phone='+880_1785208590' WHERE id='1'";
     
     // $this->specificTableModifications($modify_sql, "Added another column to members");
   }

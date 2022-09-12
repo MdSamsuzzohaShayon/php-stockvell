@@ -1,12 +1,27 @@
 <?php
+
 namespace Models\Member;
 use Config\Database;
+// use Models\Member\Member;
+
 class Login extends Database
 {
 
-    public function __construct($email, $password)
+    public function __construct()
+    {
+        $this->phone = null;
+        $this->email = null;
+        $this->password = null;
+    }
+
+    public function setEmailPassword($email, $password)
     {
         $this->email = $email;
+        $this->password = $password;
+    }
+    public function setPhonePassword($phone, $password)
+    {
+        $this->phone = $phone;
         $this->password = $password;
     }
 
@@ -61,4 +76,47 @@ class Login extends Database
         $this->getMember($this->password, $this->email);
     }
 
+
+
+    private function getMemberByPhone($phone)
+    {
+        $stmt = $this->connect()->prepare("SELECT id, firstname, surname, role, phone, email, password  FROM members WHERE phone = :phone;");
+
+        if (!$stmt->execute(array("phone" => $phone))) {
+            $stmt = null;
+            header("Location: /login/?error=stmtfailed");
+            exit();
+        }
+        $member_found = $stmt->fetch(\PDO::FETCH_OBJ);
+        // var_dump($member_found);
+        // exit();
+        if (!$member_found) {
+            $stmt = null;
+            header("Location: /login/?error=usernotfound");
+            exit();
+        }
+        return $member_found;
+    }
+
+
+    public function memberLoginViaPhone()
+    {
+        if (empty($this->phone) || empty($this->password)) {
+            header("Location: /login.php?error=emptyinput");
+            exit();
+        }
+        $fmbp_result = $this->getMemberByPhone($this->phone); // fmbp = find member by phone
+        $checkPassword = password_verify($this->password, $fmbp_result->password);
+
+        if ($checkPassword  == false) {
+            header("Location: /login.php?error=incorrectpassword");
+            exit();
+        }
+        session_start();
+        $_SESSION["member_id"] = $fmbp_result->id;
+        $_SESSION["member_role"] = $fmbp_result->role;
+        $_SESSION["member_username"] = $fmbp_result->firstname . " " . $fmbp_result->surname;
+        $_SESSION["member_email"] = $fmbp_result->email;
+        header("Location: /dashboard.php");
+    }
 }

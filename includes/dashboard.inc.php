@@ -9,8 +9,7 @@ include $ROOT . "/vendor/autoload.php";
 // include $ROOT . "/classes/member.classes.php";
 use Models\Stockvell\Stockvell;
 use Models\Stockvell\StockvellForms;
-use Models\Member\Member;
-// use Models\AdminStockvellForms;
+use Models\Member\MemberForms;
 
 
 $foundMember = new Stockvell(); // Variables getting from dashboard.php
@@ -78,10 +77,9 @@ if (isset($_POST["member_update_submit"])) {
 
 
 
-
-  $member = new Member();
-  $member->setMember($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city);
-  $member->updateDynamicMember($member_id);
+  $member_forms = new MemberForms();
+  $member_forms->setMember($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city);
+  $member_forms->updateDynamicMember($member_id, "edit_member/");
 }
 
 ?>

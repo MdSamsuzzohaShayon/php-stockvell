@@ -23,10 +23,13 @@ require_once($ROOT . "/config/option-list.php");
 use Utils\ErrorHandler;
 use Utils\InputField;
 
-$err_arr = [];
+
+$has_error = false;
+$err_msg = null;
 $err_handler = new ErrorHandler();
 if (isset($_GET["error"])) {
-  $err_arr = $err_handler->setCommonErrors($_GET["error"]);
+    $has_error = true;
+    $err_handler->setCommonErrors($_GET["error"]);
 }
 
 $input_field = new InputField();
@@ -44,7 +47,7 @@ $input_field = new InputField();
         <p><?= __("Please enter the followings"); ?></p>
       </div>
 
-      <?php if (count($err_arr) > 0) echo $err_handler->displayErrors(); ?>
+      <?php if ($has_error) echo $err_handler->displayErrors(); ?>
       <!-- Signup Form start  -->
       <form action="/includes/signup.inc.php" method="POST" enctype="multipart/form-data">
         <div class="row mb-3">

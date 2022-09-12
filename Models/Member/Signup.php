@@ -1,25 +1,12 @@
 <?php 
 namespace Models\Member;
-use Config\Database;
-class Signup extends Database
+// use Config\Database;
+use Models\Member\Member;
+class Signup extends Member
 {
-    public function __construct($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city)
+    public function __construct()
     {
-        $this->firstname = $firstname;
-        $this->surname = $surname;
-        $this->email = $email;
-        $this->password = $password;
-        $this->password2 = $password2;
-        $this->country = $country;
-        $this->phone = $phone;
-        $this->gender = $gender;
-        $this->profession = $profession;
-        $this->interest = $interest;
-        $this->govt_id = $govt_id;
-        $this->source = $source;
-        $this->city = $city;
-
-        $this->ROOT = $_SERVER['DOCUMENT_ROOT'];
+        parent::__construct();
     }
 
 
@@ -31,7 +18,8 @@ class Signup extends Database
     //     }
     // }
 
-    public function upload_file_to_server($uploadedFile, $ROOT)
+    /*
+    public function uploadFileToServer($uploadedFile, $ROOT)
     {
         $target_dir = $ROOT . "/uploads/";
         $unique_file_name = basename("m_" . date("Ymd_") . $uploadedFile["name"]);
@@ -50,6 +38,7 @@ class Signup extends Database
         move_uploaded_file($uploadedFile["tmp_name"], $target_dir . $unique_file_name);
         return $unique_file_name;
     }
+    */
 
 
     public function signupMember()
@@ -80,8 +69,12 @@ class Signup extends Database
             header("Location: /signup/?error=passwordnotmatch");
             exit();
         }
-        if ($this->memberExist($this->email) == true) {
+        if ($this->findMemberByEmail($this->email, "signup/")) {
             header("Location: /signup/?error=alreadyexist");
+            exit();
+        }
+        if ($this->findMemberByPhone($this->phone, "signup/")) {
+            header("Location: /signup/?error=alreadyexistphone");
             exit();
         }
 
@@ -114,12 +107,12 @@ class Signup extends Database
         // move_uploaded_file($this->govt_id["tmp_name"], "uploads/" . $this->govt_id["name"]);
         */
 
-        $unique_file_name = $this->upload_file_to_server($this->govt_id, $this->ROOT);
-        $this->setMember($this->firstname, $this->surname, $this->email, $this->password, $this->country, $this->phone, $this->gender, $this->profession, $this->interest, $unique_file_name, $this->source, $this->city);
+        $unique_file_name = $this->uploadFileToServer($this->govt_id, $this->ROOT, true);
+        $this->saveMemberToDB($this->firstname, $this->surname, $this->email, $this->password, $this->country, $this->phone, $this->gender, $this->profession, $this->interest, $unique_file_name, $this->source, $this->city);
     }
 
 
-    private function setMember($firstname, $surname, $email, $password, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city)
+    private function saveMemberToDB($firstname, $surname, $email, $password, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city)
     {
 
         $stmt = $this->connect()->prepare('INSERT INTO members(firstname, surname, email, password,  country, phone, gender, profession, interest, govt_id, source, role, city) VALUES (:firstname, :surname, :email, :password,  :country, :phone, :gender, :profession, :interest, :govt_id, :source, :role, :city);');

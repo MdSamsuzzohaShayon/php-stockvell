@@ -10,7 +10,7 @@ class ErrorHandler
 
     public function __construct()
     {
-        $this->errors = [];
+        $this->errors = "";
     }
 
 
@@ -20,58 +20,55 @@ class ErrorHandler
         // echo $error;
         switch ($error) {
             case 'stmtfailed': {
-                    $err_msg = __("Invalid MySQL query!");
-                    array_push($this->errors, $err_msg);
+                    $this->errors=  __("Invalid MySQL query!");
                     break;
                 }
             case 'incorrectpassword': {
-                    $err_msg = __("Incorrect password!");
-                    array_push($this->errors, $err_msg);
+                    $this->errors=  __("Incorrect password!");
                     break;
                 }
             case 'usernotfound': {
-                    $err_msg = __("This email address is not in our database. Use a registered email address!");
-                    array_push($this->errors, $err_msg);
+                    $this->errors=  __("This email address is not in our database. Use a registered email address!");
                     break;
                 }
             case 'emptyinput': {
-                    $err_msg = __("Make sure to fill in all the fields!");
-                    array_push($this->errors, $err_msg);
+                    $this->errors=  __("Make sure to fill in all the fields!");
                     break;
                 }
             case 'invalidusername': {
-                    $err_msg = __("The username should be more than one character long!");
-                    array_push($this->errors, $err_msg);
+                    $this->errors=  __("The username should be more than one character long!");
                     break;
                 }
             case 'invalidphone': {
-                    $err_msg = __("Make sure to use a valid phone number!");
-                    array_push($this->errors, $err_msg);
+                    $this->errors=  __("Make sure to use a valid phone number!");
                     break;
                 }
             case 'invalidemail': {
-                    $err_msg = __("Make sure to use a valid email address!");
-                    array_push($this->errors, $err_msg);
+                    $this->errors=  __("Make sure to use a valid email address!");
                     break;
                 }
             case 'passwordnotmatch': {
-                    $err_msg = __("Password did not match!");
-                    array_push($this->errors, $err_msg);
+                    $this->errors=  __("Password did not match!");
                     break;
                 }
             case 'alreadyexist': {
-                    $err_msg = __("This email address already exists!");
-                    array_push($this->errors, $err_msg);
+                    $this->errors=  __("This email address already exists!");
                     break;
                 }
             case 'invalidfile': {
-                    $err_msg = __("Government ID must be less than 2 megabytes and allowed file formats are pdf, png, jpeg, and jpg!");
-                    array_push($this->errors, $err_msg);
+                    $this->errors=  __("Government ID must be less than 2 megabytes and allowed file formats are pdf, png, jpeg, and jpg!");
                     break;
                 }
             case 'invalidcode': {
-                    $err_msg = __("Recovery code is not valid please try again!");
-                    array_push($this->errors, $err_msg);
+                    $this->errors=  __("Recovery code is not valid please try again!");
+                    break;
+                }
+            case 'alreadyexistphone': {
+                    $this->errors=  __("An account with this phone number already exists. please use another one!");
+                    break;
+                }
+            case 'none': {
+                    $this->errors=  __("Operation successfull!");
                     break;
                 }
 
@@ -84,15 +81,23 @@ class ErrorHandler
 
     public function displayErrors()
     {
-        $err_msg = '';
-        if (count($this->errors) > 0) {
-            foreach ($this->errors as $err) {
-                $err_msg .= "<div class='err-msg d-flex align-items-center'>
-                <img src='/public/icons/error.svg' width='25' alt='error-message' class='error-message mx-3'>
-                <p class='m-0'>$err</p>
-                </div>";
+        if(isset($_GET["error"])){
+            $error = $_GET["error"];
+            if($error === "none"){
+                return "<div class='alert alert-success'>
+                            <div class='success-msg d-flex align-items-center'>
+                                <img src='/public/icons/success.svg' width='25' alt='success-message' class='success-message mx-3'>
+                                <p class='m-0'>$this->errors</p>
+                            </div>
+                        </div>";
+            }else{
+                return "<div class='alert alert-danger'>
+                                <div class='err-msg d-flex align-items-center'>
+                                    <img src='/public/icons/error.svg' width='25' alt='error-message' class='error-message mx-3'>
+                                    <p class='m-0'>$this->errors</p>
+                                </div>
+                        </div>";
             }
-            return "<div class='alert alert-danger'>$err_msg</div>";
         }
     }
 }

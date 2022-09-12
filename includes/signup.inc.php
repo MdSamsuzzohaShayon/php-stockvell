@@ -46,7 +46,8 @@ if (isset($_POST["member_signup_submit"])) {
   // require_once($ROOT . '/config/Database.php');
   // require_once($ROOT . '/Models/Signup.php');
 
-  $signup = new Signup($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city);
+  $signup = new Signup();
+  $signup->setMember($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city);
   $signup->signupMember();
 
   header("location: /login.php");

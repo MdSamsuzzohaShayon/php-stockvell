@@ -10,27 +10,6 @@ use Config\Database;
  */
 class Member extends Database
 {
-    public function __construct()
-    {
-        $this->ROOT = $_SERVER['DOCUMENT_ROOT'];
-    }
-
-    public function setMember($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city){
-        $this->firstname = $firstname;
-        $this->surname = $surname;
-        $this->email = $email;
-        $this->password = $password;
-        $this->password2 = $password2;
-        $this->country = $country;
-        $this->phone = $phone;
-        $this->gender = $gender;
-        $this->profession = $profession;
-        $this->interest = $interest;
-        $this->govt_id = $govt_id;
-        $this->source = $source;
-        $this->city = $city;
-    }
-
 
     // Delete this function leter and use the below one
     protected function findMember($email)
@@ -67,18 +46,17 @@ class Member extends Database
             exit();
         }
         $member_found = $stmt->fetch(\PDO::FETCH_OBJ);
-        if (!$member_found) {
-            $stmt = null;
-            header("Location: /$redirect_url?error=usernotfound");
-            exit();
-        }
+        // if (!$member_found) {
+        //     $stmt = null;
+        //     header("Location: /$redirect_url?error=usernotfound");
+        //     exit();
+        // }
         return $member_found;
     }
 
 
     protected function findMemberByPhone($phone, $redirect_url)
     {
-        // echo $phone . "<br>";
         $stmt = $this->connect()->prepare("SELECT id, firstname, phone, email  FROM members WHERE phone = :phone;");
 
         if (!$stmt->execute(array("phone"=> $phone))) {
@@ -89,11 +67,6 @@ class Member extends Database
         $member_found = $stmt->fetch(\PDO::FETCH_OBJ);
         // var_dump($member_found);
         // exit();
-        if (!$member_found) {
-            $stmt = null;
-            header("Location: /$redirect_url?error=usernotfound");
-            exit();
-        }
         return $member_found;
     }
 
@@ -102,26 +75,36 @@ class Member extends Database
 
 
 
-    protected function updateMember($cols, $member_id, $redirect_url)
+    protected function updateMember($cols, $member_id)
     {
         $updateElement = implode(', ', $cols);
+        
         $sql = "UPDATE members SET $updateElement WHERE id=$member_id";
         $stmt = $this->connect()->prepare($sql);
         // $stmt->bindParam('updateElement', $updateElement,\PDO::PARAM_STR); // Not working
-        try {
-            if ($stmt->execute()) {
-                header("Location: $redirect_url?error=none");
-            }
-        } catch (\PDOException $e) {
-            //throw $th;
-            header("Location: $redirect_url?error=stmtfailed");
+        // try {
+        //     if ($stmt->execute()) {
+        //         // header("Location: /$redirect_url?error=none");
+        //         echo "Working - " . $redirect_url;
+        //         exit();
+        //     }
+        //     header("Location: /$redirect_url?error=stmtfailed");
+        //     exit();
+        // } catch (\PDOException $e) {
+        //     //throw $th;
+        //     header("Location: /$redirect_url?error=stmtfailed");
+        //     exit();
+        // }
+        if($stmt->execute()){
+            return true;
         }
+        return false;
     }
 
 
 
 
-    public function delete_prev_file_from_server($prev_name, $ROOT)
+    public function deletePrevFileFromServer($prev_name, $ROOT)
     {
         $target_dir = $ROOT . "/uploads/";
         if (file_exists($target_dir . $prev_name)) {
@@ -129,7 +112,7 @@ class Member extends Database
         }
     }
 
-    public function upload_file_to_server($uploadedFile, $ROOT, $is_member)
+    public function uploadFileToServer($uploadedFile, $ROOT, $is_member)
     {
         $target_dir = $ROOT . "/uploads/";
         $unique_file_name = basename("m_" . date("Ymd_") . $uploadedFile["name"]);
@@ -165,60 +148,7 @@ class Member extends Database
     }
 
 
-    public function updateDynamicMember($member_id)
-    {
-        if (!empty($this->email)) {
-            $_SESSION["member_email"] = $this->email;
-        }
-        if (!empty($this->password)) {
-            if ($this->password !== $this->password2) {
-                header('Location: /dashboard.php?error=passwordnotmatch');
-                exit();
-            }
-            $hashedPassword = password_hash($this->password, PASSWORD_DEFAULT);
-            $this->password = $hashedPassword;
-        }
 
-        $unique_file_name = null;
-        if ($this->govt_id['name']) {
-            $file_sql = "SELECT * FROM members WHERE id=:member_id";
-            $stmt = $this->connect()->prepare($file_sql);
-            $stmt->bindParam('member_id', $member_id);
-            $stmt->execute();
-            $found_file = $stmt->fetch(\PDO::FETCH_OBJ);
-            if ($found_file->govt_id) {
-                $this->delete_prev_file_from_server($found_file->govt_id, $this->ROOT);
-            }
-            $unique_file_name = $this->upload_file_to_server($this->govt_id, $this->ROOT, true);
-        }
-        $this->input_list = array(
-            'firstname' => $this->firstname,
-            'surname' => $this->surname,
-            'email' => $this->email,
-            'password' => $this->password,
-            'password2' => $this->password2,
-            'country' => $this->country,
-            'phone' => $this->phone,
-            'gender' => $this->gender,
-            'profession' => $this->profession,
-            'interest' => $this->interest,
-            'govt_id' => $unique_file_name,
-            'source' => $this->source,
-            'city' => $this->city,
-        );
-
-
-
-
-        $cols = array();
-
-        // Remove blank inputs and password2
-        foreach ($this->input_list as $key => $val) {
-            if (!empty($val) && $key !== "password2")   $cols[] = "$key = '$val'";
-        }
-
-        $this->updateMember($cols, $member_id, "/dashboard.php");
-    }
 }
 
 

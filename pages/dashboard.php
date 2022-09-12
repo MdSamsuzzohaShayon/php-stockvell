@@ -27,10 +27,12 @@ require_once($ROOT . "/config/option-list.php");
 use Utils\ErrorHandler;
 use Utils\InputField;
 
-$err_arr = [];
+$has_error = false;
+$err_msg = null;
 $err_handler = new ErrorHandler();
 if (isset($_GET["error"])) {
-   $err_arr = $err_handler->setCommonErrors($_GET["error"]);
+    $has_error = true;
+    $err_handler->setCommonErrors($_GET["error"]);
 }
 
 $input_field = new InputField();
@@ -68,7 +70,7 @@ $input_field = new InputField();
                   <h1 class="h1"><?= __("Update your informations!") ?></h1>
                   <p>You can change any field</p>
                </div>
-               <?php if (count($err_arr) > 0) echo $err_handler->displayErrors(); ?>
+               <?php if ($has_error) echo $err_handler->displayErrors(); ?>
                <!-- Signup Form start  -->
                <form action="/includes/dashboard.inc.php" method="POST" enctype="multipart/form-data">
                   <div class="row mb-3">
@@ -252,7 +254,7 @@ $input_field = new InputField();
                   <h1 class="h1"><?= __("Create your own Stockvell pack!") ?></h1>
                   <p><?= __("You can create your own stockvell, in order to do that you need to fill in all the input fields and once you create your will request of creating a new pack will be under our review.") ?></p>
                </div>
-               <?php if (count($err_arr) > 0) echo $err_handler->displayErrors(); ?>
+               <?php if ($has_error) echo $err_handler->displayErrors(); ?>
                <!-- Form start  -->
                <form action="/includes/dashboard.inc.php" method="POST">
                   <div class="row mb-3">

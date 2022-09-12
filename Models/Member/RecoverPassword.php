@@ -22,6 +22,10 @@ class RecoverPassword extends Member
     public function generateBackupCodeViaEmail($email)
     {
         $fmber_result = $this->findMemberByEmail($email, 'forget_password.php'); // fmber = found member by email result
+        if (!$fmber_result) {
+            header("Location: /forget_password.php?error=usernotfound");
+            exit();
+        }
         // $random_code = rand(100000, 999999);
         $random_code_str = strval(rand(1000, 9999));
         $id_str = strval($fmber_result->id);
@@ -45,6 +49,10 @@ class RecoverPassword extends Member
         // $recovery_code = mt_rand(100000, 999999);
         // $recovery_code = rand(100000, 999999);
         $fmber_result = $this->findMemberByPhone($phone, 'forget_password.php'); // fmber = found member by email result
+        if (!$fmber_result) {
+            header("Location: /forget_password.php?error=usernotfound");
+            exit();
+        }
         // $random_code = rand(100000, 999999);
         $random_code_str = strval(rand(1000, 9999));
         $id_str = strval($fmber_result->id);

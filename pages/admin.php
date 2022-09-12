@@ -13,16 +13,19 @@ if (isset($admin_id)) $logged_admin = true;
 require_once($ROOT . "/vendor/autoload.php");
 require_once($ROOT . "/config/lang.php");
 require_once($ROOT . "/layouts/header.php");
+require_once($ROOT . "/config/option-list.php");
 // require_once($ROOT . "/utils/input-fields.php");
 // require_once($ROOT . "/classes/input.classes.php");
 
 use Utils\ErrorHandler;
 use Utils\InputField;
 
-$err_arr = [];
+$has_error= false;
+$err_msg = null;
 $err_handler = new ErrorHandler();
 if (isset($_GET["error"])) {
-   $err_arr = $err_handler->setCommonErrors($_GET["error"]);
+   $has_error = true;
+   $err_handler->setCommonErrors($_GET["error"]);
 }
 
 
@@ -36,74 +39,123 @@ $input_field = new InputField();
    <?php
    if ($logged_admin) {
       require_once($ROOT . "/includes/admin.inc.php");
+
+      $npf = __("No pack found");
    ?>
       <!-- Authenticated content start  -->
       <section class="section-2">
          <div class="row w-full flex-column-reverse flex-md-row p-0 m-0">
             <div class="col-md-3 bg-secondary text-primary sidebar-menus p-0">
                <ul class="d-flex justify-content-between sidebar-menu-items flex-md-column bg-secondary position-md-sticky sticky-md-bottom sticky-md-top p-0 m-0 w-full">
-                  <li role="button" data-item="all-members" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row active">
+                  <li role="button" data-item="admin-profile" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row active">
+                     <img class="mx-md-4 mx-0" height="33" src="/public/icons/profile-icon.svg" alt="">
+                     <p class="m-0 px-3"><?= __("Profile"); ?></p>
+                  </li>
+                  <li role="button" data-item="all-members" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row">
                      <img class="mx-md-4 mx-0" src="/public/icons/profile.svg" alt="">
-                     <p class="m-0 px-3">All members</p>
+                     <p class="m-0 px-3"><?= __("All members"); ?></p>
                   </li>
                   <li role="button" data-item="approved-pack" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row" aria-current="true">
                      <img class="mx-md-4 mx-0" src="/public/icons/my-pack.svg" alt="">
-                     <p class="m-0 px-3">Approved Pack</p>
+                     <p class="m-0 px-3"><?= __("Approved Pack"); ?></p>
                   </li>
                   <li role="button" data-item="pending-pack" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row">
                      <img class="mx-md-4 mx-0" src="/public/icons/pending-pack.svg" alt="">
-                     <p class="m-0 px-3">Pending Pack</p>
+                     <p class="m-0 px-3"><?= __("Pending Pack"); ?></p>
                   </li>
                   <li role="button" data-item="add-pack" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row">
                      <img class="mx-md-4 mx-0" src="/public/icons/add-pack.svg" alt="">
-                     <p class="m-0 px-3">Add Pack</p>
+                     <p class="m-0 px-3"><?= __("Add Pack"); ?></p>
                   </li>
                </ul>
             </div>
             <div class="col-md-9 sidebar-content">
-               <?php if (count($err_arr) > 0) echo $err_handler->displayErrors(); ?>
-               <div class="content my-4 all-members-content d-block">
-                  <h1 class="h1 text-center">All members!</h1>
-                  <p class="text-center">All members informations which is verified or not</p>
+               <?php if ($has_error) echo $err_handler->displayErrors(); ?>
+               <div class="content my-4 admin-profile-content d-block">
+                  <h1 class="h1 text-center"><?= __("Admin Profile!"); ?></h1>
+                  <p class="text-center"><?= __("Edit admin's informations"); ?></p>
+                  <form action="/includes/admin.inc.php" method="post">
+                     <div class="row mb-3">
+                        <?php
+                        $nm = __("Name");
+                        $eml = __("Email");
+                        echo $input_field->inputText("name", $nm, false, "text", false, $fabi_result->name);
+                        echo $input_field->inputText("email", $eml, false, "email", false, $fabi_result->email);
+                        ?>
+                     </div>
+                     <div class="row mb-3">
+                        <?php
+                        $pn = __("Phone");
+                        echo $input_field->inputPhone("phone", $pn, true, false, $phone_code, $fabi_result->phone);
+                        ?>
+                     </div>
+                     <div class="row mb-3">
+                        <?php
+                        $pw = __("Password");
+                        $pw2 = __("Confirm Password");
+                        echo $input_field->inputText("password", $pw, false, "password", false);
+                        echo $input_field->inputText("password2", $pw2, false, "password", false);
+                        ?>
+                     </div>
+                     <button type="submit" name="update_profile_submit" class="btn btn-primary"><?= __("Update"); ?></button> 
+                  </form>
+               </div>
+               <div class="content my-4 all-members-content d-none">
+                  <h1 class="h1 text-center"><?= __("All members"); ?>!</h1>
+                  <p class="text-center"><?= __("All members pieces of information which are verified or not"); ?></p>
                   <?php
                   // psr = pending stockvell result 
                   // $psr_result - getting from dashboard.inc.php
                   if (count($amr_result) <= 0) {
-                     echo "<div class='alert alert-warning'>No pack found</div>";
+                     echo "<div class='alert alert-warning'>$npf</div>";
                   } else { ?>
                      <div class="table-responsive">
                         <table class="table table-bordered border-warning">
-                           <thead class="bg-warning text-white border-primary">
-                              <tr>
-                                 <th scope="col">#ID</th>
-                                 <th scope="col">Firstname</th>
-                                 <th scope="col">Sourname</th>
-                                 <th scope="col">email</th>
-                                 <th scope="col">Country</th>
-                                 <th scope="col">Phone</th>
-                                 <th scope="col">Gender</th>
-                                 <th scope="col">Profession</th>
-                                 <th scope="col">Interest</th>
-                                 <th scope="col">Source</th>
-                                 <th scope="col">Role</th>
-                                 <th scope="col">Government ID</th>
-                                 <th scope="col">Verification</th>
+                           <thead class="bg-warning text-capitalize">
+                              <colgroup span="11"></colgroup>
+                              <colgroup span="3"></colgroup>
+                              <tr class="bg-warning text-white border-primary" scope="colgroup">
+                                 <th colspan="11">Properties</th>
+                                 <th colspan="3">Action</th>
+                              </tr>
+                              <tr class="bg-warning text-white border-primary">
+                                 <th >#<?= __("ID"); ?></th>
+                                 <th scope="col"><?= __("Firstname"); ?></th>
+                                 <th scope="col"><?= __("Surname"); ?></th>
+                                 <th scope="col"><?= __("Email"); ?></th>
+                                 <th scope="col"><?= __("Country"); ?></th>
+                                 <th scope="col"><?= __("Phone"); ?></th>
+
+                                 <th scope="col"><?= __("Gender"); ?></th>
+                                 <th scope="col"><?= __("Profession"); ?></th>
+                                 <th scope="col"><?= __("Interest"); ?></th>
+                                 <th scope="col"><?= __("Source"); ?></th>
+                                 <th scope="col"><?= __("Role"); ?></th>
+
+                                 <th scope="col"><?= __("Government ID"); ?></th>
+                                 <th scope="col"><?= __("Edit"); ?></th>
+                                 <th scope="col"><?= __("Verification"); ?></th>
                               </tr>
                            </thead>
                            <tbody>
                               <?php
                               // amr = all member result
                               // id, firstname, surname, email, country, phone, gender, profession, interest, govt_id, source, role
-
+                              
+                              $av = __("Approve");
+                              $vw = __("View");
+                              $vd = __("Verified");
+                              $et = __("Edit");
                               foreach ($amr_result as $amr_key) {
                                  # If not verified add a form to verify
                                  $verified_content = "<form class='p-0 m-0' action='/includes/admin.inc.php?member_id=" . $amr_key["id"] . "' method='post'>
-                                                         <button type='submit' name='verify_member' class='btn btn-warning'>Approve</button>  
+                                                         <button type='submit' name='verify_member' class='btn btn-warning'>$av</button>  
                                                       </form>";
                                  // If already verified show the text verified
                                  if (intval($amr_key['is_verified']) === 1) {
-                                    $verified_content = "Verified";
+                                    $verified_content = $vd;
                                  }
+                                 // echo $amr_key["id"];
                                  echo "
                                           <tr class='text-lowercase'>
                                              <th>" . $amr_key["id"] . "</th>
@@ -112,15 +164,19 @@ $input_field = new InputField();
                                              <td>" . $amr_key["email"] . "</td>
                                              <td>" . $amr_key["country"] . "</td>
                                              <td>" . $amr_key["phone"] . "</td>
+
                                              <td>" . $amr_key["gender"] . "</td>
                                              <td>" . $amr_key["profession"] . "</td>
                                              <td>" . $amr_key["interest"] . " </td>
                                              <td>" . $amr_key["source"] . "</td>
                                              <td>" . $amr_key["role"] . "</td>
-                                             <td><a href='/uploads/" . $amr_key["govt_id"] . "' class='btn btn-primary'>View</a></td>
+
+                                             <td><a href='/uploads/" . $amr_key["govt_id"] . "' class='btn btn-primary'>$vw</a></td>
+                                             <td><a href='/edit_member/?member_id=" . $amr_key['id'] . "' class='btn btn-primary'>$et</a></td>
                                              <td>$verified_content</td>
                                           </tr>
-                                       ";
+                                          ";
+                                             // <td><a href='/edit_member/?member_id=" . $amr_key["id"] . ">Edit</a></td>   
                               }
                               ?>
                            </tbody>
@@ -131,29 +187,30 @@ $input_field = new InputField();
                <div class="content approved-pack-content d-none">
                   <!-- All stockvells (approved, pending, rejected)
                   See whoever requested to become leader -->
-                  <h1 class="h1 text-center">All approved packs!</h1>
-                  <p class="text-center">You can find all the stockvell pack that is made and requested for approvals. N.B. If you can not find a pack that you have created, in that case, the pack is been rejected. Try creating another one with proper informations!</p>
+                  <h1 class="h1 text-center"><?= __("All approved packs"); ?>!</h1>
+                  <p class="text-center"><?= __("You can find all the stockvell pack that is made and requested for approvals. N.B. If you can not find a pack that you have created, in that case, the pack is been rejected. Try creating another one with proper pieces of information."); ?>!</p>
                   <?php
                   // psr = pending stockvell result 
                   // $psr_result - getting from dashboard.inc.php
+                  $nf = __("No pack found");
                   if (count($aasr_result) <= 0) {
-                     echo "<div class='alert alert-warning'>No pack found</div>";
+                     echo "<div class='alert alert-warning'>$nf</div>";
                   } else { ?>
                      <div class="table-responsive">
                         <table class="table table-bordered border-warning">
                            <thead class="bg-warning text-white border-primary">
                               <tr>
-                                 <th scope="col">#ID</th>
-                                 <th scope="col">Name</th>
-                                 <th scope="col">Goal</th>
-                                 <th scope="col">Category</th>
-                                 <th scope="col">Status</th>
-                                 <th scope="col">Payment</th>
-                                 <th scope="col">Payment Period</th>
-                                 <th scope="col">Leader</th>
-                                 <th scope="col">Total Members</th>
-                                 <th scope="col">Withdraw Period</th>
-                                 <th scope="col">Action</th>
+                                 <th scope="col"><?= __("ID"); ?></th>
+                                 <th scope="col"><?= __("Name"); ?></th>
+                                 <th scope="col"><?= __("Goal"); ?></th>
+                                 <th scope="col"><?= __("Category"); ?></th>
+                                 <th scope="col"><?= __("Status"); ?></th>
+                                 <th scope="col"><?= __("Payment"); ?></th>
+                                 <th scope="col"><?= __("Payment Period"); ?></th>
+                                 <th scope="col"><?= __("Leader"); ?></th>
+                                 <th scope="col"><?= __("Total Members"); ?></th>
+                                 <th scope="col"><?= __("Withdraw Period"); ?></th>
+                                 <th scope="col"><?= __("Action"); ?></th>
                               </tr>
                            </thead>
                            <tbody>
@@ -174,7 +231,7 @@ $input_field = new InputField();
                                           <td>" . $aasr_key["leader_id"] . "</td>
                                           <td>" . $aasr_key["totel_members"] . " </td>
                                           <td>" . $aasr_key["withdraw_frequency"] . "</td>
-                                          <td><a href='/pack_single/?stockvell_id=" . $aasr_key["id"] . "' class='btn btn-primary'>View</a></td>
+                                          <td><a href='/pack_single/?stockvell_id=" . $aasr_key["id"] . "' class='btn btn-primary'>$vw</a></td>
                                        </tr>
                                     ";
                               }
@@ -185,28 +242,29 @@ $input_field = new InputField();
                   <?php }                  ?>
                </div>
                <div class="content pending-pack-content d-none">
-                  <h1 class="h1 text-center">All pending packs!</h1>
-                  <p class="text-center">You can find all the stockvell pack that is made and requested for approvals. N.B. If you can not find a pack that you have created, in that case, the pack is been rejected. Try creating another one with proper informations!</p>
+                  <h1 class="h1 text-center"><?= __("All pending packs!"); ?></h1>
+                  <p class="text-center"><?= __("You can find all the stockvell pack that is made and requested for approvals. N.B. If you can not find a pack that you have created, in that case, the pack is been rejected. Try creating another one with proper informations!"); ?></p>
                   <?php
                   // psr = pending stockvell result 
                   // $apsr_result - getting from dashboard.inc.php
+
                   if (count($apsr_result) <= 0) {
-                     echo "<div class='alert alert-warning'>No pack found</div>";
+                     echo "<div class='alert alert-warning'>$npf</div>";
                   } else { ?>
                      <div class="table-responsive">
                         <table class="table table-bordered border-warning">
                            <thead class="bg-warning text-white border-primary">
                               <tr>
-                                 <th scope="col">#ID</th>
-                                 <th scope="col">Name</th>
-                                 <th scope="col">Goal</th>
-                                 <th scope="col">Category</th>
-                                 <th scope="col">Status</th>
-                                 <th scope="col">Payment</th>
-                                 <th scope="col">Payment Period</th>
-                                 <th scope="col">Leader</th>
-                                 <th scope="col">Withdraw Period</th>
-                                 <th scope="col">Action</th>
+                                 <th scope="col">#<?= __("ID"); ?></th>
+                                 <th scope="col"><?= __("Name"); ?></th>
+                                 <th scope="col"><?= __("Goal"); ?></th>
+                                 <th scope="col"><?= __("Category"); ?></th>
+                                 <th scope="col"><?= __("Status"); ?></th>
+                                 <th scope="col"><?= __("Payment"); ?></th>
+                                 <th scope="col"><?= __("Payment Period"); ?></th>
+                                 <th scope="col"><?= __("Leader"); ?></th>
+                                 <th scope="col"><?= __("Withdraw Period"); ?></th>
+                                 <th scope="col"><?= __("Action"); ?></th>
                               </tr>
                            </thead>
                            <tbody>
@@ -228,7 +286,7 @@ $input_field = new InputField();
                                        <td>" . $apsr_key["withdraw_frequency"] . "</td>
                                        <td>
                                           <form class='p-0 m-0' action='/includes/admin.inc.php?stockvell_id=" . $apsr_key["id"] . "&leader_id=" . $apsr_key["leader_id"] . "' method='post'>
-                                             <button type='submit' name='approve_stockvell' class='btn btn-primary'>Approve</button>  
+                                             <button type='submit' name='approve_stockvell' class='btn btn-primary'>$av</button>  
                                           </form>
                                        </td>
                                     </tr>
@@ -241,7 +299,7 @@ $input_field = new InputField();
                   <?php } ?>
                </div>
                <div class="content add-pack-content d-none my-4">
-                  add or Update stockvell
+                  <?= __("Add or Update stockvell"); ?>
                </div>
             </div>
          </div>
@@ -254,10 +312,10 @@ $input_field = new InputField();
       <div class="section-1">
          <div class="container">
             <div class="admin-login-caption text-center">
-               <h1 class="h1 text-center">Welcome to stockvell</h1>
-               <p class="text-center">Please enter the followings</p>
+               <h1 class="h1 text-center"><?= __("Welcome to stockvell"); ?></h1>
+               <p class="text-center"><?= __("Please enter the followings"); ?></p>
             </div>
-            <?php if (count($err_arr) > 0) echo $err_handler->displayErrors(); ?>
+            <?php if ($has_error) echo $err_handler->displayErrors(); ?>
             <form action="/includes/login.inc.php" method="POST">
                <div class="row mb-3">
                   <?php
@@ -266,7 +324,7 @@ $input_field = new InputField();
                   echo $input_field->inputText("password", $password, false, "password", true);
                   ?>
                </div>
-               <button type="submit" name="login_admin_submit" class="btn btn-primary">login</button>
+               <button type="submit" name="login_admin_submit" class="btn btn-primary"><?= __("Login"); ?></button>
             </form>
          </div>
       </div>
