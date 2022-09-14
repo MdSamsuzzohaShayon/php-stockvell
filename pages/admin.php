@@ -4,23 +4,45 @@ if (isset($_SESSION['member_id'])) {
    header("Location: /dashboard.php");
    exit();
 }
-$admin_id = $_SESSION['admin_id'];
+
+$admin_id = null;
+
+if (!isset($_SESSION['admin_id'])) {
+   $admin_id = $_SESSION['admin_id'];
+}
+
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
-$logged_admin = false;
-if (isset($admin_id)) $logged_admin = true;
 
 // Check for session 
 require_once($ROOT . "/vendor/autoload.php");
 require_once($ROOT . "/config/lang.php");
 require_once($ROOT . "/layouts/header.php");
 require_once($ROOT . "/config/option-list.php");
-// require_once($ROOT . "/utils/input-fields.php");
-// require_once($ROOT . "/classes/input.classes.php");
+
 
 use Utils\ErrorHandler;
 use Utils\InputField;
+use Models\Stockvell\FetchStockvell;
+use Models\Admin\FetchAdmin;
 
-$has_error= false;
+/**
+ * @ fetch essential data
+ */
+$admin_id = $_SESSION['admin_id'];
+$is_admin = null;
+$admin_id ? $is_admin = true : $is_admin = false;
+
+$admin_def = new FetchAdmin();
+$fabi_result = $admin_def->findAdminById($admin_id);
+// echo json_encode($fabi_result);
+
+
+$stockvell_pack = new FetchStockvell();
+$apsr_result = $stockvell_pack->getAllPendingStockvell("PENDING", $is_admin); // apsr = all pending stockvell result
+$aasr_result = $stockvell_pack->getStockvellByStatus('APPROVED'); // aasr = all approved stockvell result
+$amr_result = $stockvell_pack->getAllMembers($is_admin);
+
+$has_error = false;
 $err_msg = null;
 $err_handler = new ErrorHandler();
 if (isset($_GET["error"])) {
@@ -30,6 +52,12 @@ if (isset($_GET["error"])) {
 
 
 $input_field = new InputField();
+
+
+$av = __("Approve");
+$vw = __("View");
+$vd = __("Verified");
+$et = __("Edit");
 ?>
 
 
@@ -37,7 +65,7 @@ $input_field = new InputField();
 <main class="admin">
    <!-- This section is for authenticated admin  -->
    <?php
-   if ($logged_admin) {
+   if ($admin_id) {
       require_once($ROOT . "/includes/admin.inc.php");
 
       $npf = __("No pack found");
@@ -97,7 +125,7 @@ $input_field = new InputField();
                         echo $input_field->inputText("password2", $pw2, false, "password", false);
                         ?>
                      </div>
-                     <button type="submit" name="update_profile_submit" class="btn btn-primary"><?= __("Update"); ?></button> 
+                     <button type="submit" name="update_profile_submit" class="btn btn-primary"><?= __("Update"); ?></button>
                   </form>
                </div>
                <div class="content my-4 all-members-content d-none">
@@ -119,7 +147,7 @@ $input_field = new InputField();
                                  <th colspan="3">Action</th>
                               </tr>
                               <tr class="bg-warning text-white border-primary">
-                                 <th >#<?= __("ID"); ?></th>
+                                 <th>#<?= __("ID"); ?></th>
                                  <th scope="col"><?= __("Firstname"); ?></th>
                                  <th scope="col"><?= __("Surname"); ?></th>
                                  <th scope="col"><?= __("Email"); ?></th>
@@ -133,7 +161,7 @@ $input_field = new InputField();
                                  <th scope="col"><?= __("Role"); ?></th>
 
                                  <th scope="col"><?= __("Government ID"); ?></th>
-                                 <th scope="col"><?= __("Edit"); ?></th>
+                                 <th scope="col"><?= $et ?></th>
                                  <th scope="col"><?= __("Verification"); ?></th>
                               </tr>
                            </thead>
@@ -141,11 +169,7 @@ $input_field = new InputField();
                               <?php
                               // amr = all member result
                               // id, firstname, surname, email, country, phone, gender, profession, interest, govt_id, source, role
-                              
-                              $av = __("Approve");
-                              $vw = __("View");
-                              $vd = __("Verified");
-                              $et = __("Edit");
+
                               foreach ($amr_result as $amr_key) {
                                  # If not verified add a form to verify
                                  $verified_content = "<form class='p-0 m-0' action='/includes/admin.inc.php?member_id=" . $amr_key["id"] . "' method='post'>
@@ -176,7 +200,7 @@ $input_field = new InputField();
                                              <td>$verified_content</td>
                                           </tr>
                                           ";
-                                             // <td><a href='/edit_member/?member_id=" . $amr_key["id"] . ">Edit</a></td>   
+                                 // <td><a href='/edit_member/?member_id=" . $amr_key["id"] . ">Edit</a></td>   
                               }
                               ?>
                            </tbody>
@@ -199,7 +223,13 @@ $input_field = new InputField();
                      <div class="table-responsive">
                         <table class="table table-bordered border-warning">
                            <thead class="bg-warning text-white border-primary">
-                              <tr>
+                              <colgroup span="10"></colgroup>
+                              <colgroup span="2"></colgroup>
+                              <tr class="bg-warning text-white border-primary">
+                                 <th colspan="10">Properties</th>
+                                 <th colspan="2">Action</th>
+                              </tr>
+                              <tr class="bg-warning text-white border-primary">
                                  <th scope="col"><?= __("ID"); ?></th>
                                  <th scope="col"><?= __("Name"); ?></th>
                                  <th scope="col"><?= __("Goal"); ?></th>
@@ -210,7 +240,8 @@ $input_field = new InputField();
                                  <th scope="col"><?= __("Leader"); ?></th>
                                  <th scope="col"><?= __("Total Members"); ?></th>
                                  <th scope="col"><?= __("Withdraw Period"); ?></th>
-                                 <th scope="col"><?= __("Action"); ?></th>
+                                 <th scope="col"><?= $vw ?></th>
+                                 <th scope="col"><?= $et ?></th>
                               </tr>
                            </thead>
                            <tbody>
@@ -220,7 +251,7 @@ $input_field = new InputField();
                               foreach ($aasr_result as $aasr_key) {
                                  # code...
                                  echo "
-                                       <tr class='text-lowercase'>
+                                       <tr class='text-capitalize'>
                                           <th>" . $aasr_key["id"] . "</th>
                                           <td>" . $aasr_key["name"] . "</td>
                                           <td>" . $aasr_key["goal"] . "</td>
@@ -232,6 +263,7 @@ $input_field = new InputField();
                                           <td>" . $aasr_key["totel_members"] . " </td>
                                           <td>" . $aasr_key["withdraw_frequency"] . "</td>
                                           <td><a href='/pack_single/?stockvell_id=" . $aasr_key["id"] . "' class='btn btn-primary'>$vw</a></td>
+                                          <td><a href='/edit_stockvell/?stockvell_id=" . $aasr_key["id"] . "' class='btn btn-primary'>$et</a></td>
                                        </tr>
                                     ";
                               }
@@ -253,8 +285,14 @@ $input_field = new InputField();
                   } else { ?>
                      <div class="table-responsive">
                         <table class="table table-bordered border-warning">
-                           <thead class="bg-warning text-white border-primary">
-                              <tr>
+                           <thead>
+                              <colgroup span="9"></colgroup>
+                              <colgroup span="2"></colgroup>
+                              <tr class="bg-warning text-white border-primary">
+                                 <th colspan="9">Properties</th>
+                                 <th colspan="2">Action</th>
+                              </tr>
+                              <tr class="bg-warning text-white border-primary">
                                  <th scope="col">#<?= __("ID"); ?></th>
                                  <th scope="col"><?= __("Name"); ?></th>
                                  <th scope="col"><?= __("Goal"); ?></th>
@@ -264,7 +302,8 @@ $input_field = new InputField();
                                  <th scope="col"><?= __("Payment Period"); ?></th>
                                  <th scope="col"><?= __("Leader"); ?></th>
                                  <th scope="col"><?= __("Withdraw Period"); ?></th>
-                                 <th scope="col"><?= __("Action"); ?></th>
+                                 <th scope="col"><?= __("Previlage"); ?></th>
+                                 <th scope="col"><?= __("Edit"); ?></th>
                               </tr>
                            </thead>
                            <tbody>
@@ -274,7 +313,7 @@ $input_field = new InputField();
                               foreach ($apsr_result as $apsr_key) {
                                  # code...
                                  echo "
-                                    <tr class='text-lowercase'>
+                                    <tr class='text-capitalize'>
                                        <th>" . $apsr_key["id"] . "</th>
                                        <td>" . $apsr_key["name"] . "</td>
                                        <td>" . $apsr_key["goal"] . "</td>
@@ -285,10 +324,11 @@ $input_field = new InputField();
                                        <td>" . $apsr_key["firstname"] . " " . $apsr_key["surname"] . "</td>
                                        <td>" . $apsr_key["withdraw_frequency"] . "</td>
                                        <td>
-                                          <form class='p-0 m-0' action='/includes/admin.inc.php?stockvell_id=" . $apsr_key["id"] . "&leader_id=" . $apsr_key["leader_id"] . "' method='post'>
-                                             <button type='submit' name='approve_stockvell' class='btn btn-primary'>$av</button>  
-                                          </form>
+                                       <form class='p-0 m-0' action='/includes/admin.inc.php?stockvell_id=" . $apsr_key["id"] . "&leader_id=" . $apsr_key["leader_id"] . "' method='post'>
+                                       <button type='submit' name='approve_stockvell' class='btn btn-primary'>$av</button>  
+                                       </form>
                                        </td>
+                                       <td><a href='/edit_stockvell/?stockvell_id=" . $apsr_key["id"] . "' class='btn btn-warning text-white'>Edit</a></td>
                                     </tr>
                                  ";
                               }
@@ -299,7 +339,53 @@ $input_field = new InputField();
                   <?php } ?>
                </div>
                <div class="content add-pack-content d-none my-4">
-                  <?= __("Add or Update stockvell"); ?>
+                  <h1 class="h1 text-center"><?= __("Add stockvell pack"); ?>!</h1>
+                  <p class="text-center"><?= __("This pack will be added as a pending pack that will don't be available to everyone until the admin approves it."); ?>!</p>
+
+                  <!-- Form start  -->
+                  <form action="/includes/admin.inc.php" method="POST">
+                     <div class="row mb-3">
+                        <?php // echo inputElement('name', 'Name*', false, 'text'); 
+                        $nm = __("Name*");
+                        $gl = __("Goal*");
+                        $pyt = __("Payment*");
+                        $pytf = __("Payment Frequency(days)*");
+                        $wdf = __("Withdraw Frequency(days)*");
+                        $ct = __("Category*");
+                        $dsc = __("Description*");
+                        $agmt = __("You Must Write Agreement About This Stockvell Pack*");
+                        echo $input_field->inputText("name", $nm, false, "text", true);
+                        echo $input_field->inputText("goal", $gl, false, "text", true);
+                        ?>
+
+                     </div>
+                     <div class="row mb-3">
+                        <?php
+                        echo $input_field->inputTextarea("description", $dsc, true, true);
+                        ?>
+                     </div>
+                     <div class="row mb-3">
+                        <?php
+                        echo $input_field->inputText('payment', $pyt, false, 'number', true);
+                        echo $input_field->inputSelect("payment_frequency", $pytf, false, null, $freq_days);
+                        ?>
+                     </div>
+                     <div class="row mb-3">
+                        <?php
+                        echo $input_field->inputSelect("category", $ct, false, null, ["social", "professional", "investmant"]);
+                        echo $input_field->inputSelect("withdraw_frequency", $wdf, false, null, $freq_days);
+                        ?>
+                     </div>
+                     <div class="row mb-3">
+                        <?php
+                        echo $input_field->inputTextarea("agreement", $agmt, true, true)
+                        ?>
+                     </div>
+
+
+                     <button type="submit" name="create-stockvell-pack" class="btn btn-primary">Create Stockvell</button>
+                  </form>
+                  <!-- Form end  -->
                </div>
             </div>
          </div>
@@ -312,11 +398,11 @@ $input_field = new InputField();
       <div class="section-1">
          <div class="container">
             <div class="admin-login-caption text-center">
-               <h1 class="h1 text-center"><?= __("Welcome to stockvell"); ?></h1>
+               <h1 class="h1 text-center text-capitalize"><?= __("Login as Admin"); ?></h1>
                <p class="text-center"><?= __("Please enter the followings"); ?></p>
             </div>
             <?php if ($has_error) echo $err_handler->displayErrors(); ?>
-            <form action="/includes/login.inc.php" method="POST">
+            <form action="/includes/admin.inc.php" method="POST">
                <div class="row mb-3">
                   <?php
                   $password = __("Password");

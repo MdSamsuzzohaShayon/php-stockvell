@@ -35,17 +35,6 @@ if(isset($_POST["member_phone_login"])){
 
 
 
-if(isset($_POST["login_admin_submit"])){
-  $admin_email = $_POST["email"];
-  $admin_password = $_POST["password"];
 
-  // include $ROOT . "/config/Database.php";
-  // include $ROOT . "/Models/Login.php";
-
-  $login = new AdminLogin($admin_email , $admin_password);
-  $login->loginAdmin();
-
-  header("location: /dashboard");
-}
 
  ?>

@@ -25,31 +25,29 @@ require_once($ROOT . "/includes/packs.inc.php");
             </div>
 
             <div class="pack-list">
-                <div class="row">
+                <div class="d-flex flex-wrap justify-content-between">
                     <?php
                     if (count($asr_result) <= 0) {
                         echo "<div class='alert alert-warning'>No pack found</div>";
                     } else {
                         // psr = pending stockvell result 
                         foreach ($asr_result as $asr_key) { ?>
-                            <div class="col-12 col-md-4">
-                                <div class="card pack-item">
-                                    <div class="card-body text-bg-secondary text-primary">
-                                        <h4 class="h4">SL#<?= $asr_key['id'] ?></h4>
-                                        <div class="d-flex justify-content-between w-full">
-                                            <p><?= __("Monthly deposit"); ?></p>
-                                            <p>$<?= $asr_key['payment'] ?></p>
-                                        </div>
-                                        <div class="d-flex justify-content-between w-full">
-                                            <p><?= __("Total members"); ?></p>
-                                            <p><?= $asr_key['totel_members'] ?></p>
-                                        </div>
-                                        <div class="d-flex justify-content-between w-full">
-                                            <p><?= __("Goal"); ?></p>
-                                            <p><?= $asr_key['goal'] ?></p>
-                                        </div>
-                                        <a href="/pack_single.php?stockvell_id=<?= $asr_key['id'] ?>" class="btn btn-warning text-decoration-none text-white"><?= __("Details"); ?></a>
+                            <div class="card pack-item mb-5">
+                                <div class="card-body text-bg-secondary text-primary">
+                                    <h4 class="h4">ID#<?= $asr_key['id'] ?></h4>
+                                    <div class="d-flex justify-content-between w-full">
+                                        <p><?= __("Monthly deposit"); ?></p>
+                                        <p>$<?= $asr_key['payment'] ?></p>
                                     </div>
+                                    <div class="d-flex justify-content-between w-full">
+                                        <p><?= __("Category"); ?></p>
+                                        <p><?= $asr_key['category'] ?></p>
+                                    </div>
+                                    <div class="d-flex justify-content-between w-full">
+                                        <p><?= __("Goal"); ?></p>
+                                        <p><?= $asr_key['goal'] ?></p>
+                                    </div>
+                                    <a href="/pack_single.php?stockvell_id=<?= $asr_key['id'] ?>" class="btn btn-warning text-decoration-none text-white"><?= __("Details"); ?></a>
                                 </div>
                             </div>
                     <?php }

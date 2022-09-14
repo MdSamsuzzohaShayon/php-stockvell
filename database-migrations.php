@@ -61,6 +61,7 @@ class DatabaseMigrations extends Database
       $sql_query = "CREATE TABLE stockvells(
         id INT  NOT NULL AUTO_INCREMENT,
         name VARCHAR(100) NOT NULL,
+        COLUMN description TEXT NOT NULL,
         agreement TEXT NOT NULL,
         goal VARCHAR(100) NOT NULL,
         category VARCHAR(100) NOT NULL,
@@ -88,6 +89,21 @@ class DatabaseMigrations extends Database
         );";
       $this->createTable($sql_query, "stockvell_to_member");
     }
+
+
+    if (!$this->checkTableExist("stockvell_lr_member")) { // lr = leader request
+$sql_query = "CREATE TABLE stockvell_lr_member (
+        id INT NOT NULL AUTO_INCREMENT,
+        stockvell_id INT NOT NULL,
+        member_id INT NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY(stockvell_id) REFERENCES stockvells(id) ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY(member_id) REFERENCES members(id) ON DELETE CASCADE ON UPDATE CASCADE
+      )";
+      $this->createTable($sql_query, "stockvell_lr_member");
+    }
+
+
     if (!$this->checkTableExist("admins")) {
       $sql_query = "CREATE TABLE admins(
         id INT NOT NULL AUTO_INCREMENT, 
@@ -107,6 +123,7 @@ class DatabaseMigrations extends Database
     // $modify_sql = "ALTER TABLE members ADD COLUMN recovery_code VARCHAR(100)";
     // $modify_sql = "ALTER TABLE members MODIFY phone VARCHAR(150) UNIQUE NOT NULL";
     // $modify_sql = "UPDATE admins SET phone='+880_1785208590' WHERE id='1'";
+    // $modify_sql = "ALTER TABLE stockvells ADD COLUMN description TEXT NOT NULL";
     
     // $this->specificTableModifications($modify_sql, "Added another column to members");
   }

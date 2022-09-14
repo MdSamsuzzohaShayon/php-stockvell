@@ -3,12 +3,19 @@
  - [Live Preview](stockvell.allinone-office.com)
 
 ### Development
+ - Create admin staff
+ - Appoint leader of the pack  (make table of applicant)
+ - Member apply to be leader of the pack
+ - set max member of a pack 
+ - the simple member submit a proof of address, and Government ID
  - Join pack
  - refer link 
  - monthly payment made
+ - Mobile sidebar for admin and dashboard 
  - Edit admin profile details
  - Edit all member details by admin
- - Single pack page design
+ - Single pack page design 😎
+ - Create and edit stockvell pack by admin  😎
  - Login with phone and email 😎
  - Make phone number full including country code and plus sign (modify database) 😎
  - Unique member phone number (signup, database) 😎
@@ -55,6 +62,7 @@ Member Dashboard :
 A simple member can create a Stockvell Pack 
 but he must be approved as Leader of the Pack before the pack become visible to others to join. 
 I am not sure how technically it will be possible, 
+
 but please suggest some possibilities so that a simple member does not create a Pack (only A LEADER or AN ADMIN can create a Pack). A simple must apply to be a Leader once he creates a Pack. To apply as LEADER, the simple member submit a proof of address, and Government ID.
 And as leader, he will be able to define next member to withdraw funds (withdrawal can be random or first come, first served)
 Define the number of people is missing (can be dropdown from 02 to max 100)
@@ -344,6 +352,23 @@ Dominant - #C99127, Complementary - #809130, Accent - #2F4858, white - #ffffff, 
       </Directory>
     </VirtualHost>
   ```
+
+
+
+### Question
+ - 
+ Step-1: **Admin** create a pack
+ Step-2: A **user** join the pack (many user can be the **member** of the a pack)
+ Step-3: A member can make a request to be leader of the pack
+ Step-4: Admin will verify his document and appoint as leader
+
+ User types - There are 3 type of prople in this website
+ 1. Admin -> You who control the website
+ 2. User -> who signup with this website 
+ 2. Member -> Who join a stockvell pack he/she will be member of that pack  
+
+ did you mean leader of a pack will be able to create another pack?
+ - Input validation is already done (user can not leave it blank)
 
 
   

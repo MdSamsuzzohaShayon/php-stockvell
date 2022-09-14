@@ -1,19 +1,5 @@
 <?php
 session_start(); // In every single page we should start our session at the top of our code
-require_once($ROOT . "/includes/edit_member.inc.php");
-
-
-$ROOT = $_SERVER['DOCUMENT_ROOT'];
-// Check for session 
-require_once($ROOT . "/vendor/autoload.php");
-require_once($ROOT . "/includes/edit_member.inc.php");
-require_once($ROOT . "/config/lang.php");
-require_once($ROOT . "/layouts/header.php");
-require_once($ROOT . "/config/option-list.php");
-
-
-
-
 
 // member can not access this page
 if (isset($_SESSION['member_id'])) {
@@ -36,6 +22,22 @@ $admin_id = $_SESSION['admin_id'];
 $member_id = $_GET['member_id'];
 $logged_admin = false;
 if (isset($admin_id)) $logged_admin = true;
+
+
+$ROOT = $_SERVER['DOCUMENT_ROOT'];
+
+// Check for session 
+require_once($ROOT . "/vendor/autoload.php");
+require_once($ROOT . "/includes/edit_member.inc.php");
+require_once($ROOT . "/config/lang.php");
+require_once($ROOT . "/layouts/header.php");
+require_once($ROOT . "/config/option-list.php");
+
+
+
+
+
+
 
 
 use Utils\ErrorHandler;

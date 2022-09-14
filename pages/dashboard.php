@@ -161,6 +161,7 @@ $input_field = new InputField();
                               <th scope="col"><?= __("Payment") ?></th>
                               <th scope="col"><?= __("Payment Period") ?></th>
                               <th scope="col"><?= __("Withdraw Period") ?></th>
+                              <th scope="col"><?= __("Request to be the leader") ?></th>
                            </tr>
                         </thead>
                         <tbody>
@@ -182,6 +183,7 @@ $input_field = new InputField();
                                     <td>" . $asr_key["payment"] . "</td>
                                     <td>" . $asr_key["payment_frequency"] . "</td>
                                     <td>" . $asr_key["withdraw_frequency"] . "</td>
+                                    <td><button class='btn btn-primary'>Request Leader</button></td>
                                  </tr>
                               ";
                               }

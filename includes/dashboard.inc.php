@@ -7,12 +7,12 @@ include $ROOT . "/vendor/autoload.php";
 // include $ROOT . "/config/database.php";
 // include $ROOT . "/classes/stockvell.classes.php";
 // include $ROOT . "/classes/member.classes.php";
-use Models\Stockvell\Stockvell;
+use Models\Stockvell\FetchStockvell;
 use Models\Stockvell\StockvellForms;
 use Models\Member\MemberForms;
 
 
-$foundMember = new Stockvell(); // Variables getting from dashboard.php
+$foundMember = new FetchStockvell(); // Variables getting from dashboard.php
 $foundMember->setMember($member_email, $member_id );
 $cmr_result = $foundMember->getCurrentMember(); // cm = current member result
 $psr_result = $foundMember->getAllPendingStockvell("PENDING", false); // psr = pending search result

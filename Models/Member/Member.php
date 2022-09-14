@@ -36,6 +36,39 @@ class Member extends Database
     }
 
 
+    protected function findByMemberStockvellRelation($member_id, $stockvell_id){
+        $sql = "SELECT * FROM stockvell_to_member WHERE member_id=:member_id AND stockvell_id=:stockvell_id";
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute(array(':member_id' => $member_id, ':stockvell_id'=> $stockvell_id))){
+            return null;
+        }
+        // var_dump(array("mid"=> $member_id, "sid"=> $stockvell_id));
+        // exit();
+        $member_found = $stmt->fetch(\PDO::FETCH_OBJ);
+        if(!$member_found) return null;
+        return $member_found;
+        
+    }
+
+    protected function joinTheStockvellPack($member_id, $stockvell_id){
+        $sql = "INSERT INTO stockvell_to_member (member_id, stockvell_id) VALUES(:member_id, :stockvell_id)";
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute(array(':member_id' => $member_id, ':stockvell_id'=> $stockvell_id))){
+            return false;
+        }
+        return true;
+    }
+
+    protected function leaveFromStockvellPack($member_id, $stockvell_id){
+        $sql = "DELETE FROM stockvell_to_member WHERE member_id=:member_id AND stockvell_id=:stockvell_id";
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute(array(':member_id' => $member_id, ':stockvell_id'=> $stockvell_id))){
+            return false;
+        }
+        return true;
+    }
+
+
     protected function findMemberByEmail($email, $redirect_url)
     {
         $stmt = $this->connect()->prepare("SELECT id, firstname, surname, email  FROM members WHERE email = :email ");
@@ -146,6 +179,9 @@ class Member extends Database
         // echo "uploads/" . $uploadedFile["name"];
         return $unique_file_name;
     }
+
+
+
 
 
 

@@ -7,11 +7,11 @@ include $ROOT . "/vendor/autoload.php";
 // include $ROOT . "/config/database.php";
 // include $ROOT . "/classes/stockvell.classes.php";
 
-use Models\Stockvell\Stockvell;
+use Models\Stockvell\FetchStockvell;
 
 
-$foundMember = new Stockvell(); // Variables getting from dashboard.php
-$asr_result = $foundMember->getAllApprovedStockvell("APPROVED", false); // asr = approved search result
+$foundMember = new FetchStockvell(); // Variables getting from dashboard.php
+$asr_result = $foundMember->getStockvellByStatus("APPROVED"); // asr = approved search result
 
 
 

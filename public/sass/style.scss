@@ -159,7 +159,7 @@ header {
           position: fixed;
           bottom: 0;
           .menu-item{
-            width: 25% !important;
+            width: $sidebar_menu_item_width !important;
             text-align: center !important;
             align-items: center !important;
           }
@@ -175,7 +175,7 @@ header {
     margin: $section_gap;
     .pack-list{
       .pack-item{
-        width: 90%;
+        width: 30%;
       }
     }
   }
@@ -185,6 +185,9 @@ header {
   min-height: $min_height_of_the_page ;
   .section-1{
     margin: $section_gap;
+    .highlight-item {
+      width: 10rem;
+    }
   }
 }
 
@@ -207,7 +210,7 @@ header {
           position: fixed;
           bottom: 0;
           .menu-item{
-            width: 25% !important;
+            width: $sidebar_menu_item_width !important;
             text-align: center !important;
             align-items: center !important;
           }

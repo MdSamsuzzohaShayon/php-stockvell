@@ -73,6 +73,7 @@ $lang = [
     "Leader" => "Chef",
     "Total Members" => "Nombre total de membres",
     "Withdraw Period" => "Période de retrait",
+    "Request to be the leader" => "Demander à être le leader",
 
     // "Connect to your College Savings" => "Connectez-vous à votre épargne-études",
 
@@ -96,6 +97,12 @@ $lang = [
     "Monthly deposit" => "Dépôt mensuel",
     "Total members" => "Membres totaux",
     "Details" => "Détails",
+
+    // Single pack
+    "You are already a member of this pack!" => "Vous êtes déjà membre de ce pack !",
+    "Join Pack" => "Rejoindre le pack",
+    "Leave Pack" => "Laisser le paquet",
+    "Leader Request" => "Demande de chef",
     
     
     
@@ -103,9 +110,10 @@ $lang = [
     // Login page
     "Use Phone to Login" => "Utiliser le téléphone pour se connecter",
     "Use Email to Login" => "Utiliser l'e-mail pour se connecter",
+    "Login as User" => "Connectez-vous en tant qu'utilisateur",
 
 
-    // Admin page
+    // Admin page / edit member and stockvell
     "All members" => "Tous les membres",
     "Approved Pack" => "Pack approuvé",
     'Phone' => "Téléphoner",
@@ -113,7 +121,6 @@ $lang = [
     'Confirm Password' => "Confirmez le mot de passe",
     "All member's pieces of information which are verified or not" => "Toutes les informations du membre vérifiées ou non",
     "No pack found" => "Aucun pack trouvé",
-
     "Firstname" => "Prénom",
     "Surname" => "Nom de famille",
     "Password" => "Mot de passe",
@@ -132,6 +139,13 @@ $lang = [
     'All approved packs' => "Tous les packs approuvés",
     "You can find all the stockvell pack that is made and requested for approvals. N.B. If you can not find a pack that you have created, in that case, the pack is been rejected. Try creating another one with proper pieces of information." => "Vous pouvez trouver tous les packs stockvell qui sont fabriqués et demandés pour les approbations. N.B. Si vous ne trouvez pas un pack que vous avez créé, dans ce cas, le pack est rejeté. Essayez d'en créer un autre avec des informations appropriées.",
     'Add or Update stockvell' => "Ajouter ou mettre à jour stockvell",
+    'This stockvell pack is not found in the database!' => "Ce pack stockvell est introuvable dans la base de données !",
+    "This pack will be added as a pending pack that will don't be available to everyone until the admin approves it." => "Ce pack sera ajouté en tant que pack en attente qui ne sera pas disponible pour tout le monde tant que l'administrateur ne l'aura pas approuvé.",
+    'Edit any property of a Stockvell pack!' => "Modifiez n'importe quelle propriété d'un pack Stockvell !",
+    'You can change any properties of the pack and republish the pack to members once again' => "Vous pouvez modifier toutes les propriétés du pack et republier à nouveau le pack pour les membres",
+    'Update Stockvell' => "Mettre à jour Stockvell",
+    'Login as Admin' => "Connectez-vous en tant qu'administrateur",
+    'Edit' => "Éditer",
 ];
 
 

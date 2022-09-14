@@ -15,11 +15,45 @@ $stockvell_id = $_GET['stockvell_id'];
 
 $is_admin = false;
 if (isset($_SESSION['admin_id'])) $is_admin = true;
+
+
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
 require_once($ROOT . "/config/lang.php");
+require_once($ROOT . "/vendor/autoload.php");
 require_once($ROOT . "/layouts/header.php");
 require_once($ROOT . "/config/option-list.php");
-require_once($ROOT . "/includes/pack_single.inc.php");
+
+use Models\Stockvell\FetchStockvell;
+use Utils\InputField;
+use Utils\ErrorHandler;
+
+
+$foundStockvell = new FetchStockvell(); // Variables getting from dashboard.php
+// echo $stockvell_id ;
+$ssr_result = $foundStockvell->getASingleApprovedStockvell($stockvell_id); // single stockvell result
+// echo $ssr_result ["id"];
+if (empty($ssr_result['id'])) {
+    header("Location: /packs");
+    exit();
+}
+
+$is_mos = false;
+if ($is_admin === false) {
+    $is_mos = $foundStockvell->isMemberBelongToStockvell($stockvell_id, $member_id); // mos = member of stockvell
+}
+
+
+$has_error = false;
+$err_msg = null;
+$err_handler = new ErrorHandler();
+if (isset($_GET["error"])) {
+    $has_error = true;
+    $err_handler->setCommonErrors($_GET["error"]);
+}
+
+
+
+$input_field = new InputField();
 ?>
 
 
@@ -27,43 +61,56 @@ require_once($ROOT . "/includes/pack_single.inc.php");
 <main class="pack_single">
     <section class="section-1">
         <div class="container">
-            collapse
-            member list
-            make desc
-            agreement
-            more
+            <?php if ($has_error) echo $err_handler->displayErrors(); ?>
             <div class="row">
                 <div class="col-md-6">
                     <h1 class="h1"><?= $ssr_result['name']; ?></h1>
-                    <p>Description</p>
+                    <p><?php echo $ssr_result['description']; ?></p>
                     <p><?= $ssr_result['category']; ?></p>
-                    <?php 
-                    if($is_admin === false){
-                        if($is_mos) {
-                            echo "<a href='' class='btn btn-warning'>Leave Pack</a>";
-                        }else{
-                            echo "<a href='' class='btn btn-warning'>Join Pack</a>";    
+                    <div class="d-flex">
+                    <?php
+                    $jp = __("Join Pack");
+                    $lp = __("Leave Pack");
+                    $lr = __("Leader Request");
+                    if ($is_admin === false) {
+                        if ($is_mos) {
+                            $stockvell_id_input = $input_field->inputHidden("stockvell_id", $ssr_result["id"]);
+                            $member_id_input = $input_field->inputHidden("member_id", $member_id);
+                            echo "<form action='/includes/pack_single.inc.php' method='post' class='p-0 m-0'>
+                                        $stockvell_id_input
+                                        $member_id_input
+                                        <button type='submit' class='btn btn-warning text-capitalize' name='member_leader_request_pack'>$lr</button>
+                                    </form>";
+                        } else {
+                            $stockvell_id_input = $input_field->inputHidden("stockvell_id", $ssr_result["id"]);
+                            $member_id_input = $input_field->inputHidden("member_id", $member_id);
+                            echo "<form action='/includes/pack_single.inc.php' method='post' class='p-0 m-0'>
+                                        $stockvell_id_input
+                                        $member_id_input
+                                        <button type='submit' class='btn btn-warning text-capitalize ml-3' name='member_join_pack'>$jp</button>
+                                    </form>";
                         }
                     }
                     ?>
+                    </div>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <div class="row">
-                        <div class="col bg-primary text-secondary m-4">
+                    <div class="row d-flex highlight-stat justify-content-md-end justify-content-between">
+                        <div class="highlight-item m-2 p-2 bg-primary text-secondary">
                             <p>Monthly Deposit</p>
                             <h3 class="h3">$<?= $ssr_result['payment']; ?></h3>
                         </div>
-                        <div class="col bg-primary text-secondary m-4">
+                        <div class="highlight-item m-2 p-2 bg-primary text-secondary">
                             <p>Goal</p>
                             <h3 class="h3"><?= $ssr_result['goal']; ?></h3>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col bg-primary text-secondary m-4">
+                    <div class="row d-flex highlight-stat justify-content-md-end justify-content-between">
+                        <div class="highlight-item m-2 p-2 bg-primary text-secondary">
                             <p>Total Members</p>
                             <h3 class="h3"><?= $ssr_result['total_members']; ?></h3>
                         </div>
-                        <div class="col bg-primary text-secondary m-4">
+                        <div class="highlight-item m-2 p-2 bg-primary text-secondary">
                             <p>Pack ID</p>
                             <h3 class="h3"><?= $ssr_result['id']; ?></h3>
                         </div>
@@ -79,7 +126,7 @@ require_once($ROOT . "/includes/pack_single.inc.php");
                     // psr = pending stockvell result 
                     // $psr_result - getting from dashboard.inc.php
                     if (count($ssr_result['members']) <= 0) {
-                        echo "<div class='alert alert-warning'>No pack found</div>";
+                        echo "<div class='alert alert-warning'>No member joined yet</div>";
                     } else { ?>
                         <div class="table-responsive">
                             <table class="table table-bordered border-warning">

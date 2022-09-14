@@ -70,8 +70,13 @@ function sidebarElementToggle(allMenuItems, allContent) {
   allMenuItems.forEach((ami, i) => {
     ami.addEventListener("click", (amie) => {
       amie.preventDefault();
+      // console.log(location);
       const clickedItem = amie.currentTarget.dataset.item;
       if (pse !== clickedItem) elToggle(clickedItem, `${clickedItem}-content`);
+      const queryParams = new URLSearchParams(window.location.search);
+      if (queryParams.get("error")) {
+        location.replace(`${location.origin + location.pathname}`); // if anything went wrong remove this line
+      }
     });
   });
 
@@ -111,36 +116,34 @@ function sidebarElementToggle(allMenuItems, allContent) {
  * @page login
  * Toggle content for dashboard sidebar menu item
  */
- if (
+if (
   window.location.pathname === "/login.php" ||
   window.location.pathname === "/login/" ||
   window.location.pathname === "/login"
 ) {
-  const phoneLoginBtn = document.querySelector('.use-phone-btn');
-  const emailLoginBtn = document.querySelector('.use-email-btn');
-  
-  const phoneLoginForm = document.querySelector('.phone-login-form');
-  const emailLoginForm = document.querySelector('.email-login-form');
+  const phoneLoginBtn = document.querySelector(".use-phone-btn");
+  const emailLoginBtn = document.querySelector(".use-email-btn");
 
+  const phoneLoginForm = document.querySelector(".phone-login-form");
+  const emailLoginForm = document.querySelector(".email-login-form");
 
-  phoneLoginBtn.addEventListener("click", (plbe)=>{
-    if(emailLoginForm.classList.contains('d-block')){
-      emailLoginForm.classList.remove('d-block');
-      emailLoginForm.classList.add('d-none');
+  phoneLoginBtn.addEventListener("click", (plbe) => {
+    if (emailLoginForm.classList.contains("d-block")) {
+      emailLoginForm.classList.remove("d-block");
+      emailLoginForm.classList.add("d-none");
 
-      phoneLoginForm.classList.remove('d-none');
-      phoneLoginForm.classList.add('d-block');
+      phoneLoginForm.classList.remove("d-none");
+      phoneLoginForm.classList.add("d-block");
     }
   });
 
+  emailLoginBtn.addEventListener("click", (elbe) => {
+    if (phoneLoginForm.classList.contains("d-block")) {
+      phoneLoginForm.classList.remove("d-block");
+      phoneLoginForm.classList.add("d-none");
 
-  emailLoginBtn.addEventListener("click", (elbe)=>{
-    if(phoneLoginForm.classList.contains('d-block')){
-      phoneLoginForm.classList.remove('d-block');
-      phoneLoginForm.classList.add('d-none');
-      
-      emailLoginForm.classList.remove('d-none');
-      emailLoginForm.classList.add('d-block');
+      emailLoginForm.classList.remove("d-none");
+      emailLoginForm.classList.add("d-block");
     }
   });
 
@@ -198,6 +201,14 @@ if (
     const allContent = document.querySelectorAll(".content");
     if (allMenuItems && allContent) sidebarElementToggle(allMenuItems, allContent);
   }
+
+  const agreement = document.getElementById("agreement");
+  if (agreement) {
+    // Work with ck editor
+    ClassicEditor.create(agreement).catch((error) => {
+      console.error(error);
+    });
+  }
 }
 
 // recover-via-email
@@ -240,16 +251,30 @@ if (
     }
   }
 
-
   countryCodePrefixForPhone(false);
 }
 
-
+/**
+ * @page edit stockvell
+ */
+if (
+  window.location.pathname === "/edit_stockvell.php" ||
+  window.location.pathname === "/edit_stockvell/" ||
+  window.location.pathname === "/edit_stockvell"
+) {
+  const agreement = document.getElementById("agreement");
+  if (agreement) {
+    // Work with ck editor
+    ClassicEditor.create(agreement).catch((error) => {
+      console.error(error);
+    });
+  }
+}
 
 /**
  * @page edit member
  */
- if (
+if (
   window.location.pathname === "/edit_member.php" ||
   window.location.pathname === "/edit_member/" ||
   window.location.pathname === "/edit_member"
@@ -264,11 +289,10 @@ function countryCodePrefixForPhone(hasCountry) {
   const phoneMainHidden = document.getElementById("phone");
   const phoneRawInput = document.getElementById("phone-raw-input");
   const phonePrefixSelect = document.getElementById("phone-select");
-  
-  
+
   let country_code = "+229"; // default
 
-  if(hasCountry){
+  if (hasCountry) {
     const countryInput = document.getElementById("country");
     // Changing code
     countryInput.addEventListener("change", (cie) => {
@@ -278,7 +302,7 @@ function countryCodePrefixForPhone(hasCountry) {
       const pattern = /\W\d+/;
       country_code = cie.currentTarget.value.toString().match(pattern)[0];
       phonePrefixSelect.value = country_code;
-  
+
       let formatted_code = `${country_code}_${phoneRawInput.value}`;
       if (phoneRawInput.value === "") {
         formatted_code = country_code;

@@ -46,7 +46,7 @@ class AdminLogin extends Database
             $_SESSION["admin_username"] = $admin->name;
             $_SESSION["admin_email"] = $admin->email;
             $stmt = null;
-            header("Location: /admin.php?error=none");
+            header("Location: /admin");
             exit();
         }
 

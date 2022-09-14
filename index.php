@@ -11,6 +11,8 @@ if ($router === '/' || $router === '/home' || $router === '/index.php' || $route
     include($ROOT . '/pages/admin.php');
 }elseif ($router === '/edit_member' || $router === '/edit_member.php' || $router === '/edit_member/') {
     include($ROOT . '/pages/edit_member.php');
+}elseif ($router === '/edit_stockvell' || $router === '/edit_stockvell.php' || $router === '/edit_stockvell/') {
+    include($ROOT . '/pages/edit_stockvell.php');
 } elseif ($router === '/dashboard' || $router === '/dashboard.php' || $router === '/dashboard/') {
     include($ROOT . '/pages/dashboard.php');
 } elseif ($router === '/about' || $router === '/about.php' || $router === '/about/') {

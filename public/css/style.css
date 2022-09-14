@@ -10621,7 +10621,7 @@ header .toggle-menu {
     bottom: 0;
   }
   .admin .section-2 .sidebar-menus .sidebar-menu-items .menu-item {
-    width: 25% !important;
+    width: 20% !important;
     text-align: center !important;
     align-items: center !important;
   }
@@ -10634,7 +10634,7 @@ header .toggle-menu {
   margin: 7rem 0;
 }
 .packs .section-1 .pack-list .pack-item {
-  width: 90%;
+  width: 30%;
 }
 
 .pack_single {
@@ -10642,6 +10642,9 @@ header .toggle-menu {
 }
 .pack_single .section-1 {
   margin: 7rem 0;
+}
+.pack_single .section-1 .highlight-item {
+  width: 10rem;
 }
 
 .dashboard .section-1 .sidebar-menus {
@@ -10660,7 +10663,7 @@ header .toggle-menu {
     bottom: 0;
   }
   .dashboard .section-1 .sidebar-menus .sidebar-menu-items .menu-item {
-    width: 25% !important;
+    width: 20% !important;
     text-align: center !important;
     align-items: center !important;
   }

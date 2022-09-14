@@ -41,7 +41,7 @@ $input_field = new InputField();
   <section class="section-1">
     <div class="container">
       <div class="login-caption text-center">
-        <h1 class="h1"><?= __("Welcome to stockvell"); ?></h1>
+        <h1 class="h1 text-center text-capitalize"><?= __("Login as User"); ?></h1>
         <p><?= __("Please enter the following to login as a member"); ?> </p>
       </div>
 

@@ -116,10 +116,55 @@ class MemberForms extends Member
         foreach ($this->input_list as $key => $val) {
             if (!empty($val) && $key !== "password2")   $cols[] = "$key = '$val'";
         }
-        if($this->updateMember($cols, $member_id)){
+        if ($this->updateMember($cols, $member_id)) {
             header("Location: /edit_member/?member_id=$member_id&error=none");
-        }else{
+        } else {
             header("Location: /edit_member/?member_id=$member_id&error=stmtfailed");
+        }
+    }
+    public function memberJoinPack($member_id, $stockvell_id)
+    {
+        if (empty($member_id) || empty($stockvell_id)) {
+            header("Location: /pack_single/?stockvell_id=$stockvell_id&error=emptyinput");
+            exit();
+        }
+        $find_relation = $this->findByMemberStockvellRelation($member_id, $stockvell_id);
+        if ($find_relation) {
+            // error - return or redirect
+            header("Location: /pack_single/?stockvell_id=$stockvell_id&error=alreadymember");
+            exit();
+        } else {
+            // create a new relation 
+            if ($this->joinTheStockvellPack($member_id, $stockvell_id)) {
+                header("Location: /pack_single/?stockvell_id=$stockvell_id&error=none");
+                exit();
+            } else {
+                header("Location: /pack_single/?stockvell_id=$stockvell_id&error=stmtfailed");
+                exit();
+            }
+        }
+    }
+
+    public function memberLeavePack($member_id, $stockvell_id)
+    {
+        if (empty($member_id) || empty($stockvell_id)) {
+            header("Location: /pack_single/?stockvell_id=$stockvell_id&error=emptyinput");
+            exit();
+        }
+        $find_relation = $this->findByMemberStockvellRelation($member_id, $stockvell_id);
+        if ($find_relation) {
+            // remove from relation 
+            if ($this->leaveFromStockvellPack($member_id, $stockvell_id)) {
+                header("Location: /pack_single/?stockvell_id=$stockvell_id&error=none");
+                exit();
+            } else {
+                header("Location: /pack_single/?stockvell_id=$stockvell_id&error=stmtfailed");
+                exit();
+            }
+        } else {
+            // error - return or redirect
+            header("Location: /pack_single/?stockvell_id=$stockvell_id&error=alreadymember");
+            exit();
         }
     }
 }
