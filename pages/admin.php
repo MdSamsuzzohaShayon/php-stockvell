@@ -383,7 +383,7 @@ $et = __("Edit");
                      </div>
 
 
-                     <button type="submit" name="create-stockvell-pack" class="btn btn-primary">Create Stockvell</button>
+                     <button type="submit" name="create_stockvell_pack" class="btn btn-primary"><?= __("Create Stockvell") ?></button>
                   </form>
                   <!-- Form end  -->
                </div>

@@ -11,8 +11,13 @@ class StockvellForms extends Database
     // {
     //     // parent::__construct($member_email, $leader_id);
     //     // $this->leader_id = $_SESSION['member_id'];
-    //     // $this->redirect = $redirect;
+    //     // admin/ = $redirect;
     // }
+
+    public function __construct()
+    {
+        $this->ROOT = $_SERVER['DOCUMENT_ROOT'];
+    }
 
     public function setStockvellPropertyArray($stockvell_id, $name, $description, $payment, $payment_frequency, $category, $withdraw_frequency, $agreement)
     {
@@ -56,7 +61,7 @@ class StockvellForms extends Database
         $cols = array();
         // Remove blank inputs and password2
         foreach ($input_list as $key => $val) {
-            if(!empty($val) && $key === "stockvell_id"){
+            if (!empty($val) && $key === "stockvell_id") {
                 continue;
             }
             if (!empty($val) && $key !== "password2")   $cols[] = "$key = '$val'";
@@ -72,10 +77,10 @@ class StockvellForms extends Database
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam('stockvell_id', $stockvell_id);
 
-        
+
         if (!$stmt->execute()) {
             return false;
-        }        
+        }
         return true;
     }
 
@@ -101,22 +106,19 @@ class StockvellForms extends Database
         $stmt->bindParam('withdraw_frequency', intval($this->withdraw_frequency, 10), \PDO::PARAM_INT);
         // $stmt->bindParam('leader_id', intval($this->leader_id, 10), \PDO::PARAM_INT);
 
-        /*
-        echo json_encode(array(
-            "name" => $this->name,
-            // "agreement" => $this->agreement,
-            "goal" => $this->goal,
-            "category" => $this->category,
-            "description" => $this->description,
-            "payment" => intval($this->payment, 10),
-            "payment_frequency" => intval($this->payment_frequency, 10),
-            "status" => $status,
-            "category" => $this->category,
-            "withdraw_frequency" => intval($this->withdraw_frequency, 10),
-            "leader_id" => intval($this->leader_id, 10),
-        ));
-        exit();
-        */
+        // echo json_encode(array(
+        //     "name" => $this->name,
+        //     // "agreement" => $this->agreement,
+        //     "goal" => $this->goal,
+        //     "category" => $this->category,
+        //     "description" => $this->description,
+        //     "payment" => intval($this->payment, 10),
+        //     "payment_frequency" => intval($this->payment_frequency, 10),
+        //     "status" => $status,
+        //     "category" => $this->category,
+        //     "withdraw_frequency" => intval($this->withdraw_frequency, 10),
+        // ));
+        // exit();
 
 
         // make many to many relationship
@@ -125,17 +127,18 @@ class StockvellForms extends Database
         try {
             //code...
             if (!$stmt->execute()) {
-                header("Location: /$this->redirect?error=stmtfailed");
+                header("Location: /admin/?error=stmtfailed");
                 exit();
             }
             // $stmt->execute();
             // $stmt = null;
-            header("Location: /$this->redirect?error=none");
+            header("Location: /admin/?error=none");
+            exit();
         } catch (\PDOException $e) {
             //throw $th;
             echo $e->getMessage();
             exit();
-            header("Location: /$this->redirect?error=stmtfailed");
+            header("Location: /admin/?error=stmtfailed");
         }
     }
 
@@ -143,10 +146,81 @@ class StockvellForms extends Database
     {
 
         if (empty($this->name) || empty($this->goal) || empty($this->payment) || empty($this->description) || empty($this->payment_frequency) || empty($this->category) || empty($this->withdraw_frequency) || empty($this->agreement)) {
-            header("Location: /$this->redirect?error=emptyinput");
+            header("Location: /admin/?error=emptyinput");
             exit();
         }
 
         $this->createStockvellPack();
+    }
+
+
+    protected function removeFromLeaderRequest($sm_id)
+    { // sm = stockvell leader request member (stockvell_lr_member)
+        $sql = "DELETE FROM stockvell_lr_member WHERE id=:sm_id";
+        $stmt = $this->connect()->prepare($sql);
+        if ($stmt->execute(array('sm_id' => $sm_id))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    protected function findRequestOfMemberToBeLeaderByID($sm_id)
+    {
+        $sql = "SELECT * FROM stockvell_lr_member WHERE id=:sm_id";
+        $stmt = $this->connect()->prepare($sql);
+        if ($stmt->execute(array('sm_id' => $sm_id))) {
+            $result = $stmt->fetch(\PDO::FETCH_OBJ);
+            return $result;
+        } else {
+            return null;
+        }
+    }
+
+    // government ID proof and address proof
+    protected function deletePrevFileFromServer($prev_name, $ROOT)
+    {
+        $target_dir = $ROOT . "/uploads/";
+        if (file_exists($target_dir . $prev_name)) {
+            unlink($target_dir . $prev_name);
+        }
+    }
+
+    protected function updateMemberToLeader($stockvell_id, $member_id)
+    {
+        $sql = "UPDATE stockvells SET leader_id=:leader_id WHERE id=:stockvell_id";
+        $stmt = $this->connect()->prepare($sql);
+        if ($stmt->execute(array(":leader_id"=>$member_id, ":stockvell_id"=>$stockvell_id))) {
+            return true;
+        }
+        return false;
+    }
+
+
+    public function makeLeaderOfThePack($sm_id, $member_id, $stockvell_id)
+    {
+        if (empty($sm_id) || empty($member_id) || empty($stockvell_id)) {
+            header("Location: /pack_single/?stockvell_id=$stockvell_id");
+            exit();
+        }
+        $rl_result =  $this->findRequestOfMemberToBeLeaderByID($sm_id); // $rl = request leader
+        if ($rl_result === null) {
+            header("Location: /pack_single/?stockvell_id=$stockvell_id&error=stockvellnotfound");
+            exit();
+        }
+        $this->deletePrevFileFromServer($rl_result->govt_id_proof, $this->ROOT);
+        $this->deletePrevFileFromServer($rl_result->address_proof, $this->ROOT);
+
+        $this->updateMemberToLeader($stockvell_id, $member_id); 
+
+
+        if (!$this->removeFromLeaderRequest($sm_id)) {
+            header("Location: /pack_single/?stockvell_id=$stockvell_id&error=stmtfailed");
+            exit();
+        }
+
+        header("Location: /pack_single/?stockvell_id=$stockvell_id&error=none");
+        exit();
     }
 }

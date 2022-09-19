@@ -4,10 +4,10 @@ namespace Models\Member;
 use Models\Member\Member;
 class Signup extends Member
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    // public function __construct()
+    // {
+    //     parent::__construct();
+    // }
 
 
     // public function delete_prev_file_from_server($prev_name, $ROOT)
@@ -39,6 +39,23 @@ class Signup extends Member
         return $unique_file_name;
     }
     */
+
+
+    public function setMember($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city){
+        $this->firstname  = $firstname;
+        $this->surname  = $surname;
+        $this->email  = $email;
+        $this->password  = $password;
+        $this->password2  = $password2;
+        $this->country  = $country;
+        $this->phone  = $phone;
+        $this->gender  = $gender;
+        $this->profession  = $profession;
+        $this->interest  = $interest;
+        $this->govt_id  = $govt_id;
+        $this->source  = $source;
+        $this->city = $city;
+    }
 
 
     public function signupMember()
@@ -107,7 +124,7 @@ class Signup extends Member
         // move_uploaded_file($this->govt_id["tmp_name"], "uploads/" . $this->govt_id["name"]);
         */
 
-        $unique_file_name = $this->uploadFileToServer($this->govt_id, $this->ROOT, true);
+        $unique_file_name = $this->uploadFileToServer($this->govt_id, $this->ROOT, "/dashboard/?");
         $this->saveMemberToDB($this->firstname, $this->surname, $this->email, $this->password, $this->country, $this->phone, $this->gender, $this->profession, $this->interest, $unique_file_name, $this->source, $this->city);
     }
 

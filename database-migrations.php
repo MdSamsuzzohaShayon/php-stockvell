@@ -96,6 +96,8 @@ $sql_query = "CREATE TABLE stockvell_lr_member (
         id INT NOT NULL AUTO_INCREMENT,
         stockvell_id INT NOT NULL,
         member_id INT NOT NULL,
+        govt_id_proof VARCHAR(150) NOT NULL,
+        address_proof VARCHAR(150) NOT NULL,
         PRIMARY KEY (id),
         FOREIGN KEY(stockvell_id) REFERENCES stockvells(id) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY(member_id) REFERENCES members(id) ON DELETE CASCADE ON UPDATE CASCADE

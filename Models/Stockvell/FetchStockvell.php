@@ -23,6 +23,24 @@ class FetchStockvell extends Stockvell
     }
 
 
+
+    public function memberWhoRequestToBeLeader($member_id, $stockvell_id){
+        $sql = "SELECT * FROM stockvell_lr_member WHERE stockvell_id=:stockvell_id AND member_id=:member_id";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute(array("stockvell_id"=> $stockvell_id, "member_id"=>$member_id));
+        $result = $stmt->fetch(\PDO::FETCH_OBJ);
+        return $result;
+    }
+
+    public function allMembersWhoRequestToBeLeader($stockvell_id){
+        $sql = "SELECT sm.id, sm.member_id, sm.stockvell_id, sm.govt_id_proof, sm.address_proof, s.name, s.goal, s.category, s.leader_id, m.firstname, m.surname, m.email, m.phone FROM stockvell_lr_member sm LEFT JOIN stockvells s ON sm.stockvell_id=s.id LEFT JOIN members m ON sm.member_id=m.id WHERE stockvell_id=:stockvell_id";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute(array("stockvell_id"=> $stockvell_id));
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+
     public function getASingleApprovedStockvell($stockvell_id)
     {
         $stockvell_result = $this->getASingleApprovedStockvellWithMembers($stockvell_id);
@@ -116,11 +134,9 @@ class FetchStockvell extends Stockvell
 
     public function getAllPendingStockvell($status, $is_admin)
     {
-        $sql = null;
-        $stmt = null;
         if ($is_admin) {
             // All stockvell of a member
-            $sql = "SELECT s.id, s.leader_id, s.name, s.agreement, s.goal, s.category, s.status, s.payment, s.payment_frequency, s.withdraw_frequency, m.firstname, m.surname FROM stockvells s WHERE status=:status";
+            $sql = "SELECT s.id, s.leader_id, s.name, s.agreement, s.goal, s.category, s.status, s.payment, s.payment_frequency, s.withdraw_frequency FROM stockvells s WHERE status=:status";
             $stmt = $this->connect()->prepare($sql);
             $stmt->bindParam('status', $status);
         } else {

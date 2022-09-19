@@ -14,6 +14,7 @@ $lang = [
     "Connect to your College Savings" => "Connectez-vous à votre épargne-études",
     "Must agree with goal of the group" => "Doit être d'accord avec l'objectif du groupe",
     "Withdraw money at the end" => "Retirer de l'argent à la fin",
+    "Packs" => "Forfaits",
     
     // Signup and login pages
     "Please enter the followings" => "Veuillez entrer les éléments suivants",
@@ -24,7 +25,7 @@ $lang = [
     'Country*' => "Pays*",
     'Phone*' => "Téléphoner*",
     'Select Gender*' => "Sélectionnez le sexe*",
-    'Profession*' => "fr",
+    // 'Profession*' => "fr",
     "Interest (Optional comma-separated list)" => "Intérêts (liste facultative séparée par des virgules)",
     "Government ID*" => "Pièce d'identité gouvernementale*",
     'How did you hear about the Stockvell platform? (Optional)' => "Comment avez-vous entendu parler de la plateforme Stockvell ? (Optionnel)",
@@ -103,6 +104,18 @@ $lang = [
     "Join Pack" => "Rejoindre le pack",
     "Leave Pack" => "Laisser le paquet",
     "Leader Request" => "Demande de chef",
+    "Submit the required document in order to be the leader of the pack!" => "Soumettez le document requis afin d'être le leader du peloton!",
+    "Admin of this site will validate your document and if we think you can be the leader we will appoint you as the leader of the pack" => "L'administrateur de ce site validera votre document et si nous pensons que vous pouvez être le leader nous vous désignerons comme le leader du peloton",
+    "The request you have made to become the leader of the pack, we will review and let you know thank you." => "La demande que vous avez faite pour devenir le chef de meute, nous l'examinerons et vous en informerons merci.",
+    "Monthly Deposit" => "Dépôt mensuel",
+    "Pack ID" => "ID de pack",
+    "Agreement" => "Accord",
+    "Members" => "Membres",
+    "Members requested to be a leader" => "Les membres ont demandé à être un leader",
+    "No one requested to be the leader of the pack" => "Personne n'a demandé à être le chef de la meute",
+    "No member joined yet" => "Aucun membre n'a encore rejoint",
+    "Government ID Proof" => "Government ID Proof",
+    "Address Proof" => "Preuve d'adresse",
     
     
     

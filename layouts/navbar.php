@@ -40,8 +40,8 @@ $ROOT = $_SERVER['DOCUMENT_ROOT'];
           <?= __("Lang") ?>
           </div>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/?lang=fr">Français</a></li>
-            <li><a class="dropdown-item" href="/?lang=en">English</a></li>
+            <li><a class="dropdown-item" data-lang="fr" id="lang-fn" href="/?lang=fr">Français</a></li>
+            <li><a class="dropdown-item" data-lang="en" id="lang-en" href="/?lang=en">English</a></li>
           </ul>
         </div>
       </li>

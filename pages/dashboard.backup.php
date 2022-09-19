@@ -54,6 +54,14 @@ $input_field = new InputField();
                   <img class="mx-md-4 mx-0" src="/public/icons/my-pack.svg" alt="">
                   <p class="m-0 px-3"><?= __("My Pack"); ?></p>
                </li>
+               <li role="button" data-item="pending-pack" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row">
+                  <img class="mx-md-4 mx-0" src="/public/icons/pending-pack.svg" alt="">
+                  <p class="m-0 px-3"><?= __("Pending Pack"); ?></p>
+               </li>
+               <li role="button" data-item="add-pack" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row">
+                  <img class="mx-md-4 mx-0" src="/public/icons/add-pack.svg" alt="">
+                  <p class="m-0 px-3"><?= __("Add Pack"); ?></p>
+               </li>
             </ul>
          </div>
          <div class="col-md-9 sidebar-content">
@@ -185,6 +193,108 @@ $input_field = new InputField();
                      </table>
                   </div>
                <?php }               ?>
+            </div>
+            <div class="content pending-pack-content d-none">
+               <h1 class="h1"><?= __("All pending packs!") ?></h1>
+               <p><?= __("You can find all the stockvell pack that is made and requested for approvals. N.B. If you can not find a pack that you have created, in that case, the pack is been rejected. Try creating another one with proper informations!") ?></p>
+               <?php
+               // psr = pending stockvell result 
+               // $psr_result - getting from dashboard.inc.php
+               if (count($psr_result) <= 0) {
+                  echo "<div class='alert alert-warning'>No pack found</div>";
+               } else { ?>
+                  <div class="table-responsive">
+                     <table class="table table-bordered border-warning">
+                        <thead class="bg-warning text-white border-primary">
+                           <tr>
+                              <th scope="col">#ID</th>
+                              <th scope="col">Name</th>
+                              <th scope="col">Goal</th>
+                              <th scope="col">Category</th>
+                              <th scope="col">Status</th>
+                              <th scope="col">Payment</th>
+                              <th scope="col">Payment Period</th>
+                              <th scope="col">Leader</th>
+                              <th scope="col">Total Members (u)</th>
+                              <th scope="col">Withdraw Period</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <?php
+                           // psr = pending stockvell result 
+                           // $psr_result - getting from dashboard.inc.php
+                           if (count($psr_result) <= 0) {
+                              echo "<div class='alert alert-warning'>No pack found</div>";
+                           } else {
+                              foreach ($psr_result as $psr_key) {
+                                 # code...
+                                 echo "
+                                 <tr class='text-lowercase'>
+                                    <th>" . $psr_key["id"] . "</th>
+                                    <td>" . $psr_key["name"] . "</td>
+                                    <td>" . $psr_key["goal"] . "</td>
+                                    <td>" . $psr_key["category"] . "</td>
+                                    <td>" . $psr_key["status"] . "</td>
+                                    <td>" . $psr_key["payment"] . "</td>
+                                    <td>" . $psr_key["payment_frequency"] . "</td>
+                                    <td>" . $psr_key["leader_id"] . "</td>
+                                    <td> 10 </td>
+                                    <td>" . $psr_key["withdraw_frequency"] . "</td>
+                                 </tr>
+                              ";
+                              }
+                           }
+                           ?>
+                        </tbody>
+                     </table>
+                  </div>
+               <?php }                ?>
+
+            </div>
+            <div class="content add-pack-content d-none my-4">
+               <div class="signup-caption text-center">
+                  <h1 class="h1"><?= __("Create your own Stockvell pack!") ?></h1>
+                  <p><?= __("You can create your own stockvell, in order to do that you need to fill in all the input fields and once you create your will request of creating a new pack will be under our review.") ?></p>
+               </div>
+               <?php if ($has_error) echo $err_handler->displayErrors(); ?>
+               <!-- Form start  -->
+               <form action="/includes/dashboard.inc.php" method="POST">
+                  <div class="row mb-3">
+                     <?php // echo inputElement('name', 'Name*', false, 'text'); 
+                     $nm = __("Name*");
+                     $gl = __("Goal*");
+                     $pyt = __("Payment*");
+                     $pytf = __("Payment Frequency(days)*");
+                     $wdf = __("Withdraw Frequency(days)*");
+                     $ct = __("Category*");
+                     $agmt = __("You Must Write Agreement About This Stockvell Pack*");
+                     echo $input_field->inputText("name", $nm, false, "text", true);
+                     echo $input_field->inputText("goal", $gl, false, "text", true);
+                     ?>
+
+                  </div>
+                  <div class="row mb-3">
+                     <?php
+                     echo $input_field->inputText('payment', $pyt, false, 'number', true);
+                     echo $input_field->inputSelect("payment_frequency", $pytf, false, null, $freq_days);
+                     ?>
+                  </div>
+                  <div class="row mb-3">
+                     <?php
+                     echo $input_field->inputSelect("category", $ct, false, null, ["social", "professional", "investmant"]);
+                     echo $input_field->inputSelect("withdraw_frequency", $wdf, false, null, $freq_days);
+                     ?>
+                  </div>
+                  <div class="row mb-3">
+                     <?php 
+                     echo $input_field->inputTextarea("agreement", $agmt, true, true)
+                     ?>
+                  </div>
+
+
+                  <button type="submit" name="create-stockvell" class="btn btn-primary">Create Stockvell</button>
+               </form>
+               <!-- Form end  -->
             </div>
          </div>
       </div>

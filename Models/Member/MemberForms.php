@@ -89,7 +89,7 @@ class MemberForms extends Member
             if ($found_file->govt_id) {
                 $this->deletePrevFileFromServer($found_file->govt_id, $this->ROOT);
             }
-            $unique_file_name = $this->uploadFileToServer($this->govt_id, $this->ROOT, true);
+            $unique_file_name = $this->uploadFileToServer($this->govt_id, $this->ROOT, "/dashboard/?");
         }
         $this->input_list = array(
             'firstname' => $this->firstname,
@@ -142,6 +142,32 @@ class MemberForms extends Member
                 header("Location: /pack_single/?stockvell_id=$stockvell_id&error=stmtfailed");
                 exit();
             }
+        }
+    }
+
+    public function submitLeaderRequest($member_id,  $stockvell_id, $govt_id_proof, $address_proof)
+    {
+        if (empty($member_id) || empty($stockvell_id)) {
+            header("Location: /pack_single/?stockvell_id=$stockvell_id&error=emptyinput");
+            exit();
+        }
+        // echo json_encode(
+        //     array(
+        //         "member_id" => $member_id,
+        //         "stockvell_id" => $stockvell_id,
+        //         "govt_id_proof" => $govt_id_proof,
+        //         "address_proof" => $address_proof
+        //     )
+        // );
+        // exit();
+        $unique_govt_id_name = $this->uploadFileToServer($govt_id_proof, $this->ROOT, "/pack_single/?stockvell_id=$stockvell_id&");
+        $unique_address_name = $this->uploadFileToServer($address_proof, $this->ROOT, "/pack_single/?stockvell_id=$stockvell_id&");
+        if($this->requestToBeTheLeader($member_id, $stockvell_id, $unique_govt_id_name, $unique_address_name)){
+            header("Location: /pack_single/?stockvell_id=$stockvell_id&error=none");
+            exit();
+        }else{
+            header("Location: /pack_single/?stockvell_id=$stockvell_id&error=stmtfaild");
+            exit();
         }
     }
 

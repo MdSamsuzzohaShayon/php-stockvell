@@ -4,6 +4,7 @@ $ROOT = $_SERVER['DOCUMENT_ROOT'];
 
 // require_once($ROOT . "/vendor/autoload.php");
 require_once($ROOT . "/vendor/autoload.php");
+
 use Models\Stockvell\StockvellForms;
 use Models\Stockvell\AdminStockvellForms;
 use Models\Member\MemberForms;
@@ -20,16 +21,16 @@ use Models\Admin\AdminLogin;
 
 
 
-if(isset($_POST["login_admin_submit"])){
+if (isset($_POST["login_admin_submit"])) {
     $admin_email = $_POST["email"];
     $admin_password = $_POST["password"];
-  
+
     // include $ROOT . "/config/Database.php";
     // include $ROOT . "/Models/Login.php";
-  
-    $login = new AdminLogin($admin_email , $admin_password);
+
+    $login = new AdminLogin($admin_email, $admin_password);
     $login->loginAdmin();
-  }
+}
 
 
 if (isset($_POST["approve_stockvell"])) {
@@ -66,7 +67,7 @@ if (isset($_POST["update_profile_submit"])) {
 
 
 
-if (isset($_POST["create-stockvell-pack"])) {
+if (isset($_POST["create_stockvell_pack"])) {
     /**
      * @var getting all inputs
      */
@@ -79,19 +80,18 @@ if (isset($_POST["create-stockvell-pack"])) {
     $withdraw_frequency = $_POST["withdraw_frequency"];
     $agreement = $_POST["agreement"];
 
-    $stockvell_control = new StockvellForms("admin/");
-    $stockvell_control->setStockvell($name, $goal, $payment, $description , $payment_frequency, $category, $withdraw_frequency, $agreement);
+    // echo json_encode(array(
+    //     "name " => $name,
+    //     "goal " => $goal,
+    //     "payment " => $payment,
+    //     "description " => $description,
+    //     "payment_frequency " => $payment_frequency,
+    //     "category" => $category,
+    //     "withdraw_frequency" => $withdraw_frequency,
+    // ));
+    // exit();
+
+    $stockvell_control = new StockvellForms();
+    $stockvell_control->setStockvell($name, $goal, $payment, $description, $payment_frequency, $category, $withdraw_frequency, $agreement);
     $stockvell_control->validateAndCreate();
 }
-
-
-
-
-
-
-
-
-
-
-
-
