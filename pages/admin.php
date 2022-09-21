@@ -38,7 +38,7 @@ $fabi_result = $admin_def->findAdminById($admin_id);
 
 
 $stockvell_pack = new FetchStockvell();
-$apsr_result = $stockvell_pack->getAllPendingStockvell("PENDING", $is_admin); // apsr = all pending stockvell result
+$apsr_result = $stockvell_pack->getAllPendingStockvell("PENDING", $is_admin, null); // apsr = all pending stockvell result
 $aasr_result = $stockvell_pack->getStockvellByStatus('APPROVED'); // aasr = all approved stockvell result
 $amr_result = $stockvell_pack->getAllMembers($is_admin);
 

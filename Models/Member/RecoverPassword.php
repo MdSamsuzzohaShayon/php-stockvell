@@ -141,6 +141,12 @@ class RecoverPassword extends Member
         //  Update member 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $update_arr = [" password= '$hashedPassword' "];
-        $this->updateMember($update_arr, $user_id, "/login.php");
+        if($this->updateMember($update_arr, $user_id)){
+            header("Location: /login/?error=none");
+            exit();
+        }else{
+            header("Location: /forget_password/?segment=reset_password&user_id=$user_id&error=smtpfailed");
+            exit();
+        }
     }
 }

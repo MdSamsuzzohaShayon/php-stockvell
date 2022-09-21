@@ -2,7 +2,9 @@
 
 namespace Models\Stockvell;
 
+
 use Config\Database;
+use Models\Member\MemberForms;
 
 class StockvellForms extends Database
 {
@@ -87,58 +89,42 @@ class StockvellForms extends Database
 
 
 
-    private function createStockvellPack()
+    private function createStockvellPack($redirect)
     {
-        $sql = "INSERT INTO stockvells(name, agreement, goal, category, status, description, payment, payment_frequency, withdraw_frequency) VALUES 
-                                    (:name, :agreement, :goal, :category, :status, :description, :payment, :payment_frequency, :withdraw_frequency)";
-        $stmt = $this->connect()->prepare($sql);
-
-        $stmt->bindParam('name', $this->name, \PDO::PARAM_STR);
-        $agreement = preg_replace('/\s+/', '', $this->agreement);
-        $stmt->bindParam('agreement', $agreement);
-        $stmt->bindParam('goal', $this->goal, \PDO::PARAM_STR);
-        $stmt->bindParam('category', $this->category, \PDO::PARAM_STR);
-        $status = "PENDING";
-        $stmt->bindParam('status', $status, \PDO::PARAM_STR);
-        $stmt->bindParam('description', $this->description, \PDO::PARAM_STR);
-        $stmt->bindParam('payment', intval($this->payment, 10), \PDO::PARAM_INT);
-        $stmt->bindParam('payment_frequency', intval($this->payment_frequency, 10), \PDO::PARAM_INT);
-        $stmt->bindParam('withdraw_frequency', intval($this->withdraw_frequency, 10), \PDO::PARAM_INT);
-        // $stmt->bindParam('leader_id', intval($this->leader_id, 10), \PDO::PARAM_INT);
-
-        // echo json_encode(array(
-        //     "name" => $this->name,
-        //     // "agreement" => $this->agreement,
-        //     "goal" => $this->goal,
-        //     "category" => $this->category,
-        //     "description" => $this->description,
-        //     "payment" => intval($this->payment, 10),
-        //     "payment_frequency" => intval($this->payment_frequency, 10),
-        //     "status" => $status,
-        //     "category" => $this->category,
-        //     "withdraw_frequency" => intval($this->withdraw_frequency, 10),
-        // ));
-        // exit();
-
-
-        // make many to many relationship
-
+        $conn= $this->connect();
+        $conn->beginTransaction();
 
         try {
+            $sql = "INSERT INTO stockvells(name, agreement, goal, category, status, description, payment, payment_frequency, withdraw_frequency) VALUES 
+                                        (:name, :agreement, :goal, :category, :status, :description, :payment, :payment_frequency, :withdraw_frequency)";
+            $stmt = $conn->prepare($sql);
+    
+            $stmt->bindParam('name', $this->name, \PDO::PARAM_STR);
+            $agreement = preg_replace('/\s+/', '', $this->agreement);
+            $stmt->bindParam('agreement', $agreement);
+            $stmt->bindParam('goal', $this->goal, \PDO::PARAM_STR);
+            $stmt->bindParam('category', $this->category, \PDO::PARAM_STR);
+            $status = "PENDING";
+            $stmt->bindParam('status', $status, \PDO::PARAM_STR);
+            $stmt->bindParam('description', $this->description, \PDO::PARAM_STR);
+            $stmt->bindParam('payment', intval($this->payment, 10), \PDO::PARAM_INT);
+            $stmt->bindParam('payment_frequency', intval($this->payment_frequency, 10), \PDO::PARAM_INT);
+            $stmt->bindParam('withdraw_frequency', intval($this->withdraw_frequency, 10), \PDO::PARAM_INT);
             //code...
             if (!$stmt->execute()) {
-                header("Location: /admin/?error=stmtfailed");
+                header("Location: $redirect/?error=stmtfailed");
                 exit();
             }
+            $stockvell_id = $conn->lastInsertId();
+            $conn->commit();
             // $stmt->execute();
             // $stmt = null;
-            header("Location: /admin/?error=none");
-            exit();
+            return $stockvell_id;
         } catch (\PDOException $e) {
             //throw $th;
-            echo $e->getMessage();
+            $conn->rollback();
+            header("Location: $redirect/?error=stmtfailed");
             exit();
-            header("Location: /admin/?error=stmtfailed");
         }
     }
 
@@ -150,7 +136,55 @@ class StockvellForms extends Database
             exit();
         }
 
-        $this->createStockvellPack();
+        if($this->createStockvellPack("/admin")){
+            header("Location: /admin/?error=none");
+            exit();
+        }
+    }
+
+    public function createStockvellPackByMember($member_id, $address_proof, $govt_id_proof)
+    {
+        // echo json_encode(array(
+        //     "name" => $this->name,
+        //     // "agreement" => $this->agreement,
+        //     "goal" => $this->goal,
+        //     "category" => $this->category,
+        //     "description" => $this->description,
+        //     "payment" => intval($this->payment, 10),
+        //     "payment_frequency" => intval($this->payment_frequency, 10),
+        //     "category" => $this->category,
+        //     "withdraw_frequency" => intval($this->withdraw_frequency, 10),
+        //     "address_proof" => $address_proof["name"],
+        //     "govt_id_proof" => $govt_id_proof["name"],
+        // ));
+        // exit();
+
+        if (empty($this->name) || empty($this->goal) || empty($this->payment) || empty($this->description) || empty($this->payment_frequency) || empty($this->category) || empty($this->withdraw_frequency) || empty($this->agreement) || empty($member_id) || empty($govt_id_proof["name"]) || empty($address_proof["name"])) {
+            header("Location: /dashboard/?error=emptyinput");
+            exit();
+        }
+
+        
+        
+        $stockvell_id = $this->createStockvellPack("/dashboard");
+        
+
+
+        $member_controler = new MemberForms();
+        $member_controler->joinTheStockvellPack($member_id, $stockvell_id);
+        $unique_govt_id_name = $member_controler->uploadFileToServer($govt_id_proof, $this->ROOT, "/dashboard/?stockvell_id=$stockvell_id&");
+        $unique_address_name = $member_controler->uploadFileToServer($address_proof, $this->ROOT, "/dashboard/?stockvell_id=$stockvell_id&");
+
+
+
+
+        if ($member_controler->requestToBeTheLeader($member_id, $stockvell_id, $unique_govt_id_name, $unique_address_name)) {
+            header("Location: /dashboard/?stockvell_id=$stockvell_id&error=none");
+            exit();
+        } else {
+            header("Location: /dashboard/?stockvell_id=$stockvell_id&error=stmtfaild");
+            exit();
+        }
     }
 
 
@@ -191,7 +225,7 @@ class StockvellForms extends Database
     {
         $sql = "UPDATE stockvells SET leader_id=:leader_id WHERE id=:stockvell_id";
         $stmt = $this->connect()->prepare($sql);
-        if ($stmt->execute(array(":leader_id"=>$member_id, ":stockvell_id"=>$stockvell_id))) {
+        if ($stmt->execute(array(":leader_id" => $member_id, ":stockvell_id" => $stockvell_id))) {
             return true;
         }
         return false;
@@ -212,7 +246,7 @@ class StockvellForms extends Database
         $this->deletePrevFileFromServer($rl_result->govt_id_proof, $this->ROOT);
         $this->deletePrevFileFromServer($rl_result->address_proof, $this->ROOT);
 
-        $this->updateMemberToLeader($stockvell_id, $member_id); 
+        $this->updateMemberToLeader($stockvell_id, $member_id);
 
 
         if (!$this->removeFromLeaderRequest($sm_id)) {

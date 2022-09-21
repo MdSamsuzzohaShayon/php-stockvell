@@ -132,7 +132,7 @@ class FetchStockvell extends Stockvell
     }
 
 
-    public function getAllPendingStockvell($status, $is_admin)
+    public function getAllPendingStockvell($status, $is_admin, $member_id)
     {
         if ($is_admin) {
             // All stockvell of a member
@@ -141,9 +141,12 @@ class FetchStockvell extends Stockvell
             $stmt->bindParam('status', $status);
         } else {
             // All stockvell of a member
-            $sql = "SELECT * FROM stockvells WHERE status=:status";
+
+            $sql = "SELECT sm.id, s.name, s.status, s.category, s.payment, s.payment_frequency, s.withdraw_frequency FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id=s.id WHERE sm.member_id=:member_id AND status=:status";
+
             $stmt = $this->connect()->prepare($sql);
-            $stmt->bindParam('status', $status);
+            $stmt->bindParam('status', $status, \PDO::PARAM_STR);
+            $stmt->bindParam('member_id', $member_id, \PDO::PARAM_INT);
         }
         $stmt->execute();
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);

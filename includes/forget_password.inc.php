@@ -36,8 +36,7 @@ if(isset($_POST["reset_password_submit"])){
   $user_id = $_POST["id"];
   $password = $_POST["password"];
   $password2 = $_POST["password2"];
-  // echo var_dump(array($user_id, $password, $password2));
-  // exit();
+
   $member_recover = new RecoverPassword();
   $member_recover->resetNewPassword($user_id, $password, $password2);
 }

@@ -122,24 +122,24 @@ class MemberForms extends Member
             header("Location: /edit_member/?member_id=$member_id&error=stmtfailed");
         }
     }
-    public function memberJoinPack($member_id, $stockvell_id)
+    public function memberJoinPack($member_id, $stockvell_id, $redirect_url)
     {
         if (empty($member_id) || empty($stockvell_id)) {
-            header("Location: /pack_single/?stockvell_id=$stockvell_id&error=emptyinput");
+            header("Location: $redirect_url/?stockvell_id=$stockvell_id&error=emptyinput");
             exit();
         }
         $find_relation = $this->findByMemberStockvellRelation($member_id, $stockvell_id);
         if ($find_relation) {
             // error - return or redirect
-            header("Location: /pack_single/?stockvell_id=$stockvell_id&error=alreadymember");
+            header("Location: $redirect_url/?stockvell_id=$stockvell_id&error=alreadymember");
             exit();
         } else {
             // create a new relation 
             if ($this->joinTheStockvellPack($member_id, $stockvell_id)) {
-                header("Location: /pack_single/?stockvell_id=$stockvell_id&error=none");
+                header("Location: $redirect_url/?stockvell_id=$stockvell_id&error=none");
                 exit();
             } else {
-                header("Location: /pack_single/?stockvell_id=$stockvell_id&error=stmtfailed");
+                header("Location: $redirect_url/?stockvell_id=$stockvell_id&error=stmtfailed");
                 exit();
             }
         }
@@ -171,7 +171,7 @@ class MemberForms extends Member
         }
     }
 
-    public function memberLeavePack($member_id, $stockvell_id)
+    public function memberLeavePack($member_id, $stockvell_id, $redirect_url)
     {
         if (empty($member_id) || empty($stockvell_id)) {
             header("Location: /pack_single/?stockvell_id=$stockvell_id&error=emptyinput");

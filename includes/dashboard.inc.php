@@ -15,13 +15,13 @@ use Models\Member\MemberForms;
 $foundMember = new FetchStockvell(); // Variables getting from dashboard.php
 $foundMember->setMember($member_email, $member_id );
 $cmr_result = $foundMember->getCurrentMember(); // cm = current member result
-$psr_result = $foundMember->getAllPendingStockvell("PENDING", false); // psr = pending search result
+$psr_result = $foundMember->getAllPendingStockvell("PENDING", false, $member_id ); // psr = pending search result
 $asr_result = $foundMember->getAllApprovedStockvellOfAMember("APPROVED", $member_id); // asr = approved search result
 
 
 
 //  Create stockvell pack
-if(isset($_POST['create-stockvell'])){
+if(isset($_POST['create_stockvell_pack'])){
     /**
    * @var getting all inputs
    */
@@ -31,7 +31,13 @@ if(isset($_POST['create-stockvell'])){
   $payment_frequency = $_POST["payment_frequency"];
   $category = $_POST["category"];
   $withdraw_frequency = $_POST["withdraw_frequency"];
+  $desc = $_POST["desc"];
   $agreement = $_POST["agreement"];
+  
+  $member_id = $_POST["member_id"];
+  $address_proof = $_FILES["address_proof"];
+  $govt_id_proof = $_FILES["govt_id_proof"];
+
 
   // echo json_encode(array($name, $goal, $payment, $payment_frequency, $category, $withdraw_frequency));
   // echo htmlspecialchars($agreement);
@@ -41,8 +47,9 @@ if(isset($_POST['create-stockvell'])){
   // echo strval(htmlentities($agreement, ENT_COMPAT, 'UTF-8'));
   // exit();
   
-  $stockvell_control = new StockvellForms($name, $goal, $payment, $payment_frequency, $category, $withdraw_frequency, $agreement);
-  $stockvell_control->validateAndCreate();
+  $stockvell_control = new StockvellForms();
+  $stockvell_control->setStockvell($name, $goal, $payment, $desc, $payment_frequency, $category, $withdraw_frequency, $agreement);
+  $stockvell_control->createStockvellPackByMember($member_id, $address_proof, $govt_id_proof);
 
 }
 

@@ -75,6 +75,7 @@ $lang = [
     "Total Members" => "Nombre total de membres",
     "Withdraw Period" => "Période de retrait",
     "Request to be the leader" => "Demander à être le leader",
+    "You need to submit all proof because once you create a stockvell pack by default you will request to be the leader of the group. We will check your papers, if everything is okay we will accept your pack!" => "Vous devez soumettre toutes les preuves car une fois que vous aurez créé un pack stockvell par défaut, vous demanderez à être le leader du groupe. Nous vérifierons vos papiers, si tout va bien nous accepterons votre pack !",
 
     // "Connect to your College Savings" => "Connectez-vous à votre épargne-études",
 

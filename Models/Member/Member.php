@@ -52,7 +52,7 @@ class Member extends Database
         return $member_found;
     }
 
-    protected function joinTheStockvellPack($member_id, $stockvell_id)
+    public function joinTheStockvellPack($member_id, $stockvell_id)
     {
         $sql = "INSERT INTO stockvell_to_member (member_id, stockvell_id) VALUES(:member_id, :stockvell_id)";
         $stmt = $this->connect()->prepare($sql);
@@ -63,7 +63,7 @@ class Member extends Database
     }
 
 
-    protected function requestToBeTheLeader($member_id, $stockvell_id, $govt_id_proof, $address_proof)
+    public function requestToBeTheLeader($member_id, $stockvell_id, $govt_id_proof, $address_proof)
     {
         $sql = "INSERT INTO stockvell_lr_member (member_id, stockvell_id, govt_id_proof, address_proof) VALUES(:member_id, :stockvell_id, :govt_id_proof, :address_proof)";
         $stmt = $this->connect()->prepare($sql);
