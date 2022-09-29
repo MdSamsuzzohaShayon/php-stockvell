@@ -72,7 +72,7 @@ $input_field = new InputField();
           <?php
           $pn = __("Phone");
           $password = __("Password*");
-          echo $input_field->inputPhone("phone", $pn, false, true, $phone_code, "+229");
+          echo $input_field->inputPhone("phone", $pn, false, true, $countries_code, "Benin (+229)");
           echo $input_field->inputText("password", $password, false, "password", true);
           ?>
         </div>

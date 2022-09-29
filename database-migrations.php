@@ -7,22 +7,23 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
 
 
-class Database{
-  protected function connect(){
+class Database
+{
+  protected function connect()
+  {
     try {
       $username = $_ENV["MYSQL_USER"];
       $password =  $_ENV["MYSQL_PASSWORD"];
       $db_name =  $_ENV["MYSQL_DATABASE"];
-      $db_host= $_ENV["MYSQL_HOST"];
+      $db_host = $_ENV["MYSQL_HOST"];
       $conn = new \PDO("mysql:host=$db_host;dbname=$db_name", $username, $password);
       // echo $conn;
       // exit();
       return $conn;
     } catch (\PDOException $e) {
-      echo "Error: " . $e->getMessage(). "<br />";
+      echo "Error: " . $e->getMessage() . "<br />";
       die();
     }
-
   }
 }
 
@@ -31,37 +32,48 @@ class DatabaseMigrations extends Database
 {
   public function __construct()
   {
+
+    $this->deleteTable("members");
+    // $this->deleteTable("stockvells");
+    // $this->deleteTable("stockvell_lr_member");
+    // $this->deleteTable("stockvell_to_member");
+    // $this->deleteTable("admins");
+
+
     // $this->deleteTable("stockvells");
     // $this->deleteTable("stockvell_to_member");
-    // If there are no table with this name create one
-    if (!$this->checkTableExist("members")) {
-      $sql_query = "CREATE TABLE members(
-        id INT NOT NULL AUTO_INCREMENT,
-        firstname VARCHAR(100) NOT NULL,
-        surname VARCHAR(100) NOT NULL,
-        email VARCHAR(255) NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        recovery_code VARCHAR(100),
-        country VARCHAR(100) NOT NULL,
-        city VARCHAR(255) NOT NULL,
-        phone VARCHAR(255) NOT NULL,
-        gender VARCHAR(60) NOT NULL,
-        profession VARCHAR(100) NOT NULL,
-        interest TEXT,
-        govt_id VARCHAR(100) NOT NULL,
-        is_verified BOOLEAN NOT NULL DEFAULT false,
-        source TEXT,
-        role VARCHAR(255) NOT NULL DEFAULT 'GENERAL',
-        PRIMARY KEY (id),
-        UNIQUE (email, phone)
-        );";
-      $this->createTable($sql_query, "members");
-    }
+    
+        // If there are no table with this name create one
+        if (!$this->checkTableExist("members")) {
+          $sql_query = "CREATE TABLE members(
+            id INT NOT NULL AUTO_INCREMENT,
+            firstname VARCHAR(100) NOT NULL,
+            surname VARCHAR(100) NOT NULL,
+            email VARCHAR(255) NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            recovery_code VARCHAR(100),
+            country VARCHAR(100) NOT NULL,
+            city VARCHAR(255) NOT NULL,
+            phone VARCHAR(255) NOT NULL,
+            gender VARCHAR(60) NOT NULL,
+            profession VARCHAR(100) NOT NULL,
+            interest TEXT,
+            govt_id VARCHAR(100) NOT NULL,
+            is_verified BOOLEAN NOT NULL DEFAULT false,
+            source TEXT,
+            role VARCHAR(255) NOT NULL DEFAULT 'GENERAL',
+            PRIMARY KEY (id),
+            UNIQUE (email, phone)
+            );";
+          $this->createTable($sql_query, "members");
+        }
+
+
     if (!$this->checkTableExist("stockvells")) {
       $sql_query = "CREATE TABLE stockvells(
         id INT  NOT NULL AUTO_INCREMENT,
         name VARCHAR(100) NOT NULL,
-        COLUMN description TEXT NOT NULL,
+        description TEXT NOT NULL,
         agreement TEXT NOT NULL,
         goal VARCHAR(100) NOT NULL,
         category VARCHAR(100) NOT NULL,
@@ -92,7 +104,7 @@ class DatabaseMigrations extends Database
 
 
     if (!$this->checkTableExist("stockvell_lr_member")) { // lr = leader request
-$sql_query = "CREATE TABLE stockvell_lr_member (
+      $sql_query = "CREATE TABLE stockvell_lr_member (
         id INT NOT NULL AUTO_INCREMENT,
         stockvell_id INT NOT NULL,
         member_id INT NOT NULL,
@@ -120,13 +132,15 @@ $sql_query = "CREATE TABLE stockvell_lr_member (
       $this->addToTheAdminsTable("admins", "stockvell_admin", "stockvellexample@gmail.com", "+880_1785208590", "Test1234");
     }
 
+        /**/
+
     // Update or modify specific table
     // $modify_sql = "ALTER TABLE members ADD COLUMN city VARCHAR(255) NOT NULL";
     // $modify_sql = "ALTER TABLE members ADD COLUMN recovery_code VARCHAR(100)";
     // $modify_sql = "ALTER TABLE members MODIFY phone VARCHAR(150) UNIQUE NOT NULL";
     // $modify_sql = "UPDATE admins SET phone='+880_1785208590' WHERE id='1'";
     // $modify_sql = "ALTER TABLE stockvells ADD COLUMN description TEXT NOT NULL";
-    
+
     // $this->specificTableModifications($modify_sql, "Added another column to members");
   }
 
@@ -141,40 +155,56 @@ $sql_query = "CREATE TABLE stockvell_lr_member (
 
   private function checkTableExist($tablename)
   {
-    // $this->connect()->prepare('SELECT * FROM members');
-    $stmt = $this->connect()->prepare('SHOW TABLES LIKE ?');
-    $stmt->bindParam(1, $tablename);
-    if (!$stmt->execute()) {
-      echo "git SQL error to check existing table";
+    try {
+      $sql = "SHOW TABLES LIKE '$tablename'";
+      // $this->connect()->prepare('SELECT * FROM members');
+      $stmt = $this->connect()->prepare($sql);
+      // $stmt->bindParam(1, $tablename);
+      $stmt->execute();
+
+      $hasTable = null;
+      if ($stmt->rowCount() > 0) {
+        echo "Table " . $tablename . " already exist  <br />";
+        $hasTable = true;
+      } else {
+        $hasTable = false;
+      }
+      return $hasTable;
+    } catch (\PDOException $e) {
+      //throw $th;
+      echo $e->getMessage();
       exit();
     }
-    $hasTable = null;
-    if ($stmt->rowCount() > 0) {
-      echo "Table " . $tablename . " already exist  <br />";
-      $hasTable = true;
-    } else {
-      $hasTable = false;
-    }
-    return $hasTable;
+    return false;
   }
 
   private function createTable($sql_query, $tablename)
   {
-    $stmt = $this->connect()->prepare($sql_query);
-    if (!$stmt->execute()) {
-      echo "Got SQL error to create table";
+    try {
+      //code...
+      $stmt = $this->connect()->prepare($sql_query);
+      $stmt->execute();
+
+      echo "created " . $tablename . " table successfully <br />";
+    } catch (\PDOException $e) {
+      //throw $th;
+      echo $e->getMessage();
       exit();
     }
-    echo "created " . $tablename . " table successfully <br />";
   }
 
   private function deleteTable($tablename)
   {
     $before_delete_stmt = $this->connect()->prepare("SET FOREIGN_KEY_CHECKS=0;"); // Not working
     $before_delete_stmt->execute();
-    $stmt = $this->connect()->prepare("DROP TABLE $tablename");
-    if (!$stmt->execute()) {
-      echo "Got SQL error to create table";
+    try {
+      $sql = "DROP TABLE " . $tablename;
+      $stmt = $this->connect()->prepare($sql);
+      $stmt->execute();
+      //code...
+    } catch (\PDOException $e) {
+      //throw $th;
+      echo $e->getMessage();
       exit();
     }
     $after_delete_stmt = $this->connect()->prepare("SET FOREIGN_KEY_CHECKS=1;"); // Not working
@@ -195,9 +225,10 @@ $sql_query = "CREATE TABLE stockvell_lr_member (
   }
 
 
-  private function specificTableModifications($sql, $msg){
+  private function specificTableModifications($sql, $msg)
+  {
     // ALTER TABLE members ADD COLUMN is_verified BOOLEAN NOT NULL DEFAULT false;
-    
+
     $stmt = $this->connect()->prepare($sql);
     if (!$stmt->execute()) {
       echo "Got SQL error to modify table";

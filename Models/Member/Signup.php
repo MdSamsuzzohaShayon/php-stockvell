@@ -4,41 +4,13 @@ namespace Models\Member;
 use Models\Member\Member;
 class Signup extends Member
 {
-    // public function __construct()
-    // {
-    //     parent::__construct();
-    // }
-
-
-    // public function delete_prev_file_from_server($prev_name, $ROOT)
-    // {
-    //     $target_dir = $ROOT . "/uploads/";
-    //     if (file_exists($target_dir . $prev_name)) {
-    //         unlink($target_dir . $prev_name);
-    //     }
-    // }
-
-    /*
-    public function uploadFileToServer($uploadedFile, $ROOT)
+    public function __construct()
     {
-        $target_dir = $ROOT . "/uploads/";
-        $unique_file_name = basename("m_" . date("Ymd_") . $uploadedFile["name"]);
-        $target_file = $target_dir . basename($unique_file_name . $uploadedFile["name"]);
-        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        // 1kb = 1000, 1 mb = 1000 kb
-        if ($uploadedFile['size'] > (1000 * 1000 * 2)) {
-            header("Location: /signup/?error=invalidfile");
-            exit();
-        }
-        if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "pdf") {
-            header("Location: /signup/?error=invalidfile");
-            exit();
-        }
-        // Upload file
-        move_uploaded_file($uploadedFile["tmp_name"], $target_dir . $unique_file_name);
-        return $unique_file_name;
+        $this->ROOT = $_SERVER['DOCUMENT_ROOT'];
     }
-    */
+
+
+
 
 
     public function setMember($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city){
@@ -66,7 +38,7 @@ class Signup extends Member
             header("Location: /signup/?error=emptyinput");
             exit();
         }
-        if (!preg_match("/^[a-zA-Z0-9]*$/", $this->username) || strlen($this->firstname) <= 1) {
+        if (!preg_match("/^[a-zA-Z0-9]*$/", $this->firstname) || strlen($this->firstname) <= 1) {
             header("Location: /signup/?error=invalidusername");
             exit();
         }
@@ -98,33 +70,8 @@ class Signup extends Member
 
 
 
-        /*
-        // File inputs
-        $target_dir = $this->ROOT . "/uploads/";
-        $unique_file_name = basename("m_" . date("Ymd_") . $this->govt_id["name"]);
-        $target_file = $target_dir . basename($unique_file_name . $this->govt_id["name"]);
-        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        // 1kb = 1000, 1 mb = 1000 kb
-        if ($this->govt_id['size'] > (1000 * 1000 * 2)) {
-            header("Location: /signup/?error=invalidfile");
-            exit();
-        }
-        if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "pdf") {
-            header("Location: /signup/?error=invalidfile");
-            exit();
-        }
-        // if (file_exists($target_dir . $unique_file_name)) {
-        //     header("Location: /signup/?error=invalidfile");
-        //     exit();
-        // }
 
-
-        // Upload file
-        move_uploaded_file($this->govt_id["tmp_name"], $target_dir . $unique_file_name);
-        // move_uploaded_file($this->govt_id["tmp_name"], "uploads/" . $this->govt_id["name"]);
-        */
-
-        $unique_file_name = $this->uploadFileToServer($this->govt_id, $this->ROOT, "/dashboard/?");
+        $unique_file_name = $this->uploadFileToServer($this->govt_id, $this->ROOT, "/signup/?");
         $this->saveMemberToDB($this->firstname, $this->surname, $this->email, $this->password, $this->country, $this->phone, $this->gender, $this->profession, $this->interest, $unique_file_name, $this->source, $this->city);
     }
 

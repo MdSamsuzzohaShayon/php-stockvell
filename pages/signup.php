@@ -79,7 +79,7 @@ $input_field = new InputField();
         <div class="row mb-3">
           <?php
           echo $input_field->inputText("password", $pw, false, "password", true);
-          echo $input_field->inputText("password2", $pw, false, "password", true);
+          echo $input_field->inputText("password2", $cpw, false, "password", true);
           ?>
 
         </div>

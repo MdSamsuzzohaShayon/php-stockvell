@@ -34,7 +34,10 @@ header {
 
 .phone-input-group {
   .option-list {
-    flex-basis: 20%;
+    flex-basis: 30%;
+  }
+  .raw-number{
+    flex-basis: 70%;
   }
 }
 

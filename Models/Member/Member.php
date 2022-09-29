@@ -170,6 +170,12 @@ class Member extends Database
         $unique_file_name = basename("m_" . date("Ymd_") . $uploadedFile["name"]);
         $imageFileType = strtolower(pathinfo($uploadedFile["name"], PATHINFO_EXTENSION));
         $target_file = $target_dir . basename($unique_file_name);
+
+        echo $target_dir . "</br>";
+        echo $unique_file_name . "</br>";
+        echo $imageFileType . "</br>";
+        echo $target_file . "</br>";
+        exit();
         // $err_redirect = "/signup";
         // if ($is_member === true) {
         //     $err_redirect = '/dashboard';

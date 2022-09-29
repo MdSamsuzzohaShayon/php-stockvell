@@ -51,4 +51,5 @@ if (isset($_POST["member_signup_submit"])) {
   $signup->signupMember();
 
   header("location: /login.php");
+  exit();
 }

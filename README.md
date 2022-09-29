@@ -1,6 +1,6 @@
 # Stockvell credit system
 
- - [Live Preview](stockvell.allinone-office.com)
+ - [Live Preview](http://stockvell.allinone-office.com)
 
 ### Development
  - member dashboard -> member create stockvell, add two more fields (address proof, govt id), request to be the leader
@@ -41,7 +41,9 @@
 
 ### Deployment Instructions
  - Install all packages of Composer
+ - Connect via SSH `ssh -p 2222 aiocel@ssh.web11.us.cloudlogin.co`
  - Install php curl `sudo apt-get install php7.4-curl`
+ - Run `database-migration.php`
  - Setup `.htaccess` file for redirecting 
  - Change all `.env` variables
  - All file owner change `sudo chown -R www-data:www-data project-name`
@@ -250,6 +252,19 @@ Dominant - #C99127, Complementary - #809130, Accent - #2F4858, white - #ffffff, 
 
  - To help me to translate the page you can go to the file **languages/fr.php** and change text (It's an php array, if you still don't know how to do it let me know I will make a small video for you)
  - Input field already validated - some input fileds are required until you fill those it won't let you submit the form
+
+### Message to client
+ - admin url http://stockvell.allinone-office.com/admin (You can change or add another admin on database lavel). user email `stockvellexample@gmail.com` password `Test1234`
+ - If you want to wadd another admin add the line from below to the `__construct` of `DatabaseMigrations` class on `database-migrations.php` file or run `http://stockvell.allinone-office.com/database-migrations.php`
+  
+  ```
+  $this->addToTheAdminsTable("admins", "stockvell_admin", "youradmin@gmail.com", "+880_1785208590", "password_of_your_admin");
+  ```
+ - Translate language -> there is an array inside `languages/fr.php` -> You can add new line like this 
+  ```
+  "This is english language" => "This is translated french language",
+  ```
+
 
 
   
