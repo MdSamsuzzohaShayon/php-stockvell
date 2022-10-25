@@ -57,7 +57,10 @@ header {
   .section-1 {
     min-height: $landing_section_height;
     .landing-img {
-      width: 100%;
+      // width: 100%;
+      width: 50%;
+      right: 0;
+      transform: scaleX(-1);
       z-index: -1;
       height: $landing_section_height;
       object-fit: cover;
@@ -162,7 +165,7 @@ header {
           position: fixed;
           bottom: 0;
           .menu-item{
-            width: $sidebar_menu_item_width !important;
+            width: 16.66% !important;
             text-align: center !important;
             align-items: center !important;
           }

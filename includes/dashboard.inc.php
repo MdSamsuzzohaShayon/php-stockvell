@@ -7,16 +7,10 @@ include $ROOT . "/vendor/autoload.php";
 // include $ROOT . "/config/database.php";
 // include $ROOT . "/classes/stockvell.classes.php";
 // include $ROOT . "/classes/member.classes.php";
-use Models\Stockvell\FetchStockvell;
 use Models\Stockvell\StockvellForms;
 use Models\Member\MemberForms;
 
 
-$foundMember = new FetchStockvell(); // Variables getting from dashboard.php
-$foundMember->setMember($member_email, $member_id );
-$cmr_result = $foundMember->getCurrentMember(); // cm = current member result
-$psr_result = $foundMember->getAllPendingStockvell("PENDING", false, $member_id ); // psr = pending search result
-$asr_result = $foundMember->getAllApprovedStockvellOfAMember("APPROVED", $member_id); // asr = approved search result
 
 
 
@@ -30,9 +24,11 @@ if(isset($_POST['create_stockvell_pack'])){
   $payment = $_POST["payment"];
   $payment_frequency = $_POST["payment_frequency"];
   $category = $_POST["category"];
+  $max_member = $_POST["max_member"];
   $withdraw_frequency = $_POST["withdraw_frequency"];
   $desc = $_POST["desc"];
   $agreement = $_POST["agreement"];
+  $currency = $_POST["currency"];
   
   $member_id = $_POST["member_id"];
   $address_proof = $_FILES["address_proof"];
@@ -47,9 +43,9 @@ if(isset($_POST['create_stockvell_pack'])){
   // echo strval(htmlentities($agreement, ENT_COMPAT, 'UTF-8'));
   // exit();
   
-  $stockvell_control = new StockvellForms();
-  $stockvell_control->setStockvell($name, $goal, $payment, $desc, $payment_frequency, $category, $withdraw_frequency, $agreement);
-  $stockvell_control->createStockvellPackByMember($member_id, $address_proof, $govt_id_proof);
+  $stockvell_form = new StockvellForms();
+  $stockvell_form->setStockvell($name, $goal, $payment, $desc, $payment_frequency, $category, $max_member, $withdraw_frequency, $agreement, $currency );
+  $stockvell_form->createStockvellPackByMember($member_id, $address_proof, $govt_id_proof);
 
 }
 
@@ -87,6 +83,30 @@ if (isset($_POST["member_update_submit"])) {
   $member_forms = new MemberForms();
   $member_forms->setMember($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city);
   $member_forms->updateDynamicMember($member_id, "edit_member/");
+}
+
+if(isset($_POST["stockvell_close_request_submit"])){
+  $stockvell_id = $_POST["stockvell_id"];
+  $leader_id = $_POST["leader_id"];
+  $stockvell_form = new StockvellForms();
+  $stockvell_form->requestToCloseStockvell($leader_id, $stockvell_id, "dashboard/");
+}
+
+if(isset($_POST["stockvell_generate_link_submit"])){
+  $stockvell_id = $_POST["stockvell_id"];
+  $leader_id = $_POST["leader_id"];
+  $stockvell_form = new StockvellForms();
+  $stockvell_form->generateStockvellLink($stockvell_id, 'dashboard/');
+}
+
+
+if(isset($_POST["withdraw_member_submit"])){
+  $stockvell_id = $_POST["stockvell_id"];
+  $withdraw_member_id = $_POST["withdraw_member_id"];
+  // echo json_encode(array($stockvell_id, $withdraw_member_id));
+  // exit();
+  $stockvell_form = new StockvellForms();
+  $stockvell_form->setWithdrawMember($stockvell_id, $withdraw_member_id, "dashboard/");
 }
 
 ?>

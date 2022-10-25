@@ -115,8 +115,9 @@ $lang = [
     "Members requested to be a leader" => "Les membres ont demandé à être un leader",
     "No one requested to be the leader of the pack" => "Personne n'a demandé à être le chef de la meute",
     "No member joined yet" => "Aucun membre n'a encore rejoint",
-    "Government ID Proof" => "Government ID Proof",
-    "Address Proof" => "Preuve d'adresse",
+    "Govt ID Proof (JPG, PNG, PDF)" => "Preuve d'identité gouvernementale (JPG, PNG, PDF)",
+    "Address Proof (JPG, PNG, PDF)" => "Preuve d'adresse (JPG, PNG, PDF)",
+    "Resign Leadership" => "Démissionner de la direction",
     
     
     

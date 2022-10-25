@@ -10,40 +10,30 @@ class Admin extends Database
     // {
     // }
 
-    public function setAdmin($admin_id, $name, $email, $phone, $password, $password2)
+
+
+    protected function elementList()
     {
-        $this->admin_id = $admin_id;
-        $this->name = $name;
-        $this->email = $email;
-        $this->phone = $phone;
-        $this->password = $password;
-        $this->password2 = $password2;
+        return array(
+            "name" => $this->name,
+            "email" => $this->email,
+            "phone"  => $this->phone,
+            "password"  => $this->password,
+        );
     }
 
-    
 
 
 
-    public function updateAdminProfile()
+
+    public function updateAdminProfile($admin_id, $cols)
     {
-        $update_elements = " name='$this->name', email='$this->email', phone='$this->phone'";
-        if (!empty($this->password)) {
-            if ($this->password !== $this->password2) {
-                header('Location: /admin/?error=passwordnotmatch');
-                exit();
-            }
-            $hashedPassword = password_hash($this->password, PASSWORD_DEFAULT);
-            $this->password = $hashedPassword;
-            $update_elements .= ", password='$this->password'";
-        }
-
-        $sql = "UPDATE admins SET $update_elements WHERE id=:admin_id";
+        $updateElement = implode(', ', $cols);
+        $sql = "UPDATE admins SET $updateElement WHERE id=$admin_id";
         $stmt = $this->connect()->prepare($sql);
-        if (!$stmt->execute(array("admin_id" => $this->admin_id))) {
-            header("Location: /admin/?error=stmtfailed");
-            exit();
+        if ($stmt->execute()) {
+            return true;
         }
-        header("Location: /admin/?error=none");
-        exit();
+        return false;
     }
 }

@@ -143,12 +143,15 @@ function sidebarElementToggle(allMenuItems, allContent) {
     ami.addEventListener("click", (amie) => {
       amie.preventDefault();
       // console.log(location);
+      // console.log(location.href);
+      // console.log(location.host);
+      // console.log(location.hostname);
       const clickedItem = amie.currentTarget.dataset.item;
       if (pse !== clickedItem) elToggle(clickedItem, `${clickedItem}-content`);
-      const queryParams = new URLSearchParams(window.location.search);
-      if (queryParams.get("error")) {
-        location.replace(`${location.origin + location.pathname}`); // if anything went wrong remove this line
-      }
+      // const queryParams = new URLSearchParams(window.location.search);
+      // if (queryParams.get("error")) {
+      // }
+      location.replace(`${location.origin + location.pathname}`); // if anything went wrong remove this line
     });
   });
 
@@ -264,7 +267,8 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     window.location.pathname === "/dashboard/" ||
     window.location.pathname === "/dashboard"
   ) {
-    console.log("Dashboard");
+    const generateLink = document.getElementById("generate-link");
+    const generateLinkDisplay = document.getElementById("generated-link-display");
     const allMenuItems = document.querySelectorAll(".menu-item");
     const allContent = document.querySelectorAll(".content");
     if (allMenuItems && allContent) sidebarElementToggle(allMenuItems, allContent);
@@ -278,6 +282,30 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
         console.error(error);
       });
     }
+
+
+
+    // generateLink.addEventListener('click', (gle)=>{
+    //   gle.preventDefault();
+    //   // console.log(gle.target.parentElement);
+      const params = new URLSearchParams(window.location.search);
+      const stockvellId = params.get('stockvell_id');
+     
+    //   // 1 = view, 2 = edit 
+    //   const view = 1;
+    //   const code = Math.floor(1000 + Math.random() * 9000); // random 4 digit code
+    //   const newLink = `${window.location.origin}/pack_single/?stockvell_id=${stockvellId}&sharing=${code}${view}${stockvellId}`;
+      
+    //   generateLinkDisplay.textContent = newLink;
+
+    //   if(generateLinkDisplay.classList.contains('d-none')){
+    //     generateLinkDisplay.classList.remove('d-none');
+    //     generateLinkDisplay.classList.add('d-block');
+    //   }
+    // });
+    const newLink = `${window.location.origin}/pack_single/?stockvell_id=${stockvellId}&sharing=${generateLinkDisplay.textContent.toString().trim()}`;
+    generateLinkDisplay.textContent = newLink;
+    console.log(generateLinkDisplay);
   }
 
   /**
@@ -285,11 +313,18 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
    * @page admin
    * Toggle content for dashboard sidebar menu item
    */
+  // console.log(window.location.pathname);
   if (
     window.location.pathname === "/admin.php" ||
     window.location.pathname === "/admin/" ||
     window.location.pathname === "/admin"
   ) {
+    const url = new URLSearchParams(window.location.search);
+    if(url.get('stockvell_id')){
+      const singleStockvellPack = document.getElementById('single-stockvell-pack');
+      const approvedStockvellList = document.getElementById('approved-stockvell-list');
+
+    }
     const logedinContent = document.querySelector(".section-2");
     if (logedinContent) {
       const allMenuItems = document.querySelectorAll(".menu-item");

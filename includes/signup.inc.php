@@ -10,6 +10,10 @@ if (isset($_POST["member_signup_submit"])) {
   // require_once($ROOT . '/vendor/autoload.php');
 
 
+  if(!isset($_POST['pp'])){
+    header('Location: /signup/?error=pperror');
+    exit();
+  }
 
   $firstname = $_POST["firstname"];
   $surname = $_POST["surname"];
@@ -46,7 +50,10 @@ if (isset($_POST["member_signup_submit"])) {
   // require_once($ROOT . '/config/Database.php');
   // require_once($ROOT . '/Models/Signup.php');
 
+  // echo json_encode(array($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city));
+  // exit();
   $signup = new Signup();
+
   $signup->setMember($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city);
   $signup->signupMember();
 

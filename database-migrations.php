@@ -33,19 +33,26 @@ class DatabaseMigrations extends Database
   public function __construct()
   {
 
+    /**
+     * @delete tables
+     */
+    /*
+    $this->deleteTable("admins");
+    $this->deleteTable("stockvell_to_member");
+    $this->deleteTable("stockvell_lr_member");
+    $this->deleteTable("stockvells");
     $this->deleteTable("members");
-    // $this->deleteTable("stockvells");
-    // $this->deleteTable("stockvell_lr_member");
-    // $this->deleteTable("stockvell_to_member");
-    // $this->deleteTable("admins");
+    */
 
 
-    // $this->deleteTable("stockvells");
-    // $this->deleteTable("stockvell_to_member");
-    
-        // If there are no table with this name create one
-        if (!$this->checkTableExist("members")) {
-          $sql_query = "CREATE TABLE members(
+
+    /**
+     * @create table if there is none
+     */
+
+    // If there are no table with this name create one
+    if (!$this->checkTableExist("members")) {
+      $sql_query = "CREATE TABLE members(
             id INT NOT NULL AUTO_INCREMENT,
             firstname VARCHAR(100) NOT NULL,
             surname VARCHAR(100) NOT NULL,
@@ -65,8 +72,8 @@ class DatabaseMigrations extends Database
             PRIMARY KEY (id),
             UNIQUE (email, phone)
             );";
-          $this->createTable($sql_query, "members");
-        }
+      $this->createTable($sql_query, "members");
+    }
 
 
     if (!$this->checkTableExist("stockvells")) {
@@ -79,13 +86,16 @@ class DatabaseMigrations extends Database
         category VARCHAR(100) NOT NULL,
         status VARCHAR(100) NOT NULL DEFAULT 'PENDING',
         payment INT NOT NULL,
+        currency VARCHAR(60) NOT NULL,
         payment_frequency INT NOT NULL,
         withdraw_frequency INT NOT NULL,
         withdraw_member_id INT,
         leader_id INT,
+        link VARCHAR(100),
+        max_member INT NOT NULL,
         PRIMARY KEY(id),
-        FOREIGN KEY(leader_id) REFERENCES members(id),
-        FOREIGN KEY(withdraw_member_id) REFERENCES members(id)
+        FOREIGN KEY(leader_id) REFERENCES members(id) ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY(withdraw_member_id) REFERENCES members(id) ON DELETE CASCADE ON UPDATE CASCADE
         );";
       $this->createTable($sql_query, "stockvells");
     }
@@ -132,16 +142,30 @@ class DatabaseMigrations extends Database
       $this->addToTheAdminsTable("admins", "stockvell_admin", "stockvellexample@gmail.com", "+880_1785208590", "Test1234");
     }
 
-        /**/
+
 
     // Update or modify specific table
-    // $modify_sql = "ALTER TABLE members ADD COLUMN city VARCHAR(255) NOT NULL";
-    // $modify_sql = "ALTER TABLE members ADD COLUMN recovery_code VARCHAR(100)";
-    // $modify_sql = "ALTER TABLE members MODIFY phone VARCHAR(150) UNIQUE NOT NULL";
-    // $modify_sql = "UPDATE admins SET phone='+880_1785208590' WHERE id='1'";
-    // $modify_sql = "ALTER TABLE stockvells ADD COLUMN description TEXT NOT NULL";
+    /*
+    // Not required in production/
+    $modify_sql = "ALTER TABLE members ADD COLUMN city VARCHAR(255) NOT NULL";
+    $modify_sql = "ALTER TABLE members ADD COLUMN recovery_code VARCHAR(100)";
+    $modify_sql = "ALTER TABLE members MODIFY phone VARCHAR(150) UNIQUE NOT NULL";
+    $modify_sql = "UPDATE admins SET phone='+880_1785208590' WHERE id='1'";
+    $modify_sql = "ALTER TABLE stockvells ADD COLUMN description TEXT NOT NULL";
+    */
 
-    // $this->specificTableModifications($modify_sql, "Added another column to members");
+    // $modify_members_sql = "ALTER TABLE stockvells ADD COLUMN currency VARCHAR(60) NOT NULL";
+    // $this->specificTableModifications($modify_members_sql, "Added currency to members");
+
+    // $modify_stockvell_sql = "ALTER TABLE stockvells ADD COLUMN max_member INT NOT NULL";
+    // $this->specificTableModifications($modify_stockvell_sql, "Added max_member to members");
+
+    // $modify_stockvell_sql = "ALTER TABLE stockvells ADD COLUMN link VARCHAR(100)";
+    // $this->specificTableModifications($modify_stockvell_sql, "Added link to members");
+
+
+    // $modify_stockvell_withdraw_sql = "ALTER TABLE stockvells ADD COLUMN withdraw_member_id INTEGER FOREIGN KEY(withdraw_member_id) REFERENCES members(id)  ON DELETE CASCADE ON UPDATE CASCADE";
+    // $this->specificTableModifications($modify_stockvell_withdraw_sql, "Added withdraw_member_id to members");
   }
 
 
@@ -228,13 +252,15 @@ class DatabaseMigrations extends Database
   private function specificTableModifications($sql, $msg)
   {
     // ALTER TABLE members ADD COLUMN is_verified BOOLEAN NOT NULL DEFAULT false;
-
-    $stmt = $this->connect()->prepare($sql);
-    if (!$stmt->execute()) {
-      echo "Got SQL error to modify table";
-      exit();
+    try {
+      //code...
+      $stmt = $this->connect()->prepare($sql);
+      $stmt->execute();
+      echo "$msg.<br />";
+    } catch (\PDOException $err) {
+      //throw $th;
+      echo $err->getMessage();
     }
-    echo "$msg.<br />";
   }
 }
 

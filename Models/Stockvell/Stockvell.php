@@ -89,4 +89,61 @@ class Stockvell extends Database
         }
         return [];
     }
+
+
+    protected function deleteAllLeaderRequestOfAStockvell($stockvell_id){
+        try {
+            //code...
+            $sql = "DELETE FROM stockvell_lr_member WHERE stockvell_id=:stockvell_id";
+            $stmt = $this->connect()->prepare($sql);
+            if($stmt->execute(array('stockvell_id'=>$stockvell_id))){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (\PDOException $err) {
+            //throw $th;
+            echo $err->getMessage();
+            exit();
+        }
+        return false;
+    }
+
+    protected function deleteAllMembersOfAStockvell($stockvell_id){
+        try {
+            //code...
+            $sql = "DELETE FROM stockvell_to_member WHERE stockvell_id=:stockvell_id";
+            $stmt = $this->connect()->prepare($sql);
+            if($stmt->execute(array('stockvell_id'=>$stockvell_id))){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (\PDOException $err) {
+            //throw $th;
+            echo $err->getMessage();
+            exit();
+        }
+        return false;
+    }
+
+    protected function deleteAllAStockvellPack($stockvell_id){
+        try {
+            //code...
+            $sql = "DELETE FROM stockvells WHERE id=:stockvell_id";
+            $stmt = $this->connect()->prepare($sql);
+            if($stmt->execute(array('stockvell_id'=>$stockvell_id))){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (\PDOException $err) {
+            //throw $th;
+            echo $err->getMessage();
+            exit();
+        }
+        return false;
+    }
+
+    
 }

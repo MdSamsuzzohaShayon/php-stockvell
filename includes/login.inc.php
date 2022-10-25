@@ -9,6 +9,8 @@ use Models\Admin\AdminLogin;
 if(isset($_POST["member_email_login"])){
   $email = $_POST["email"];
   $password = $_POST["password"];
+  // echo json_encode(array("email"=> $email, "password" => $password));
+  // exit();
 
 
 
@@ -20,8 +22,8 @@ if(isset($_POST["member_email_login"])){
 }
 
 if(isset($_POST["member_phone_login"])){
-  $phone = $_POST["phone"];
-  $password = $_POST["password"];
+  $phone = trim($_POST["phone"]);
+  $password = trim($_POST["password"]);
 
   // include $ROOT . "/config/Database.php";
   // include $ROOT . "/Models/Login.php";

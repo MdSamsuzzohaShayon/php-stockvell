@@ -17,8 +17,8 @@ if ($router === '/' || $router === '/home' || $router === '/index.php' || $route
     include($ROOT . '/pages/dashboard.php');
 } elseif ($router === '/about' || $router === '/about.php' || $router === '/about/') {
     include($ROOT . '/pages/about.php');
-} elseif ($router === '/privicypolicy' || $router === '/privicypolicy.php' || $router === '/privicypolicy/') {
-    include($ROOT . '/pages/privicypolicy.php');
+} elseif ($router === '/privacypolicy' || $router === '/privacypolicy.php' || $router === '/privacypolicy/') {
+    include($ROOT . '/pages/privacypolicy.php');
 } elseif ($router === '/login' || $router === '/login.php'  || $router === '/login/') {
     include($ROOT . '/pages/login.php');
 }elseif ($router === '/packs' || $router === '/packs.php'  || $router === '/packs/') {

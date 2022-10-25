@@ -86,7 +86,7 @@ $input_field = new InputField();
         <div class="row mb-3">
           <?php
           echo $input_field->inputSelect("country", $cy, false, "Benin (+229)", $countries_code);
-          echo $input_field->inputPhone("phone", $pn, false, true, $phone_code, "+229");
+          echo $input_field->inputPhone("phone", $pn, false, true, $countries_code, "Benin (+229)");
           ?>
         </div>
         <div class="row mb-3">
@@ -111,6 +111,11 @@ $input_field = new InputField();
         <div class="row mb-3">
           <?php
           echo $input_field->inputTextarea("source", $src, true);
+          ?>
+        </div>
+        <div class="row mb-3 d-flex">
+          <?php
+            echo $input_field->inputCheckbox('pp', "Agree Privacy Policy", false) . '<a href="/privacypolicy" class="w-fit">here</a>';
           ?>
         </div>
         <div class="row row-no-input mb-3 d-flex justify-content-start">

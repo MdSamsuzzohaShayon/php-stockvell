@@ -1,13 +1,23 @@
 <?php
-session_start(); // In every single page we should start our session at the top of our code
-if (!isset($_SESSION['member_id']) && !isset($_SESSION['admin_id'])) {
-    header("Location: /login.php");
-    exit();
+session_start();
+
+
+$sharelink = null;
+if (isset($_GET['sharing'])) {
+    // View as sharing
+    $sharelink = $_GET['sharing'];
+} else {
+    // In every single page we should start our session at the top of our code
+    if (!isset($_SESSION['member_id']) && !isset($_SESSION['admin_id'])) {
+        header("Location: /login.php");
+        exit();
+    }
 }
 
 if (!isset($_GET['stockvell_id'])) {
     header("Location: /index.php");
 }
+
 
 $member_email = $_SESSION['member_email'];
 $member_id = $_SESSION['member_id'];
@@ -24,6 +34,7 @@ require_once($ROOT . "/layouts/header.php");
 require_once($ROOT . "/config/option-list.php");
 
 use Models\Stockvell\FetchStockvell;
+use Models\Member\FetchMember;
 use Utils\InputField;
 use Utils\ErrorHandler;
 
@@ -64,11 +75,14 @@ if (isset($_GET["error"])) {
 
 $input_field = new InputField();
 
-// echo "lid - " . $ssr_result['leader_id'];f
-// var_dump($ssr_result['members']);
-$leader_index = array_search($ssr_result['leader_id'], array_column($ssr_result['members'], 'id'));
-$leader = $ssr_result['members'][$leader_index];
-// var_dump($ssr_result['members'][$leader_index]);
+// echo "lid - " . $ssr_result['leader_id'];
+// var_dump($ssr_result);
+// $leader_index = array_search($ssr_result['leader_id'], array_column($ssr_result['members'], 'id'));
+// echo $leader_index;
+$member_fetch = new FetchMember();
+$leader = $member_fetch->findMemberByID($ssr_result['leader_id'], '/pack_single');
+$withdraw_member = $member_fetch->findMemberByID($ssr_result['withdraw_member_id'], '/pack_single');
+
 ?>
 
 
@@ -79,17 +93,21 @@ $leader = $ssr_result['members'][$leader_index];
             <?php if ($has_error) echo $err_handler->displayErrors(); ?>
             <div class="row">
                 <div class="col-md-6">
+                    <p> <?php if ($leader) echo __("Leader") . " " . $leader->firstname . " " . $leader->surname;  ?> <?php
+                                                                                                                    // if($rpl_key['id'] === )
+                                                                                                                    // var_dump($ssr_result);
+                                                                                                                    // echo $ssr_result["leader_id"];
+                                                                                                                    ?></p>
+                    <p> <?php if ($withdraw_member) echo __("Withdraw member") . " " . $withdraw_member->firstname . " " . $withdraw_member->surname;  ?> </p>
                     <h1 class="h1"><?= $ssr_result['name']; ?></h1>
                     <p><?php echo $ssr_result['description']; ?></p>
                     <p><?= $ssr_result['category']; ?></p>
-                    <p> <?php if($leader)echo __("Leader") . " " . $leader['firstname'] . " ". $leader['surname'];  ?> <?php 
-                    // if($rpl_key['id'] === )
-                    // var_dump($ssr_result);
-                    // echo $ssr_result["leader_id"];
-                    ?></p>
+                    <p> <?= __('Member limit:') . $ssr_result['max_member']; ?></p>
                     <div class="d-flex">
                         <?php
                         $jp = __("Join Pack");
+                        $rl = __("Resign Leadership");
+                        $sl = __("Suspend Leader");
                         $lp = __("Leave Pack");
                         $lr = __("Leader Request");
                         $st = __("Submit");
@@ -98,40 +116,65 @@ $leader = $ssr_result['members'][$leader_index];
                         $gid = __("Govt ID Proof");
                         $heading = _("Submit the required document in order to be the leader of the pack!");
                         $para = _("Admin of this site will validate your document and if we think you can be the leader we will appoint you as the leader of the pack");
+                        $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $ssr_result["id"]);
+                        $member_id_hidden_input = $input_field->inputHidden("member_id", $member_id);
                         if ($is_admin === false) {
-                            $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $ssr_result["id"]);
-                            $member_id_hidden_input = $input_field->inputHidden("member_id", $member_id);
                             if ($is_mos) {
-                                if ($did_request === false) {
-                                    $govt_id_proof = $input_field->inputFile("govt_id_proof", $gid, true, true);
-                                    $address_proof = $input_field->inputFile("address_proof", $ap, true, true);
-                                    echo "<button id='leader-request-btn' class='btn btn-warning text-capitalize d-block' >$lr</button>";
-                                    echo "<form action='/includes/pack_single.inc.php' method='post' id='leader-request-form' enctype='multipart/form-data' class='p-0 m-0 d-none'>
-                                            <h2>$heading</h2>
-                                            <p>$para</p>
-                                            <div class='row my-3'>
-                                                $govt_id_proof
-                                            </div>
-                                            <div class='row mb-3'>
-                                                $address_proof
-                                            </div>
-                                            $stockvell_id_hidden_input
-                                            $member_id_hidden_input
-                                            <div class='d-flex'>                                       
-                                                <button type='submit' class='btn btn-warning text-capitalize' name='member_leader_request_pack'>$st</button>
-                                                <button class='btn btn-danger text-capitalize' id='cancel-leader-request'>$cl</button>
-                                            </div>
-                                        </form>";
-                                } else {
-                                    $rt = __("The request you have made to become the leader of the pack, we will be reviewed and let you know thank you.");
-                                    echo "<p class='text-warning'>$rt</p>";
+                                if (!$leader) {
+                                    if ($did_request === false) {
+                                        $govt_id_proof = $input_field->inputFile("govt_id_proof", $gid, true, true);
+                                        $address_proof = $input_field->inputFile("address_proof", $ap, true, true);
+                                        echo "<button id='leader-request-btn' class='btn btn-warning text-capitalize d-block' >$lr</button>";
+                                        echo "<form action='/includes/pack_single.inc.php' method='post' id='leader-request-form' enctype='multipart/form-data' class='p-0 m-0 d-none'>
+                                                <h2>$heading</h2>
+                                                <p>$para</p>
+                                                <div class='row my-3'>
+                                                    $govt_id_proof
+                                                </div>
+                                                <div class='row mb-3'>
+                                                    $address_proof
+                                                </div>
+                                                $stockvell_id_hidden_input
+                                                $member_id_hidden_input
+                                                <div class='d-flex'>                                       
+                                                    <button type='submit' class='btn btn-warning text-capitalize' name='member_leader_request_pack'>$st</button>
+                                                    <button class='btn btn-danger text-capitalize' id='cancel-leader-request'>$cl</button>
+                                                </div>
+                                            </form>";
+                                    } else {
+                                        $rt = __("The request you have made to become the leader of the pack, we will be reviewed and let you know thank you.");
+                                        echo "<p class='text-warning'>$rt</p>";
+                                    }
                                 }
                             } else {
+                                if (!$sharelink) {
+                                    echo "<form action='/includes/pack_single.inc.php' method='post' class='p-0 m-0'>
+                                            $stockvell_id_hidden_input
+                                            $member_id_hidden_input
+                                            <button type='submit' class='btn btn-warning text-capitalize ml-3' name='member_join_pack'>$jp</button>
+                                        </form>";
+                                }
+                            }
+                        }
+
+
+                        if ($leader) {
+                            // var_dump( $leader);
+                            // $member_id
+                            if ($member_id === $leader->id) {
                                 echo "<form action='/includes/pack_single.inc.php' method='post' class='p-0 m-0'>
-                                        $stockvell_id_hidden_input
-                                        $member_id_hidden_input
-                                        <button type='submit' class='btn btn-warning text-capitalize ml-3' name='member_join_pack'>$jp</button>
-                                    </form>";
+                                    $stockvell_id_hidden_input
+                                    $member_id_hidden_input
+                                    <button type='submit' class='btn btn-warning text-capitalize ml-3' name='member_resign_leadership'>$rl</button>
+                                </form>";
+                            }
+
+                            if ($is_admin === true) {
+                                echo "<form action='/includes/pack_single.inc.php' method='post' class='p-0 m-0'>
+                                    $stockvell_id_hidden_input
+                                    $member_id_hidden_input
+                                    <button type='submit' class='btn btn-danger text-capitalize ml-3' name='member_resign_leadership'>$sl</button>
+                                </form>";
                             }
                         }
                         ?>
@@ -185,14 +228,14 @@ $leader = $ssr_result['members'][$leader_index];
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        
+
                                         <?php
                                         $ml = __("Appoint leader");
                                         // rpl = requestd pack leader
                                         $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $stockvell_id);
-                                        
+
                                         foreach ($rpl_result as $rpl_key) {
-                                            
+
 
                                             $member_id_hidden_input = $input_field->inputHidden("member_id", $rpl_key["member_id"]);
                                             $sm_id_hidden_input = $input_field->inputHidden("sm_id", $rpl_key["id"]);
@@ -222,57 +265,73 @@ $leader = $ssr_result['members'][$leader_index];
                     </div>
                 </div>
             <?php }            ?>
-            <div class="row">
-                <p>
-                <h2 class="h2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"> <span><img src="/public/icons/down-arrow.svg" height="30" alt=""></span> <?= __("Members") ?></h2>
-                </p>
-                <div class="collapse" id="collapseExample">
-                    <?php
-                    // psr = pending stockvell result 
-                    // $psr_result - getting from dashboard.inc.php
-                    if (count($ssr_result['members']) <= 0) {
-                        $nmjy = __("No member joined yet");
-                        echo "<div class='alert alert-warning'>$nmjy</div>";
-                    } else { ?>
-                        <div class="table-responsive">
-                            <table class="table table-bordered border-warning">
-                                <thead class="bg-warning text-white border-primary">
-                                    <tr>
-                                        <th scope="col">#<?= __("ID") ?></th>
-                                        <th scope="col"><?= __("Name") ?></th>
-                                        <th scope="col"><?= __("Country") ?></th>
-                                        <th scope="col"><?= __("Profession") ?></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    // amr = all member result
-                                    // id, firstname, surname, email, country, phone, gender, profession, interest, govt_id, source, role
 
-                                    $leader_user = null;
-                                    foreach ($ssr_result['members'] as $amr_key) {
-                                        if($ssr_result["leader_id"] === $amr_key["id"]){
-                                            $user_and_role = "<td class='text-danger'>" . $amr_key["firstname"] . " " . $amr_key["surname"] . __("(Leader)") . "</td>";
-                                            $leader_user = $amr_key;
-                                        }else{
-                                            $user_and_role = "<td>" . $amr_key["firstname"] . " " . $amr_key["surname"] . "</td>";
+
+            <!-- List of members start  -->
+            <?php
+            if (!$sharelink) {
+            ?>
+                <div class="row">
+                    <p>
+                    <h2 class="h2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"> <span><img src="/public/icons/down-arrow.svg" height="30" alt=""></span> <?= __("Members") ?></h2>
+                    </p>
+                    <div class="collapse" id="collapseExample">
+                        <?php
+                        // psr = pending stockvell result 
+                        // $psr_result - getting from dashboard.inc.php
+                        if (count($ssr_result['members']) <= 0) {
+                            $nmjy = __("No member joined yet");
+                            echo "<div class='alert alert-warning'>$nmjy</div>";
+                        } else { ?>
+                            <div class="table-responsive">
+                                <table class="table table-bordered border-warning">
+                                    <thead class="bg-warning text-white border-primary">
+                                        <tr>
+                                            <th scope="col">#<?= __("ID") ?></th>
+                                            <th scope="col"><?= __("Name") ?></th>
+                                            <th scope="col"><?= __("Country") ?></th>
+                                            <th scope="col"><?= __("Profession") ?></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        // amr = all member result
+                                        // id, firstname, surname, email, country, phone, gender, profession, interest, govt_id, source, role
+
+                                        $leader_user = null;
+                                        $withdraw_member = null;
+                                        foreach ($ssr_result['members'] as $amr_key) {
+                                            if ($ssr_result["leader_id"] === $amr_key["id"]) {
+                                                $user_and_role = "<td class='text-danger'>" . $amr_key["firstname"] . " " . $amr_key["surname"] . __("(L)") . "</td>";
+                                                $leader_user = $amr_key;
+                                            }else if($ssr_result["withdraw_member_id"] === $amr_key["id"]){
+                                                $user_and_role = "<td>" . $amr_key["firstname"] . " " . $amr_key["surname"] . __("(W)") . "</td>";
+                                                $withdraw_member = $amr_key;
+                                            } else {
+                                                $user_and_role = "<td>" . $amr_key["firstname"] . " " . $amr_key["surname"] . "</td>";
+                                            }
+                                            echo "
+                              <tr class='text-capitalize'>
+                                 <th>" . $amr_key["id"] . "</th>
+                                 $user_and_role
+                                 <td>" . $amr_key["country"] . "</td>
+                                 <td>" . $amr_key["profession"] . "</td>
+                              </tr>
+                           ";
                                         }
-                                        echo "
-                                          <tr class='text-lowercase'>
-                                             <th>" . $amr_key["id"] . "</th>
-                                             $user_and_role
-                                             <td>" . $amr_key["country"] . "</td>
-                                             <td>" . $amr_key["profession"] . "</td>
-                                          </tr>
-                                       ";
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    <?php }                  ?>
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php }                  ?>
+                    </div>
                 </div>
-            </div>
+            <?php
+            }
+            ?>
+            <!-- List of members ends  -->
+
+
             <div class="row">
                 <p>
                 <h2 class="h2" data-bs-toggle="collapse" href="#agreementCollapse" role="button" aria-expanded="false" aria-controls="agreementCollapse"> <span><img src="/public/icons/down-arrow.svg" height="30" alt=""></span> <?= __("Agreement") ?></h2>

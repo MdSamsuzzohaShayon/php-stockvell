@@ -16,7 +16,7 @@ class Member extends Database
     // Delete this function leter and use the below one
     protected function findMember($email)
     {
-        $stmt = $this->connect()->prepare("SELECT id, firstname, surname email  FROM members WHERE email = :email ");
+        $stmt = $this->connect()->prepare("SELECT id, firstname, surname, email  FROM members WHERE email = :email ");
 
         if (!$stmt->execute(array(':email' => $email))) {
             $stmt = null;
@@ -37,10 +37,32 @@ class Member extends Database
         return $member_found;
     }
 
+    protected function membersLimitationExceed($stockvell_id){
+        try {
+            //code...
+            $sql = "SELECT sm.stockvell_id, s.name, s.status, s.max_member, COUNT(sm.stockvell_id) AS total_members FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id=s.id  WHERE stockvell_id=:stockvell_id GROUP BY sm.stockvell_id;";
+            $stmt = $this->connect()->prepare($sql);
+            if (!$stmt->execute(array(':stockvell_id' => $stockvell_id))) {
+                return null;
+            }
+            // var_dump(array("mid"=> $member_id, "sid"=> $stockvell_id));
+            // exit();
+            $stockvell_detail = $stmt->fetch(\PDO::FETCH_OBJ);
+            
+            if (!$stockvell_detail) return null;
+            return $stockvell_detail;
+        } catch (\PDOException $err) {
+            echo $err->getMessage();
+            //throw $th;
+        }
+    }
+    
+
+
 
     protected function findByMemberStockvellRelation($member_id, $stockvell_id)
     {
-        $sql = "SELECT * FROM stockvell_to_member WHERE member_id=:member_id AND stockvell_id=:stockvell_id";
+        $sql = "SELECT * FROM stockvell_to_member  WHERE member_id=:member_id AND stockvell_id=:stockvell_id";
         $stmt = $this->connect()->prepare($sql);
         if (!$stmt->execute(array(':member_id' => $member_id, ':stockvell_id' => $stockvell_id))) {
             return null;
@@ -171,11 +193,11 @@ class Member extends Database
         $imageFileType = strtolower(pathinfo($uploadedFile["name"], PATHINFO_EXTENSION));
         $target_file = $target_dir . basename($unique_file_name);
 
-        echo $target_dir . "</br>";
-        echo $unique_file_name . "</br>";
-        echo $imageFileType . "</br>";
-        echo $target_file . "</br>";
-        exit();
+        // echo $target_dir . "</br>";
+        // echo $unique_file_name . "</br>";
+        // echo $imageFileType . "</br>";
+        // echo $target_file . "</br>";
+        // exit();
         // $err_redirect = "/signup";
         // if ($is_member === true) {
         //     $err_redirect = '/dashboard';

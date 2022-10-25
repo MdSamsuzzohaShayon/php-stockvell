@@ -128,6 +128,17 @@ class MemberForms extends Member
             header("Location: $redirect_url/?stockvell_id=$stockvell_id&error=emptyinput");
             exit();
         }
+    
+        $stockvell_detail = $this->membersLimitationExceed($stockvell_id);
+        // echo json_encode(array($stockvell_detail));
+        // exit();
+        if($stockvell_detail){
+            if($stockvell_detail->max_member <= $stockvell_detail->total_members){
+                header("Location: $redirect_url/?stockvell_id=$stockvell_id&error=reachlimit");
+                exit(); 
+            }
+        }
+
         $find_relation = $this->findByMemberStockvellRelation($member_id, $stockvell_id);
         if ($find_relation) {
             // error - return or redirect
@@ -162,12 +173,36 @@ class MemberForms extends Member
         // exit();
         $unique_govt_id_name = $this->uploadFileToServer($govt_id_proof, $this->ROOT, "/pack_single/?stockvell_id=$stockvell_id&");
         $unique_address_name = $this->uploadFileToServer($address_proof, $this->ROOT, "/pack_single/?stockvell_id=$stockvell_id&");
-        if($this->requestToBeTheLeader($member_id, $stockvell_id, $unique_govt_id_name, $unique_address_name)){
+        if ($this->requestToBeTheLeader($member_id, $stockvell_id, $unique_govt_id_name, $unique_address_name)) {
             header("Location: /pack_single/?stockvell_id=$stockvell_id&error=none");
             exit();
-        }else{
+        } else {
             header("Location: /pack_single/?stockvell_id=$stockvell_id&error=stmtfaild");
             exit();
+        }
+    }
+
+    public function resignLeadership($stockvell_id, $reqirect_url)
+    {
+        echo "Working";
+        if (empty($stockvell_id)) {
+            header("Location: $reqirect_url/?stockvell_id=$stockvell_id&error=emptyinput");
+            exit();
+        }
+
+        try {
+            //code...
+            $sql = "UPDATE stockvells SET leader_id=NULL WHERE id=:stockvell_id";
+            $stmt = $this->connect()->prepare($sql);
+
+
+            $stmt->execute(array('stockvell_id' => $stockvell_id));
+            header("Location: $reqirect_url/?stockvell_id=$stockvell_id&error=none");
+            exit();
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            exit();
+            //throw $th;
         }
     }
 

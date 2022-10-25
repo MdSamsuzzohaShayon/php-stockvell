@@ -12,7 +12,6 @@ class Signup extends Member
 
 
 
-
     public function setMember($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city){
         $this->firstname  = $firstname;
         $this->surname  = $surname;
@@ -38,6 +37,8 @@ class Signup extends Member
             header("Location: /signup/?error=emptyinput");
             exit();
         }
+        // echo json_encode(array($this->firstname, $this->surname, preg_match("/^[a-zA-Z0-9]*$/", $this->firstname)));
+        // exit();
         if (!preg_match("/^[a-zA-Z0-9]*$/", $this->firstname) || strlen($this->firstname) <= 1) {
             header("Location: /signup/?error=invalidusername");
             exit();

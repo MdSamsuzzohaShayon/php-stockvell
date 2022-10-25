@@ -43,7 +43,7 @@
  - Install all packages of Composer
  - Connect via SSH `ssh -p 2222 aiocel@ssh.web11.us.cloudlogin.co`
  - Install php curl `sudo apt-get install php7.4-curl`
- - Run `database-migration.php`
+ - Run `database-migrations.php`
  - Setup `.htaccess` file for redirecting 
  - Change all `.env` variables
  - All file owner change `sudo chown -R www-data:www-data project-name`

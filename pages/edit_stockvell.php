@@ -111,7 +111,7 @@ $input_field = new InputField();
                 </div>
                 <div class="row mb-3">
                     <?php
-                    echo $input_field->inputSelect("category", $ct, false, $fss_result->category, ["social", "professional", "investmant"]);
+                    echo $input_field->inputSelect("category", $ct, false, $fss_result->category, $category_list );
                     echo $input_field->inputSelect("withdraw_frequency", $wdf, false, null, $freq_days);
                     ?>
                 </div>

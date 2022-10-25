@@ -9,12 +9,13 @@ public function __construct(){}
 
 public function findMemberByID($member_id, $redirect_url)
 {
-    $stmt = $this->connect()->prepare("SELECT *  FROM members WHERE id=:member_id;");
+    $stmt = $this->connect()->prepare("SELECT id, firstname, surname, email  FROM members WHERE id=:member_id;");
 
     if (!$stmt->execute(array("member_id"=> $member_id))) {
-        $stmt = null;
-        header("Location: /$redirect_url?error=stmtfailed");
-        exit();
+        // $stmt = null;
+        // header("Location: /$redirect_url?error=stmtfailed");
+        // exit();
+        return false;
     }
     $member_found = $stmt->fetch(\PDO::FETCH_OBJ);
     return $member_found;

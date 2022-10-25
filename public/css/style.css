@@ -10513,7 +10513,10 @@ header .toggle-menu {
 }
 
 .phone-input-group .option-list {
-  flex-basis: 20%;
+  flex-basis: 30%;
+}
+.phone-input-group .raw-number {
+  flex-basis: 70%;
 }
 
 .mobile-menu {
@@ -10529,7 +10532,9 @@ header .toggle-menu {
   min-height: 70vh;
 }
 .home .section-1 .landing-img {
-  width: 100%;
+  width: 50%;
+  right: 0;
+  transform: scaleX(-1);
   z-index: -1;
   height: 70vh;
   object-fit: cover;
@@ -10621,7 +10626,7 @@ header .toggle-menu {
     bottom: 0;
   }
   .admin .section-2 .sidebar-menus .sidebar-menu-items .menu-item {
-    width: 20% !important;
+    width: 16.66% !important;
     text-align: center !important;
     align-items: center !important;
   }

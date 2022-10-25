@@ -23,6 +23,14 @@ class ErrorHandler
                     $this->errors =  __("Invalid MySQL query!");
                     break;
                 }
+            case 'pperror': {
+                    $this->errors =  __("You must agree with our privacy policy!");
+                    break;
+                }            
+            case 'reachlimit': {
+                    $this->errors =  __("This pack reach maximum number of a pack please try to join another pack");
+                    break;
+                }
             case 'incorrectpassword': {
                     $this->errors =  __("Incorrect password!");
                     break;
