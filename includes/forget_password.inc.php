@@ -16,8 +16,6 @@ if (isset($_POST["recover_via_email_submit"])) {
 
 if (isset($_POST["recover_via_phone_submit"])) {
   $phone = $_POST["phone"];
-  // echo json_encode(array("phone" => $phone));
-  // exit();
 
   $member_recover = new RecoverPassword();
   $member_recover->generateBackupCodeViaPhone($phone);

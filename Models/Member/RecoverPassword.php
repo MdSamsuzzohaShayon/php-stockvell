@@ -21,51 +21,61 @@ class RecoverPassword extends Member
 {
     public function generateBackupCodeViaEmail($email)
     {
-        $fmber_result = $this->findMemberByEmail($email, 'forget_password.php'); // fmber = found member by email result
-        if (!$fmber_result) {
-            header("Location: /forget_password.php?error=usernotfound");
+        try {
+            $fmber_result = $this->findMemberByEmail($email, 'forget_password.php'); // fmber = found member by email result
+            if (!$fmber_result) {
+                header("Location: /forget_password.php?error=usernotfound");
+                exit();
+            }
+            // $random_code = rand(100000, 999999);
+            $random_code_str = strval(rand(1000, 9999));
+            $id_str = strval($fmber_result->id);
+            $recovery_code = $random_code_str . $id_str;
+            // $token = $this->generateEncodedToken(array("email"=> "mdshayon0@gmail.com"), "secret");
+            // $this->decodeToken($token);
+            // Save to database
+            $member_update_sql = "UPDATE members SET recovery_code=:recovery_code WHERE id=:member_id";
+            $rcu_stmt = $this->connect()->prepare($member_update_sql); // rcu = recovery code statement
+            $rcu_stmt->bindParam('member_id', $fmber_result->id);
+            $rcu_stmt->bindParam('recovery_code', $recovery_code);
+            $rcu_stmt->execute();
+            $this->sendBackupCodeThoughEmail($recovery_code, $email);
+
+            header("Location: /forget_password/?segment=verify_code");
+            exit();
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
             exit();
         }
-        // $random_code = rand(100000, 999999);
-        $random_code_str = strval(rand(1000, 9999));
-        $id_str = strval($fmber_result->id);
-        $recovery_code = $random_code_str . $id_str;
-        // $token = $this->generateEncodedToken(array("email"=> "mdshayon0@gmail.com"), "secret");
-        // $this->decodeToken($token);
-        // Save to database
-        $member_update_sql = "UPDATE members SET recovery_code=:recovery_code WHERE id=:member_id";
-        $rcu_stmt = $this->connect()->prepare($member_update_sql); // rcu = recovery code statement
-        $rcu_stmt->bindParam('member_id', $fmber_result->id);
-        $rcu_stmt->bindParam('recovery_code', $recovery_code);
-        $rcu_stmt->execute();
-        $this->sendBackupCodeThoughEmail($recovery_code, $email);
-
-        header("Location: /forget_password/?segment=verify_code");
-        exit();
     }
 
     public function generateBackupCodeViaPhone($phone)
     {
-        // $recovery_code = mt_rand(100000, 999999);
-        // $recovery_code = rand(100000, 999999);
-        $fmber_result = $this->findMemberByPhone($phone, 'forget_password.php'); // fmber = found member by email result
-        if (!$fmber_result) {
-            header("Location: /forget_password.php?error=usernotfound");
+        try {
+            // $recovery_code = mt_rand(100000, 999999);
+            // $recovery_code = rand(100000, 999999);
+            $fmber_result = $this->findMemberByPhone($phone, 'forget_password.php'); // fmber = found member by email result
+            if (!$fmber_result) {
+                header("Location: /forget_password.php?error=usernotfound");
+                exit();
+            }
+            // $random_code = rand(100000, 999999);
+            $random_code_str = strval(rand(1000, 9999));
+            $id_str = strval($fmber_result->id);
+            $recovery_code = $random_code_str . $id_str;
+            // Save to database
+            $member_update_sql = "UPDATE members SET recovery_code=:recovery_code WHERE phone=:phone";
+            $rcu_stmt = $this->connect()->prepare($member_update_sql); // rcu = recovery code statement
+            $rcu_stmt->bindParam('phone', $phone);
+            $rcu_stmt->bindParam('recovery_code', $recovery_code);
+            $rcu_stmt->execute();
+            $this->sendBackupCodeThoughPhone($recovery_code, $phone);
+            header("Location: /forget_password/?segment=verify_code");
+            exit();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
             exit();
         }
-        // $random_code = rand(100000, 999999);
-        $random_code_str = strval(rand(1000, 9999));
-        $id_str = strval($fmber_result->id);
-        $recovery_code = $random_code_str . $id_str;
-        // Save to database
-        $member_update_sql = "UPDATE members SET recovery_code=:recovery_code WHERE phone=:phone";
-        $rcu_stmt = $this->connect()->prepare($member_update_sql); // rcu = recovery code statement
-        $rcu_stmt->bindParam('phone', $phone);
-        $rcu_stmt->bindParam('recovery_code', $recovery_code);
-        $rcu_stmt->execute();
-        $this->sendBackupCodeThoughPhone($recovery_code, $phone);
-        header("Location: /forget_password/?segment=verify_code");
-        exit();
     }
 
     private function sendBackupCodeThoughEmail($recovery_code, $email)
@@ -83,24 +93,30 @@ class RecoverPassword extends Member
 
     private function sendBackupCodeThoughPhone($recovery_code, $phone)
     {
-        $formatted_phone = str_replace("_", "", $phone);
-        // Send recovery code via twilio
-        $msg = "Please use this $recovery_code recovery code to verify your account";
-        // Your Account SID and Auth Token from twilio.com/console
-
-        // Find your Account SID and Auth Token at twilio.com/console
-        // and set the environment variables. See http://twil.io/secure
-        $sid = $_ENV["TWILIO_ACCOUNT_SID"];
-        $token = $_ENV["TWILIO_ACCOUNT_TOKEN"];
-        $twilio = new Client($sid, $token);
-
-        $message = $twilio->messages
-            ->create(
-                $formatted_phone, // to
-                ["from" => $_ENV["TWILIO_PHONE_NUMBER"], "body" => $msg]
-            );
-
-        print($message->sid);
+        try {
+            $formatted_phone = str_replace("_", "", $phone);
+            // Send recovery code via twilio
+            $msg = "Please use this $recovery_code recovery code to verify your account";
+            // Your Account SID and Auth Token from twilio.com/console
+    
+            // Find your Account SID and Auth Token at twilio.com/console
+            // and set the environment variables. See http://twil.io/secure
+            $sid = $_ENV["TWILIO_ACCOUNT_SID"];
+            $token = $_ENV["TWILIO_ACCOUNT_TOKEN"];
+            // echo $sid . "<br />" . $token;
+            $twilio = new Client($sid, $token);
+    
+            $message = $twilio->messages
+                ->create(
+                    $formatted_phone, // to
+                    ["from" => $_ENV["TWILIO_PHONE_NUMBER"], "body" => $msg]
+                );
+    
+            print($message->sid);
+        } catch (\Exception $e) {
+            echo "Twilio exception - make sure to put right credentials " . $e->getMessage() ;
+            exit();
+        }
     }
 
     public function verifyRecoveryCode($recovery_code)
@@ -141,10 +157,10 @@ class RecoverPassword extends Member
         //  Update member 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $update_arr = [" password= '$hashedPassword' "];
-        if($this->updateMember($update_arr, $user_id)){
+        if ($this->updateMember($update_arr, $user_id)) {
             header("Location: /login/?error=none");
             exit();
-        }else{
+        } else {
             header("Location: /forget_password/?segment=reset_password&user_id=$user_id&error=smtpfailed");
             exit();
         }

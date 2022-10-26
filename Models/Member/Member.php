@@ -131,17 +131,21 @@ class Member extends Database
 
     protected function findMemberByPhone($phone, $redirect_url)
     {
-        $stmt = $this->connect()->prepare("SELECT id, firstname, phone, email  FROM members WHERE phone = :phone;");
-
-        if (!$stmt->execute(array("phone" => $phone))) {
-            $stmt = null;
-            header("Location: /$redirect_url?error=stmtfailed");
+        try {
+            $stmt = $this->connect()->prepare("SELECT id, firstname, phone, email  FROM members WHERE phone = :phone;");
+    
+            if (!$stmt->execute(array("phone" => $phone))) {
+                $stmt = null;
+                header("Location: /$redirect_url?error=stmtfailed");
+                exit();
+            }
+            $member_found = $stmt->fetch(\PDO::FETCH_OBJ);
+            return $member_found;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
             exit();
         }
-        $member_found = $stmt->fetch(\PDO::FETCH_OBJ);
-        // var_dump($member_found);
-        // exit();
-        return $member_found;
+        return null;
     }
 
 

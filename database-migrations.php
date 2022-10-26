@@ -50,7 +50,9 @@ class DatabaseMigrations extends Database
      * @create table if there is none
      */
 
+
     // If there are no table with this name create one
+    /*
     if (!$this->checkTableExist("members")) {
       $sql_query = "CREATE TABLE members(
             id INT NOT NULL AUTO_INCREMENT,
@@ -70,7 +72,8 @@ class DatabaseMigrations extends Database
             source TEXT,
             role VARCHAR(255) NOT NULL DEFAULT 'GENERAL',
             PRIMARY KEY (id),
-            UNIQUE (email, phone)
+            UNIQUE (email),
+            UNIQUE (phone)
             );";
       $this->createTable($sql_query, "members");
     }
@@ -142,6 +145,9 @@ class DatabaseMigrations extends Database
       $this->addToTheAdminsTable("admins", "stockvell_admin", "stockvellexample@gmail.com", "+880_1785208590", "Test1234");
     }
 
+    */
+
+
 
 
     // Update or modify specific table
@@ -212,6 +218,7 @@ class DatabaseMigrations extends Database
       echo "created " . $tablename . " table successfully <br />";
     } catch (\PDOException $e) {
       //throw $th;
+      echo "error to create $tablename </br>";
       echo $e->getMessage();
       exit();
     }

@@ -303,9 +303,16 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     //     generateLinkDisplay.classList.add('d-block');
     //   }
     // });
-    const newLink = `${window.location.origin}/pack_single/?stockvell_id=${stockvellId}&sharing=${generateLinkDisplay.textContent.toString().trim()}`;
-    generateLinkDisplay.textContent = newLink;
-    console.log(generateLinkDisplay);
+    if(generateLinkDisplay){
+      if(generateLinkDisplay.textContent && generateLinkDisplay.textContent.toString().trim() !== ''){
+        const newLink = `${window.location.origin}/pack_single/?stockvell_id=${stockvellId}&sharing=${generateLinkDisplay.textContent.toString().trim()}`;
+        generateLinkDisplay.textContent = newLink;
+      }else{
+        const newLink = `${window.location.origin}/pack_single/?stockvell_id=${stockvellId}`;
+        generateLinkDisplay.textContent = newLink;
+      }
+    }
+    // console.log(generateLinkDisplay);
   }
 
   /**

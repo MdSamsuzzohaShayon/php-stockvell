@@ -55,7 +55,9 @@ class SendEmail
             // echo 'Message has been sent';
             return true;
         } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$this->mail->ErrorInfo}";
+            echo "Message could not be sent. Mailer Error: {$this->mail->ErrorInfo} <br />";
+            echo $e->getMessage();
+            exit();
         }
         return false;
     }

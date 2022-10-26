@@ -86,7 +86,7 @@ $input_field = new InputField();
 
                 <!-- Form ends here  -->
             <?php } else { ?>
-                <!-- Form start here  -->
+                <!-- Recover by email start -->
                 <form class="d-none phone-form form-content" action="/includes/forget_password.inc.php" method="POST">
                     <div class="row mb-3">
                         <?php
@@ -103,6 +103,10 @@ $input_field = new InputField();
                         <a class="p-0" id="recover-via-email" href="#"><?= __("Use email address"); ?></a>
                     </div>
                 </form>
+                <!-- Recover by email end -->
+
+
+                <!-- Recover by phone start  -->
                 <form class="d-block email-form form-content" action="/includes/forget_password.inc.php" method="POST">
                     <div class="row mb-3">
                         <?php
@@ -117,7 +121,7 @@ $input_field = new InputField();
                         <a class="p-0" id="recover-via-phone" href="#"><?= __("Use phone number"); ?></a>
                     </div>
                 </form>
-                <!-- Form ends here  -->
+                <!-- Recover by phone end  -->
             <?php } ?>
 
         </div>

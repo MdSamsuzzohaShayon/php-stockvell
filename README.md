@@ -39,6 +39,7 @@
  - Create dashboard for members (Multiple tabs for update member profile, add stockvell pack, edit) 😎
  - Create admin panel for admins (list of stockvell) 😎
 
+
 ### Deployment Instructions
  - Install all packages of Composer
  - Connect via SSH `ssh -p 2222 aiocel@ssh.web11.us.cloudlogin.co`
@@ -68,7 +69,7 @@
     </VirtualHost>
   ```
 
-### Modifications
+### Modifications - 1
 
 Registration Page
  - City is missing 😎
@@ -120,7 +121,9 @@ These are the general remarks we have for now.
 Overall, we are satisfied with your work and please let’s open the new contract as we agree. I will accept and send the payment for the second part so that you can continue.
 
 
-Many thanks
+### Modifications - 2
+ - Detail stockvell not working in admin (Pending pack)
+ - No page for __http://stockvell.allinone-office.com/pack_single.php?stockvell_id=1__
 
 
 ### Planning

@@ -64,9 +64,9 @@ class InputField
         foreach ($countries_code as $code => $code_country) {
             if ($code_country === $default) {
                 // echo "Default - " . $default . "Item" . $item;
-                $option_list .= "<option value='+$code' selected class='text-capitalize selected-item'> $code_country </option> ";
+                $option_list .= "<option value='$code_country' selected class='text-capitalize selected-item'> $code_country </option> ";
             } else {
-                $option_list .= "<option value='+$code' class='text-capitalize'> $code_country </option> ";
+                $option_list .= "<option value='$code_country' class='text-capitalize'> $code_country </option> ";
             }
         }
 
