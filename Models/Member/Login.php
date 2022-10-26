@@ -60,6 +60,7 @@ class Login extends Database
             $_SESSION["member_email"] = $members[0]["email"];
             $stmt = null;
             header("Location: /dashboard.php");
+            exit();
         }
 
         $stmt = null;

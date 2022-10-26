@@ -64,6 +64,7 @@ $gl = __('Generate Link');
 
 
 <main class="dashboard">
+
    <section class="section-1">
       <div class="row w-full flex-column-reverse flex-md-row p-0 m-0">
          <!-- Sidebar menu start  -->
@@ -179,6 +180,7 @@ $gl = __('Generate Link');
                if (isset($single_stockvell_id)) {
                   $ssr_result = $stockvell_control->getASingleApprovedStockvell($single_stockvell_id); // ssr = single stockvell result
                   $leader = $member_controler->findMemberByID($ssr_result['leader_id'], '/admin');
+                  
 
                   $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvell_id);
                ?>
@@ -219,13 +221,13 @@ $gl = __('Generate Link');
                                  foreach ($ssr_result['members'] as $member) {
                                     // array_push($member_list, $member);
                                     // echo $member['firstname'];
-                                    $member_id = $member['id'];
+                                    $withdraw_member_id = $member['id'];
                                     $member_name = $member['firstname'] . " " . $member['surname'];
-                                    if (intval($ssr_result['withdraw_member_id']) === intval($member_id)) {
+                                    if (intval($ssr_result['withdraw_member_id']) === intval($withdraw_member_id)) {
                                        $withdraw_member = $member;
-                                       echo "<option selected value='$member_id'>$member_name</option>";
+                                       echo "<option selected value='$withdraw_member_id'>$member_name</option>";
                                     } else {
-                                       echo "<option value='$member_id'>$member_name</option>";
+                                       echo "<option value='$withdraw_member_id'>$member_name</option>";
                                     }
                                  }
                                  ?>

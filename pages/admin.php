@@ -343,12 +343,6 @@ $dl = __("Detail");
                         <div class="table-responsive d-block" id="approved-stockvell-list">
                            <table class="table table-bordered border-warning">
                               <thead class="bg-warning text-white border-primary">
-                                 <colgroup span="9"></colgroup>
-                                 <colgroup span="3"></colgroup>
-                                 <tr class="bg-warning text-white border-primary">
-                                    <th colspan="9">Properties</th>
-                                    <th colspan="3">Action</th>
-                                 </tr>
                                  <tr class="bg-warning text-white border-primary">
                                     <th scope="col"><?= __("ID"); ?></th>
                                     <th scope="col"><?= __("Name"); ?></th>
@@ -360,8 +354,8 @@ $dl = __("Detail");
                                     <th scope="col"><?= __("Leader"); ?></th>
                                     <th scope="col"><?= __("Withdraw Period"); ?></th>
                                     <th scope="col"><?= $vw ?></th>
-                                    <th scope="col"><?= $lr ?></th>
                                     <th scope="col"><?= $et ?></th>
+                                    <th scope="col"><?= $dl ?></th>
                                  </tr>
                               </thead>
                               <tbody>
@@ -386,8 +380,8 @@ $dl = __("Detail");
                                           <td>" . $leader_detail->firstname . " " . $leader_detail->surname . "</td>
                                           <<td>" . $with_per->convertFromIntToText($aasr_key["withdraw_frequency"]) . "</td>
                                           <td><a href='/pack_single/?stockvell_id=" . $aasr_key["id"] . "' class='btn btn-primary'>$vw</a></td>
-                                          <td><a href='/admin/?stockvell_id=" . $aasr_key["id"] . "' class='btn btn-primary' >$lr</a></td>
                                           <td><a href='/edit_stockvell/?stockvell_id=" . $aasr_key["id"] . "' class='btn btn-primary'>$et</a></td>
+                                          <td><a href='/admin/?stockvell_id=" . $aasr_key["id"] . "' class='btn btn-primary' >$dl</a></td>
                                        </tr>
                                     ";
                                  }
@@ -464,7 +458,7 @@ $dl = __("Detail");
                                           <tr class='text-capitalize'>
                                              <th>" . $rpl_key["id"] . "</th>
                                              <td>" . $rpl_key["firstname"] . " " . $rpl_key["surname"]  . "</td>
-                                             <td>" . $rpl_key["email"] . "</td>
+                                             <td class='text-lowercase'>" . $rpl_key["email"] . "</td>
                                              <td><a class='btn btn-primary' href='/uploads/" . $rpl_key["govt_id_proof"] . "'>View</td>
                                              <td><a class='btn btn-primary' href='/uploads/" . $rpl_key["address_proof"] . "'>View</td>
                                              <td>
