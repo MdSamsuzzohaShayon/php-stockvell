@@ -41,4 +41,9 @@ ________________________________________________________________________________
 
 
 
+Admin panel : http://stockvell.allinone-office.com/admin
+Email: stockvelladmin@gmail.com
+Password: Test1234
+
+
 

@@ -742,7 +742,7 @@ $dl = __("Detail");
                      <div class="row mb-3">
                         <?php
                         echo $input_field->inputText('payment', $pyt, false, 'number', true);
-                        echo $input_field->inputSelect('currency', $ccc, false, 'CFA', $currency_short);
+                        echo $input_field->inputSelect('currency', $ccc, false, strtoupper('XOF (CFA)'), $currency_short);
                         ?>
                      </div>
                      <div class="row mb-3">

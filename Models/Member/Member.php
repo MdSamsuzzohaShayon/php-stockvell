@@ -40,7 +40,7 @@ class Member extends Database
     protected function membersLimitationExceed($stockvell_id){
         try {
             //code...
-            $sql = "SELECT sm.stockvell_id, s.name, s.status, s.max_member, COUNT(sm.stockvell_id) AS total_members FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id=s.id  WHERE stockvell_id=:stockvell_id GROUP BY sm.stockvell_id;";
+            $sql = "SELECT sm.stockvell_id, s.name, s.status, s.max_member, s.withdraw_frequency, COUNT(sm.stockvell_id) AS total_members FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id=s.id  WHERE stockvell_id=:stockvell_id GROUP BY sm.stockvell_id;";
             $stmt = $this->connect()->prepare($sql);
             if (!$stmt->execute(array(':stockvell_id' => $stockvell_id))) {
                 return null;

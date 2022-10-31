@@ -6,6 +6,7 @@ use Config\Database;
 use Utils\SendEmail;
 
 use Models\Member\Member;
+use Models\Stockvell\StockvellForms;
 
 class MemberForms extends Member
 {
@@ -128,14 +129,31 @@ class MemberForms extends Member
             header("Location: $redirect_url/?stockvell_id=$stockvell_id&error=emptyinput");
             exit();
         }
-    
+
         $stockvell_detail = $this->membersLimitationExceed($stockvell_id);
         // echo json_encode(array($stockvell_detail));
+
+        if (intval($stockvell_detail->total_members) === 0) {
+            $first_widthdraw_member_id = intval($member_id, 10);
+            $withdraw_frequency = 7;
+            $input_list = [];
+            if (intval($stockvell_detail->withdraw_frequency)) {
+                $withdraw_frequency = intval($stockvell_detail->withdraw_frequency);
+            }
+            $withdraw_date = date("Y-m-d");
+            $offsetted_widthdraw_date =  date('Y-m-d', strtotime($withdraw_date . ' + ' . $withdraw_frequency . ' days'));
+            $input_list["withdraw_member_id"] = $first_widthdraw_member_id;
+            $input_list['withdraw_at'] = $offsetted_widthdraw_date;
+            $stockvell_forms = new StockvellForms();
+            $stockvell_forms->updateStockvell($stockvell_id, $input_list);
+        }
+        // echo "C - " . (intval($stockvell_detail->total_members ) === 0);
+        // echo intval($stockvell_detail->withdraw_frequency) === 15;
         // exit();
-        if($stockvell_detail){
-            if($stockvell_detail->max_member <= $stockvell_detail->total_members){
+        if ($stockvell_detail) {
+            if ($stockvell_detail->max_member <= $stockvell_detail->total_members) {
                 header("Location: $redirect_url/?stockvell_id=$stockvell_id&error=reachlimit");
-                exit(); 
+                exit();
             }
         }
 

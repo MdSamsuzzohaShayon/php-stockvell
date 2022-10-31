@@ -13,20 +13,24 @@ class AdminStockvellForms extends Stockvell
             // Set withdraw member id and set withdraw date
             // Get single pack and get withdraw frequency from that
             // withdraw_frequency
-            $single_stockvell = $this->getSingleStockvell($stockvell_id);
             $first_member_of_pack = $this->getFirstMemberOfAStockvellPack($stockvell_id);
-            $first_widthdraw_member_id = null;
-            $withdraw_frequency = 7;
-            if ($first_member_of_pack->member_id) {
-                $first_widthdraw_member_id = $first_member_of_pack->member_id;
-            }
-            if($single_stockvell->withdraw_frequency){
-                $withdraw_frequency = $single_stockvell->withdraw_frequency;
-            }
-            $withdraw_date = date("Y-m-d");
-            $offsetted_widthdraw_date =  date('Y-m-d', strtotime($withdraw_date . ' + '. $withdraw_frequency .' days'));
             // Update stockvell
-            $input_list = array("status" => "APPROVED", "withdraw_member_id" => $first_widthdraw_member_id, 'withdraw_at' => $offsetted_widthdraw_date );
+            $input_list = array("status" => "APPROVED");
+            if ($first_member_of_pack) {
+                $single_stockvell = $this->getSingleStockvell($stockvell_id);
+                $first_widthdraw_member_id = null;
+                $withdraw_frequency = 7;
+                if ($first_member_of_pack->member_id) {
+                    $first_widthdraw_member_id = $first_member_of_pack->member_id;
+                }
+                if ($single_stockvell->withdraw_frequency) {
+                    $withdraw_frequency = $single_stockvell->withdraw_frequency;
+                }
+                $withdraw_date = date("Y-m-d");
+                $offsetted_widthdraw_date =  date('Y-m-d', strtotime($withdraw_date . ' + ' . $withdraw_frequency . ' days'));
+                $input_list["withdraw_member_id"] = $first_widthdraw_member_id;
+                $input_list['withdraw_at'] = $offsetted_widthdraw_date ;
+            }
             $cols = array();
             // Remove blank inputs and password2
             foreach ($input_list as $key => $val) {
