@@ -33,7 +33,11 @@ if ($router === '/' || $router === '/home' || $router === '/index.php' || $route
     include('single-product-page.php');
 }elseif ($router === '/includes/signup.inc.php') {
     include('/includes/signup.inc.php');
-} else {
+}
+// elseif ($router === '/example' || $router === '/example.php'  || $router === '/example/') {
+//     include($ROOT . '/pages/example.php');
+// } 
+else {
     include($ROOT . '/pages/404.php');
 }
 

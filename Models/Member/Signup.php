@@ -37,9 +37,10 @@ class Signup extends Member
             header("Location: /signup/?error=emptyinput");
             exit();
         }
-        // echo json_encode(array($this->firstname, $this->surname, preg_match("/^[a-zA-Z0-9]*$/", $this->firstname)));
+        $user_firstname = str_replace(' ', '_', $this->firstname);
+        // echo json_encode(array('firstname' => $user_firstname, "lastname" =>  $this->surname, 'condition' => preg_match("/^[a-zA-Z0-9_]*$/", $user_firstname)));
         // exit();
-        if (!preg_match("/^[a-zA-Z0-9]*$/", $this->firstname) || strlen($this->firstname) <= 1) {
+        if (!preg_match("/^[a-zA-Z0-9_]*$/", $user_firstname) || strlen($this->firstname) <= 1) {
             header("Location: /signup/?error=invalidusername");
             exit();
         }

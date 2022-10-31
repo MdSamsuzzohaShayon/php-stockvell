@@ -11,17 +11,22 @@ require_once($ROOT . '/layouts/header.php');
 
 
 <main class="home">
-  <section class="section-1 position-relative">
-    <img src="public/img/saving-shape.svg" class="position-absolute landing-img top-0 end-0" alt="">
+  <section class="section-1">
+    <!-- <img src="public/img/saving-shape.svg" class="position-absolute landing-img top-0 end-0" alt=""> -->
     <div class="container d-flex flex-column content justify-content-center">
-      <div class="col-12 col-md-6">
-        <h1 class="h1 text-primary heading"><?= __("Stockvell Makes Saving for Life Easy") ?></h1>
-        <p class="text-primary"><?= __("Families have saved over $1 Billion for college using Stackvell. Receive a $5.29 bonus when you sign up and $25 when you link a 529 plan.") ?></p>
-        <?php if ($is_member) { ?>
-          <a href="/packs.php" class="btn btn-warning text-primary"><?= __("Join Now") ?></a>
-        <?php } else { ?>
-          <a href="/signup.php" class="btn btn-warning text-primary"><?= __("Join Now") ?></a>
-        <?php } ?>
+      <div class="row mx-0 flex-column-reverse flex-md-row">
+        <div class="col-12 col-md-6">
+          <h1 class="h1 text-primary heading"><?= __("Stockvell Makes Saving for Life Easy") ?></h1>
+          <p class="text-primary"><?= __("Families have saved over $1 Billion for college using Stackvell. Receive a $5.29 bonus when you sign up and $25 when you link a 529 plan.") ?></p>
+          <?php if ($is_member) { ?>
+            <a href="/packs.php" class="btn btn-warning text-primary"><?= __("Join Now") ?></a>
+          <?php } else { ?>
+            <a href="/signup.php" class="btn btn-warning text-primary"><?= __("Join Now") ?></a>
+          <?php } ?>
+        </div>
+        <div class="col-12 col-md-6">
+          <img src="public/img/saving-shape.svg" alt="" class="img-fluid">
+        </div>
       </div>
     </div>
   </section>

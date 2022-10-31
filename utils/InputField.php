@@ -1,6 +1,13 @@
 <?php
-
 namespace Utils;
+
+$ROOT = $_SERVER['DOCUMENT_ROOT'];
+
+// Check for session 
+require_once($ROOT . "/vendor/autoload.php");
+
+
+use Utils\HelperFunctions;
 
 class InputField
 {
@@ -8,6 +15,7 @@ class InputField
     {
         $this->input_class = "form-control text-primary bg-secondary border border-primary ";
         $this->input_label_class = "$this->input_label_class";
+        $this->helper = new HelperFunctions();
     }
     private function setConClass($single_input, $additional_con_class)
     {
@@ -136,7 +144,11 @@ class InputField
         $new_default = $this->setDefaultValue($default_value);
         $split_phone = explode("_", $default_value);
         $default_code = "";
-        if (!empty($split_phone[0])) $default_code = $split_phone[0];
+        if (!empty($split_phone[0])) {
+            // $default_code = $split_phone[0];
+            $default_code = $this->helper->findByWordFromArrayOfSentence($split_phone[0], $item_list);
+            // echo "default" . $default_code;
+        }
         // echo $default_code;
         $default_phone = "";
         if (!empty($split_phone[1])) $default_phone = $split_phone[1];

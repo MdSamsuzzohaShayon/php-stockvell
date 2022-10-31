@@ -193,7 +193,8 @@ class Member extends Database
     public function uploadFileToServer($uploadedFile, $ROOT, $err_redirect)
     {
         $target_dir = $ROOT . "/uploads/";
-        $unique_file_name = basename("m_" . date("Ymd_") . $uploadedFile["name"]);
+        $uploaded_file_name = str_replace(' ', '_', $uploadedFile["name"]);
+        $unique_file_name = basename("m_" . date("Ymd_"). rand(100, 999) . '_' . $uploaded_file_name);
         $imageFileType = strtolower(pathinfo($uploadedFile["name"], PATHINFO_EXTENSION));
         $target_file = $target_dir . basename($unique_file_name);
 
@@ -214,16 +215,17 @@ class Member extends Database
             header("Location: " . $err_redirect . "error=invalidfile");
             exit();
         }
-        if ($uploadedFile['size'] > (1000 * 1000 * 2)) {
-            header("Location: " . $err_redirect . "error=invalidfile");
-            exit();
-        }
+        // if ($uploadedFile['size'] > (1000 * 1000 * 2)) {
+        //     header("Location: " . $err_redirect . "error=invalidfile");
+        //     exit();
+        // }
         if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "pdf") {
             header("Location: " . $err_redirect . "error=invalidfile");
             exit();
         }
         // echo json_encode($uploadedFile);
         // exit();
+        // echo $uploadedFile["tmp_name"] . $target_file . ' Uploaded';
         // Upload file
         // echo $target_file;
         move_uploaded_file($uploadedFile["tmp_name"], $target_file);

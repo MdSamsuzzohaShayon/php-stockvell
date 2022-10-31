@@ -34,6 +34,7 @@ require_once($ROOT . "/layouts/header.php");
 require_once($ROOT . "/config/option-list.php");
 
 use Models\Stockvell\FetchStockvell;
+use Models\Stockvell\StockvellForms;
 use Models\Member\FetchMember;
 use Utils\InputField;
 use Utils\ErrorHandler;
@@ -83,6 +84,18 @@ $member_fetch = new FetchMember();
 $leader = $member_fetch->findMemberByID($ssr_result['leader_id'], '/pack_single');
 $withdraw_member = $member_fetch->findMemberByID($ssr_result['withdraw_member_id'], '/pack_single');
 
+
+// $ssr_result
+// Check today's date meed updated date
+$today_date = date("Y-m-d");
+// var_dump($ssr_result);
+// echo "Condition - " . ( $today_date >= $ssr_result['withdraw_at']);
+// if ($today_date >= date("Y-m-d")){
+if ($today_date >= $ssr_result['withdraw_at']){
+    // if date meet update withdraw member id and date
+    $stockvell_control = new StockvellForms();
+    $stockvell_control->setMemberToWithdrawFIFO($stockvell_id, $withdraw_member->id);
+}
 ?>
 
 
@@ -184,7 +197,12 @@ $withdraw_member = $member_fetch->findMemberByID($ssr_result['withdraw_member_id
                     <div class="row d-flex highlight-stat justify-content-md-end justify-content-between">
                         <div class="highlight-item m-2 p-2 bg-primary text-secondary">
                             <p><?= __("Monthly Deposit") ?></p>
-                            <h3 class="h3">$<?= $ssr_result['payment']; ?></h3>
+                            <?php 
+                            // $currency_symbol = substr($ssr_result['currency'], strpos($data, "("));
+                            $currency_symbol_temp = explode('(', $ssr_result['currency'])[1];
+                            $currency_symbol = explode(')', $currency_symbol_temp)[0];
+                            ?>
+                            <h3 class="h3"><?= $currency_symbol . ' ' .  $ssr_result['payment']; ?></h3>
                         </div>
                         <div class="highlight-item m-2 p-2 bg-primary text-secondary">
                             <p><?= __("Goal") ?></p>
@@ -243,7 +261,7 @@ $withdraw_member = $member_fetch->findMemberByID($ssr_result['withdraw_member_id
                                           <tr class='text-capitalize'>
                                              <th>" . $rpl_key["id"] . "</th>
                                              <td>" . $rpl_key["firstname"] . " " . $rpl_key["surname"]  . "</td>
-                                             <td>" . $rpl_key["email"] . "</td>
+                                             <td class='text-lowercase'>" . $rpl_key["email"] . "</td>
                                              <td><a class='btn btn-primary' href='/uploads/" . $rpl_key["govt_id_proof"] . "'>View</td>
                                              <td><a class='btn btn-primary' href='/uploads/" . $rpl_key["address_proof"] . "'>View</td>
                                              <td>

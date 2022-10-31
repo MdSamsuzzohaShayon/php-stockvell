@@ -78,6 +78,10 @@ Registration Page
  - Government ID (png, jpeg, jpg or PDF only) 😎
  - Button to cancel is missing 😎
 
+### Modifications - 2
+ - Address image not uploading when a user requested to the leader
+ - Validate image or file size using javascript
+
 
 Login Page
  - Use Phone/Email to login (to give both options to members) 😎

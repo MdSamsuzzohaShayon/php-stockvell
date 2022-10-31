@@ -6,23 +6,166 @@ $professions = array("accountant", "actor", "actress", "air traffic controller",
 
 // data from https://gist.github.com/andyj/7108917
 
-$countries_code = [ '44' => 'UK (+44)', '1' => 'USA (+1)', '213' => 'Algeria (+213)', '376' => 'Andorra (+376)', '244' => 'Angola (+244)', '1264' => 'Anguilla (+1264)', '1268' => 'Antigua & Barbuda (+1268)', '54' => 'Argentina (+54)', '374' => 'Armenia (+374)', '297' => 'Aruba (+297)', '61' => 'Australia (+61)', '43' => 'Austria (+43)', '994' => 'Azerbaijan (+994)', '1242' => 'Bahamas (+1242)', '973' => 'Bahrain (+973)', '880' => 'Bangladesh (+880)', '1246' => 'Barbados (+1246)', '375' => 'Belarus (+375)', '32' => 'Belgium (+32)', '501' => 'Belize (+501)', '229' => 
+$countries_code = ['44' => 'UK (+44)', '1' => 'USA (+1)', '213' => 'Algeria (+213)', '376' => 'Andorra (+376)', '244' => 'Angola (+244)', '1264' => 'Anguilla (+1264)', '1268' => 'Antigua & Barbuda (+1268)', '54' => 'Argentina (+54)', '374' => 'Armenia (+374)', '297' => 'Aruba (+297)', '61' => 'Australia (+61)', '43' => 'Austria (+43)', '994' => 'Azerbaijan (+994)', '1242' => 'Bahamas (+1242)', '973' => 'Bahrain (+973)', '880' => 'Bangladesh (+880)', '1246' => 'Barbados (+1246)', '375' => 'Belarus (+375)', '32' => 'Belgium (+32)', '501' => 'Belize (+501)', '229' =>
 'Benin (+229)', '1441' => 'Bermuda (+1441)', '975' => 'Bhutan (+975)', '591' => 'Bolivia (+591)', '387' => 'Bosnia Herzegovina (+387)', '267' => 'Botswana (+267)', '55' => 'Brazil (+55)', '673' => 'Brunei (+673)', '359' => 'Bulgaria (+359)', '226' => 'Burkina Faso (+226)', '257' => 'Burundi (+257)', '855' => 'Cambodia (+855)', '237' => 'Cameroon (+237)', '1' => 'Canada (+1)', '238' => 'Cape Verde Islands (+238)', '1345' => 'Cayman Islands (+1345)', '236' => 'Central African Republic (+236)', '56' => 'Chile (+56)', '86' => 'China (+86)', '57' => 'Colombia (+57)', '269' => 'Comoros (+269)', '242' => 'Congo (+242)', '682' => 'Cook Islands (+682)', '506' => 'Costa Rica (+506)', '385' => 'Croatia (+385)', '53' => 'Cuba (+53)', '90392' => 'Cyprus North (+90392)', '357' => 'Cyprus South (+357)', '42' => 'Czech Republic (+42)', '45' => 'Denmark (+45)', '253' => 'Djibouti (+253)', '1809' => 'Dominica (+1809)', '1809' => 'Dominican Republic (+1809)', '593' => 'Ecuador (+593)', '20' => 'Egypt (+20)', '503' => 'El Salvador (+503)', '240' => 'Equatorial Guinea (+240)', '291' => 'Eritrea (+291)', '372' => 'Estonia (+372)', '251' => 'Ethiopia (+251)', '500' => 'Falkland Islands (+500)', '298' => 'Faroe Islands (+298)', '679' => 'Fiji (+679)', '358' => 'Finland (+358)', '33' => 'France (+33)', '594' => 'French Guiana (+594)', '689' => 'French Polynesia (+689)', '241' => 'Gabon (+241)', '220' => 'Gambia (+220)', '7880' => 'Georgia (+7880)', '49' => 'Germany (+49)', '233' => 'Ghana (+233)', '350' => 'Gibraltar (+350)', '30' => 'Greece (+30)', '299' => 'Greenland (+299)', '1473' => 'Grenada (+1473)', '590' => 'Guadeloupe (+590)', '671' => 'Guam (+671)', '502' => 'Guatemala (+502)', '224' => 'Guinea (+224)', '245' => 'Guinea - Bissau (+245)', '592' => 'Guyana (+592)', '509' => 'Haiti (+509)', '504' => 'Honduras (+504)', '852' => 'Hong Kong (+852)', '36' => 'Hungary (+36)', '354' => 'Iceland (+354)', '91' => 'India (+91)', '62' => 'Indonesia (+62)', '98' => 'Iran (+98)', '964' => 'Iraq (+964)', '353' => 'Ireland (+353)', '972' => 'Israel (+972)', '39' => 'Italy (+39)', '1876' => 'Jamaica (+1876)', '81' => 'Japan (+81)', '962' => 'Jordan (+962)', '7' => 'Kazakhstan (+7)', '254' => 'Kenya (+254)', '686' => 'Kiribati (+686)', '850' => 'Korea North (+850)', '82' => 'Korea South (+82)', '965' => 'Kuwait (+965)', '996' => 'Kyrgyzstan (+996)', '856' => 'Laos (+856)', '371' => 'Latvia (+371)', '961' => 'Lebanon (+961)', '266' => 'Lesotho (+266)', '231' => 'Liberia (+231)', '218' => 'Libya (+218)', '417' => 'Liechtenstein (+417)', '370' => 'Lithuania (+370)', '352' => 'Luxembourg (+352)', '853' => 'Macao (+853)', '389' => 'Macedonia (+389)', '261' => 'Madagascar (+261)', '265' => 'Malawi (+265)', '60' => 'Malaysia (+60)', '960' => 'Maldives (+960)', '223' => 'Mali (+223)', '356' => 'Malta (+356)', '692' => 'Marshall Islands (+692)', '596' => 'Martinique (+596)', '222' => 'Mauritania (+222)', '269' => 'Mayotte (+269)', '52' => 'Mexico (+52)', '691' => 'Micronesia (+691)', '373' => 'Moldova (+373)', '377' => 'Monaco (+377)', '976' => 'Mongolia (+976)', '1664' => 'Montserrat (+1664)', '212' => 'Morocco (+212)', '258' => 'Mozambique (+258)', '95' => 'Myanmar (+95)', '264' => 'Namibia (+264)', '674' => 'Nauru (+674)', '977' => 'Nepal (+977)', '31' => 'Netherlands (+31)', '687' => 'New Caledonia (+687)', '64' => 'New Zealand (+64)', '505' => 'Nicaragua (+505)', '227' => 'Niger (+227)', '234' => 'Nigeria (+234)', '683' => 'Niue (+683)', '672' => 'Norfolk Islands (+672)', '670' => 'Northern Marianas (+670)', '47' => 'Norway (+47)', '968' => 'Oman (+968)', '680' => 'Palau (+680)', '507' => 'Panama (+507)', '675' => 'Papua New Guinea (+675)', '595' => 'Paraguay (+595)', '51' => 'Peru (+51)', '63' => 'Philippines (+63)', '48' => 'Poland (+48)', '351' => 'Portugal (+351)', '1787' => 'Puerto Rico (+1787)', '974' => 'Qatar (+974)', '262' => 'Reunion (+262)', '40' => 'Romania (+40)', '7' => 'Russia (+7)', '250' => 'Rwanda (+250)', '378' => 'San Marino (+378)', '239' => 'Sao Tome & Principe (+239)', '966' => 'Saudi Arabia (+966)', '221' => 'Senegal (+221)', '381' => 'Serbia (+381)', '248' => 'Seychelles (+248)', '232' => 'Sierra Leone (+232)', '65' => 'Singapore (+65)', '421' => 'Slovak Republic (+421)', '386' => 'Slovenia (+386)', '677' => 'Solomon Islands (+677)', '252' => 'Somalia (+252)', '27' => 'South Africa (+27)', '34' => 'Spain (+34)', '94' => 'Sri Lanka (+94)', '290' => 'St. Helena (+290)', '1869' => 'St. Kitts (+1869)', '1758' => 'St. Lucia (+1758)', '249' => 'Sudan (+249)', '597' => 'Suriname (+597)', '268' => 'Swaziland (+268)', '46' => 'Sweden (+46)', '41' => 'Switzerland (+41)', '963' => 'Syria (+963)', '886' => 'Taiwan (+886)', '7' => 'Tajikstan (+7)', '66' => 'Thailand (+66)', '228' => 'Togo (+228)', '676' => 'Tonga (+676)', '1868' => 'Trinidad & Tobago (+1868)', '216' => 'Tunisia (+216)', '90' => 'Turkey (+90)', '7' => 'Turkmenistan (+7)', '993' => 'Turkmenistan (+993)', '1649' => 'Turks & Caicos Islands (+1649)', '688' => 'Tuvalu (+688)', '256' => 'Uganda (+256)', '380' => 'Ukraine (+380)', '971' => 'United Arab Emirates (+971)', '598' => 'Uruguay (+598)', '7' => 'Uzbekistan (+7)', '678' => 'Vanuatu (+678)', '379' => 'Vatican City (+379)', '58' => 'Venezuela (+58)', '84' => 'Vietnam (+84)', '84' => 'Virgin Islands - British (+1284)', '84' => 'Virgin Islands - US (+1340)', '681' => 'Wallis & Futuna (+681)', '969' => 'Yemen (North)(+969)', '967' => 'Yemen (South)(+967)', '260' => 'Zambia (+260)', '263' => 'Zimbabwe (+263)'];
-
+$pure_code_of_country = [];
 $phone_code = [];
-foreach($countries_code as $code => $code_country){
+$pure_country_code = [];
+foreach ($countries_code as $key => $value) {
+	# code...
+	$new_country = trim(explode("(", $value)[0]);
+	array_push($pure_code_of_country, $new_country);
 	array_push($phone_code, "+$code");
+	array_push($pure_country_code, $value);
 }
 
 
-$freq_days = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 46, 52, 58, 64, 70, 78, 86, 94, 102, 110, 125, 140, 155, 170, 190, 210, 230, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000 ];
 
-$currency_list = array ( 'ALL' => 'Albania Lek', 'AFN' => 'Afghanistan Afghani', 'ARS' => 'Argentina Peso', 'AWG' => 'Aruba Guilder', 'AUD' => 'Australia Dollar', 'AZN' => 'Azerbaijan New Manat', 'BSD' => 'Bahamas Dollar', 'BBD' => 'Barbados Dollar', 'BDT' => 'Bangladeshi taka', 'BYR' => 'Belarus Ruble', 'BZD' => 'Belize Dollar', 'BMD' => 'Bermuda Dollar', 'BOB' => 'Bolivia Boliviano', 'BAM' => 'Bosnia and Herzegovina Convertible Marka', 'BWP' => 'Botswana Pula', 'BGN' => 'Bulgaria Lev', 'BRL' => 'Brazil Real', 'BND' => 'Brunei Darussalam Dollar', 'KHR' => 'Cambodia Riel', 'CAD' => 'Canada Dollar', 'CFA' => 'West African CFA franc', 'KYD' => 'Cayman Islands Dollar', 'CLP' => 'Chile Peso', 'CNY' => 'China Yuan Renminbi', 'COP' => 'Colombia Peso', 'CRC' => 'Costa Rica Colon', 'HRK' => 'Croatia Kuna', 'CUP' => 'Cuba Peso', 'CZK' => 'Czech Republic Koruna', 'DKK' => 'Denmark Krone', 'DOP' => 'Dominican Republic Peso', 'XCD' => 'East Caribbean Dollar', 'EGP' => 'Egypt Pound', 'SVC' => 'El Salvador Colon', 'EEK' => 'Estonia Kroon', 'EUR' => 'Euro Member Countries', 'FKP' => 'Falkland Islands (Malvinas) Pound', 'FJD' => 'Fiji Dollar', 'GHC' => 'Ghana Cedis', 'GIP' => 'Gibraltar Pound', 'GTQ' => 'Guatemala Quetzal', 'GGP' => 'Guernsey Pound', 'GYD' => 'Guyana Dollar', 'HNL' => 'Honduras Lempira', 'HKD' => 'Hong Kong Dollar', 'HUF' => 'Hungary Forint', 'ISK' => 'Iceland Krona', 'INR' => 'India Rupee', 'IDR' => 'Indonesia Rupiah', 'IRR' => 'Iran Rial', 'IMP' => 'Isle of Man Pound', 'ILS' => 'Israel Shekel', 'JMD' => 'Jamaica Dollar', 'JPY' => 'Japan Yen', 'JEP' => 'Jersey Pound', 'KZT' => 'Kazakhstan Tenge', 'KPW' => 'Korea (North) Won', 'KRW' => 'Korea (South) Won', 'KGS' => 'Kyrgyzstan Som', 'LAK' => 'Laos Kip', 'LVL' => 'Latvia Lat', 'LBP' => 'Lebanon Pound', 'LRD' => 'Liberia Dollar', 'LTL' => 'Lithuania Litas', 'MKD' => 'Macedonia Denar', 'MYR' => 'Malaysia Ringgit', 'MUR' => 'Mauritius Rupee', 'MXN' => 'Mexico Peso', 'MNT' => 'Mongolia Tughrik', 'MZN' => 'Mozambique Metical', 'NAD' => 'Namibia Dollar', 'NPR' => 'Nepal Rupee', 'ANG' => 'Netherlands Antilles Guilder', 'NZD' => 'New Zealand Dollar', 'NIO' => 'Nicaragua Cordoba', 'NGN' => 'Nigeria Naira', 'NOK' => 'Norway Krone', 'OMR' => 'Oman Rial', 'PKR' => 'Pakistan Rupee', 'PAB' => 'Panama Balboa', 'PYG' => 'Paraguay Guarani', 'PEN' => 'Peru Nuevo Sol', 'PHP' => 'Philippines Peso', 'PLN' => 'Poland Zloty', 'QAR' => 'Qatar Riyal', 'RON' => 'Romania New Leu', 'RUB' => 'Russia Ruble', 'SHP' => 'Saint Helena Pound', 'SAR' => 'Saudi Arabia Riyal', 'RSD' => 'Serbia Dinar', 'SCR' => 'Seychelles Rupee', 'SGD' => 'Singapore Dollar', 'SBD' => 'Solomon Islands Dollar', 'SOS' => 'Somalia Shilling', 'ZAR' => 'South Africa Rand', 'LKR' => 'Sri Lanka Rupee', 'SEK' => 'Sweden Krona', 'CHF' => 'Switzerland Franc', 'SRD' => 'Suriname Dollar', 'SYP' => 'Syria Pound', 'TWD' => 'Taiwan New Dollar', 'THB' => 'Thailand Baht', 'TTD' => 'Trinidad and Tobago Dollar', 'TRY' => 'Turkey Lira', 'TRL' => 'Turkey Lira', 'TVD' => 'Tuvalu Dollar', 'UAH' => 'Ukraine Hryvna', 'GBP' => 'United Kingdom Pound', 'USD' => 'United States Dollar', 'UYU' => 'Uruguay Peso', 'UZS' => 'Uzbekistan Som', 'VEF' => 'Venezuela Bolivar', 'VND' => 'Viet Nam Dong', 'YER' => 'Yemen Rial', 'ZWD' => 'Zimbabwe Dollar');
+
+
+$freq_days = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 46, 52, 58, 64, 70, 78, 86, 94, 102, 110, 125, 140, 155, 170, 190, 210, 230, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000];
+
+/*
+$currency_list = array('ALL' => 'Albania Lek', 'AFN' => 'Afghanistan Afghani', 'ARS' => 'Argentina Peso', 'AWG' => 'Aruba Guilder', 'AUD' => 'Australia Dollar', 'AZN' => 'Azerbaijan New Manat', 'BSD' => 'Bahamas Dollar', 'BBD' => 'Barbados Dollar', 'BDT' => 'Bangladeshi taka', 'BYR' => 'Belarus Ruble', 'BZD' => 'Belize Dollar', 'BMD' => 'Bermuda Dollar', 'BOB' => 'Bolivia Boliviano', 'BAM' => 'Bosnia and Herzegovina Convertible Marka', 'BWP' => 'Botswana Pula', 'BGN' => 'Bulgaria Lev', 'BRL' => 'Brazil Real', 'BND' => 'Brunei Darussalam Dollar', 'KHR' => 'Cambodia Riel', 'CAD' => 'Canada Dollar', 'CFA' => 'West African CFA franc', 'KYD' => 'Cayman Islands Dollar', 'CLP' => 'Chile Peso', 'CNY' => 'China Yuan Renminbi', 'COP' => 'Colombia Peso', 'CRC' => 'Costa Rica Colon', 'HRK' => 'Croatia Kuna', 'CUP' => 'Cuba Peso', 'CZK' => 'Czech Republic Koruna', 'DKK' => 'Denmark Krone', 'DOP' => 'Dominican Republic Peso', 'XCD' => 'East Caribbean Dollar', 'EGP' => 'Egypt Pound', 'SVC' => 'El Salvador Colon', 'EEK' => 'Estonia Kroon', 'EUR' => 'Euro Member Countries', 'FKP' => 'Falkland Islands (Malvinas) Pound', 'FJD' => 'Fiji Dollar', 'GHC' => 'Ghana Cedis', 'GIP' => 'Gibraltar Pound', 'GTQ' => 'Guatemala Quetzal', 'GGP' => 'Guernsey Pound', 'GYD' => 'Guyana Dollar', 'HNL' => 'Honduras Lempira', 'HKD' => 'Hong Kong Dollar', 'HUF' => 'Hungary Forint', 'ISK' => 'Iceland Krona', 'INR' => 'India Rupee', 'IDR' => 'Indonesia Rupiah', 'IRR' => 'Iran Rial', 'IMP' => 'Isle of Man Pound', 'ILS' => 'Israel Shekel', 'JMD' => 'Jamaica Dollar', 'JPY' => 'Japan Yen', 'JEP' => 'Jersey Pound', 'KZT' => 'Kazakhstan Tenge', 'KPW' => 'Korea (North) Won', 'KRW' => 'Korea (South) Won', 'KGS' => 'Kyrgyzstan Som', 'LAK' => 'Laos Kip', 'LVL' => 'Latvia Lat', 'LBP' => 'Lebanon Pound', 'LRD' => 'Liberia Dollar', 'LTL' => 'Lithuania Litas', 'MKD' => 'Macedonia Denar', 'MYR' => 'Malaysia Ringgit', 'MUR' => 'Mauritius Rupee', 'MXN' => 'Mexico Peso', 'MNT' => 'Mongolia Tughrik', 'MZN' => 'Mozambique Metical', 'NAD' => 'Namibia Dollar', 'NPR' => 'Nepal Rupee', 'ANG' => 'Netherlands Antilles Guilder', 'NZD' => 'New Zealand Dollar', 'NIO' => 'Nicaragua Cordoba', 'NGN' => 'Nigeria Naira', 'NOK' => 'Norway Krone', 'OMR' => 'Oman Rial', 'PKR' => 'Pakistan Rupee', 'PAB' => 'Panama Balboa', 'PYG' => 'Paraguay Guarani', 'PEN' => 'Peru Nuevo Sol', 'PHP' => 'Philippines Peso', 'PLN' => 'Poland Zloty', 'QAR' => 'Qatar Riyal', 'RON' => 'Romania New Leu', 'RUB' => 'Russia Ruble', 'SHP' => 'Saint Helena Pound', 'SAR' => 'Saudi Arabia Riyal', 'RSD' => 'Serbia Dinar', 'SCR' => 'Seychelles Rupee', 'SGD' => 'Singapore Dollar', 'SBD' => 'Solomon Islands Dollar', 'SOS' => 'Somalia Shilling', 'ZAR' => 'South Africa Rand', 'LKR' => 'Sri Lanka Rupee', 'SEK' => 'Sweden Krona', 'CHF' => 'Switzerland Franc', 'SRD' => 'Suriname Dollar', 'SYP' => 'Syria Pound', 'TWD' => 'Taiwan New Dollar', 'THB' => 'Thailand Baht', 'TTD' => 'Trinidad and Tobago Dollar', 'TRY' => 'Turkey Lira', 'TRL' => 'Turkey Lira', 'TVD' => 'Tuvalu Dollar', 'UAH' => 'Ukraine Hryvna', 'GBP' => 'United Kingdom Pound', 'USD' => 'United States Dollar', 'UYU' => 'Uruguay Peso', 'UZS' => 'Uzbekistan Som', 'VEF' => 'Venezuela Bolivar', 'VND' => 'Viet Nam Dong', 'YER' => 'Yemen Rial', 'ZWD' => 'Zimbabwe Dollar');
 $currency_short = [];
-foreach($currency_list as $currency => $currency_country){
-	array_push($currency_short, $currency );
+foreach ($currency_list as $currency => $currency_country) {
+	array_push($currency_short, $currency);
 }
+*/
 
 $with_freq = ['Daily', 'Weekly', 'Monthly', 'Twice A Month', 'Monthly', 'Every Two Month', 'Quarter Yearly', 'Biyearly', 'Yearly'];
 
 $category_list = ["social", "professional", "investmant"];
+
+$currency_list = [
+	array('code' => 'AFN', 'countryname' > 'Afghanistan', 'name' => 'Afghanistan Afghani', 'symbol' => '&#1547;'),
+	array('code' => 'ARS',    'countryname' => 'Argentina', 'name' => 'Argentine Peso', 'symbol' => '&#36;'),
+	array('code' => 'AWG',    'countryname' => 'Aruba', 'name' => 'Aruban florin', 'symbol' => '&#402;'),
+	array('code' => 'AUD',    'countryname' => 'Australia', 'name' => 'Australian Dollar', 'symbol' => '&#65;&#36;'),
+	array('code' => 'AZN',    'countryname' => 'Azerbaijan', 'name' => 'Azerbaijani Manat', 'symbol' => '&#8380;'),
+	array('code' => 'BSD',    'countryname' => 'The Bahamas', 'name' => 'Bahamas Dollar', 'symbol' => '&#66;&#36;'),
+	array('code' => 'BBD',    'countryname' => 'Barbados', 'name' => 'Barbados Dollar', 'symbol' => '&#66;&#100;&#115;&#36;'),
+	array('code' => 'BDT',    'countryname' => 'People\'s Republic of Bangladesh', 'name' => 'Bangladeshi taka', 'symbol' => '&#2547;'),
+	array('code' => 'BYN',    'countryname' => 'Belarus', 'name' => 'Belarus Ruble', 'symbol' => '&#66;&#114;'),
+	array('code' => 'BZD',    'countryname' => 'Belize', 'name' => 'Belize Dollar', 'symbol' => '&#66;&#90;&#36;'),
+	array('code' => 'BMD',    'countryname' => 'British Overseas Territory of Bermuda', 'name' => 'Bermudian Dollar', 'symbol' => '&#66;&#68;&#36;'),
+	array('code' => 'BOP',    'countryname' => 'Bolivia', 'name' => 'Boliviano', 'symbol' => '&#66;&#115;'),
+	array('code' => 'BAM',    'countryname' => 'Bosnia and Herzegovina', 'name' => 'Bosnia-Herzegovina Convertible Marka', 'symbol' => '&#75;&#77;'),
+	array('code' => 'BWP',    'countryname' => 'Botswana', 'name' => 'Botswana pula', 'symbol' => '&#80;'),
+	array('code' => 'BGN',    'countryname' => 'Bulgaria', 'name' => 'Bulgarian lev', 'symbol' => '&#1083;&#1074;'),
+	array('code' => 'BRL',    'countryname' => 'Brazil', 'name' => 'Brazilian real', 'symbol' => '&#82;&#36;'),
+	array('code' => 'BND',    'countryname' => 'Sultanate of Brunei', 'name' => 'Brunei dollar', 'symbol' => '&#66;&#36;'),
+	array('code' => 'KHR',    'countryname' => 'Cambodia', 'name' => 'Cambodian riel', 'symbol' => '&#6107;'),
+	array('code' => 'CAD',    'countryname' => 'Canada', 'name' => 'Canadian dollar', 'symbol' => '&#67;&#36;'),
+	array('code' => 'XOF',    'countryname' => "Benin, Burkina Faso, Côte d'Ivoire, Guinea-Bissau, Mali, Niger, Senegal, Togo", 'name' => 'West African CFA franc', 'symbol' => 'CFA'),
+	array('code' => 'KYD',    'countryname' => 'Cayman Islands', 'name' => 'Cayman Islands dollar', 'symbol' => '&#36;'),
+	array('code' => 'CLP',    'countryname' => 'Chile', 'name' => 'Chilean peso', 'symbol' => '&#36;'),
+	array('code' => 'CNY',    'countryname' => 'China', 'name' => 'Chinese Yuan Renminbi', 'symbol' => '&#165;'),
+	array('code' => 'COP',    'countryname' => 'Colombia', 'name' => 'Colombian peso', 'symbol' => '&#36;'),
+	array('code' => 'CRC',    'countryname' => 'Costa Rica', 'name' => 'Costa Rican colón', 'symbol' => '&#8353;'),
+	array('code' => 'HRK',    'countryname' => 'Croatia', 'name' => 'Croatian kuna', 'symbol' => '&#107;&#110;'),
+	array('code' => 'CUP',    'countryname' => 'Cuba', 'name' => 'Cuban peso', 'symbol' => '&#8369;'),
+	array('code' => 'CZK',    'countryname' => 'Czech Republic', 'name' => 'Czech koruna', 'symbol' => '&#75;&#269;'),
+	array('code' => 'DKK',    'countryname' => 'Denmark, Greenland, and the Faroe Islands', 'name' => 'Danish krone', 'symbol' => '&#107;&#114;'),
+	array('code' => 'DOP',    'countryname' => 'Dominican Republic', 'name' => 'Dominican peso', 'symbol' => '&#82;&#68;&#36;'),
+	array('code' => 'XCD',    'countryname' => 'Antigua and Barbuda, Commonwealth of Dominica, Grenada, Montserrat, St. Kitts and Nevis, Saint Lucia and St. Vincent and the Grenadines', 'name' => 'Eastern Caribbean dollar', 'symbol' => '&#36;'),
+	array('code' => 'EGP',    'countryname' => 'Egypt', 'name' => 'Egyptian pound', 'symbol' => '&#163;'),
+	array('code' => 'SVC',    'countryname' => 'El Salvador', 'name' => 'Salvadoran colón', 'symbol' => '&#36;'),
+	array('code' => 'EEK',    'countryname' => 'Estonia', 'name' => 'Estonian kroon', 'symbol' => '&#75;&#114;'),
+	array('code' => 'EUR',    'countryname' => 'European Union, Italy, Belgium, Bulgaria, Croatia, Cyprus, Czechia, Denmark, Estonia, Finland, France, Germany, Greece, Hungary, Ireland, Latvia, Lithuania, Luxembourg, Malta, Netherlands, Poland,             Portugal, Romania, Slovakia, Slovenia, Spain, Sweden', 'name' => 'Euro',    'symbol' => '&#8364;'),
+	array('code' => 'FKP',    'countryname' => 'Falkland Islands', 'name' => 'Falkland Islands (Malvinas) Pound', 'symbol' => '&#70;&#75;&#163;'),
+	array('code' => 'FJD',    'countryname' => 'Fiji', 'name' => 'Fijian dollar', 'symbol' => '&#70;&#74;&#36;'),
+	array('code' => 'GHC',    'countryname' => 'Ghana', 'name' => 'Ghanaian cedi', 'symbol' => '&#71;&#72;&#162;'),
+	array('code' => 'GIP',    'countryname' => 'Gibraltar', 'name' => 'Gibraltar pound', 'symbol' => '&#163;'),
+	array('code' => 'GTQ',    'countryname' => 'Guatemala', 'name' => 'Guatemalan quetzal', 'symbol' => '&#81;'),
+	array('code' => 'GGP',    'countryname' => 'Guernsey', 'name' => 'Guernsey pound', 'symbol' => '&#81;'),
+	array('code' => 'GYD',    'countryname' => 'Guyana', 'name' => 'Guyanese dollar', 'symbol' => '&#71;&#89;&#36;'),
+	array('code' => 'HNL',    'countryname' => 'Honduras', 'name' => 'Honduran lempira', 'symbol' => '&#76;'),
+	array('code' => 'HKD',    'countryname' => 'Hong Kong', 'name' => 'Hong Kong dollar', 'symbol' => '&#72;&#75;&#36;'),
+	array('code' => 'HUF',    'countryname' => 'Hungary', 'name' => 'Hungarian forint', 'symbol' => '&#70;&#116;'),
+	array('code' => 'ISK',    'countryname' => 'Iceland', 'name' => 'Icelandic króna', 'symbol' => '&#237;&#107;&#114;'),
+	array('code' => 'INR',    'countryname' => 'India', 'name' => 'Indian rupee', 'symbol' => '&#8377;'),
+	array('code' => 'IDR',    'countryname' => 'Indonesia', 'name' => 'Indonesian rupiah', 'symbol' => '&#82;&#112;'),
+	array('code' => 'IRR',    'countryname' => 'Iran', 'name' => 'Iranian rial', 'symbol' => '&#65020;'),
+	array('code' => 'IMP',    'countryname' => 'Isle of Man', 'name' => 'Manx pound', 'symbol' => '&#163;'),
+	array('code' => 'ILS',    'countryname' => 'Israel, Palestinian territories of the West Bank and the Gaza Strip', 'name' => 'Israeli Shekel', 'symbol' => '&#8362;'),
+	array('code' => 'JMD',    'countryname' => 'Jamaica', 'name' => 'Jamaican dollar', 'symbol' => '&#74;&#36;'),
+	array('code' => 'JPY',    'countryname' => 'Japan', 'name' => 'Japanese yen', 'symbol' => '&#165;'),
+	array('code' => 'JEP',    'countryname' => 'Jersey', 'name' => 'Jersey pound', 'symbol' => '&#163;'),
+	array('code' => 'KZT',    'countryname' => 'Kazakhstan', 'name' => 'Kazakhstani tenge', 'symbol' => '&#8376;'),
+	array('code' => 'KPW',    'countryname' => 'North Korea', 'name' => 'North Korean won', 'symbol' => '&#8361;'),
+	array('code' => 'KPW',    'countryname' => 'South Korea', 'name' => 'South Korean won', 'symbol' => '&#8361;'),
+	array('code' => 'KGS',    'countryname' => 'Kyrgyz Republic', 'name' => 'Kyrgyzstani som', 'symbol' => '&#1083;&#1074;'),
+	array('code' => 'LAK',    'countryname' => 'Laos', 'name' => 'Lao kip', 'symbol' => '&#8365;'),
+	array('code' => 'LAK',    'countryname' => 'Laos', 'name' => 'Latvian lats', 'symbol' => '&#8364;'),
+	array('code' => 'LVL',    'countryname' => 'Laos', 'name' => 'Latvian lats', 'symbol' => '&#8364;'),
+	array('code' => 'LBP',    'countryname' => 'Lebanon', 'name' => 'Lebanese pound', 'symbol' => '&#76;&#163;'),
+	array('code' => 'LRD',    'countryname' => 'Liberia', 'name' => 'Liberian dollar', 'symbol' => '&#76;&#68;&#36;'),
+	array('code' => 'LTL',    'countryname' => 'Lithuania', 'name' => 'Lithuanian litas', 'symbol' => '&#8364;'),
+	array('code' => 'MKD',    'countryname' => 'North Macedonia', 'name' => 'Macedonian denar', 'symbol' => '&#1076;&#1077;&#1085;'),
+	array('code' => 'MYR',    'countryname' => 'Malaysia', 'name' => 'Malaysian ringgit', 'symbol' => '&#82;&#77;'),
+	array('code' => 'MUR',    'countryname' => 'Mauritius', 'name' => 'Mauritian rupee', 'symbol' => '&#82;&#115;'),
+	array('code' => 'MXN',    'countryname' => 'Mexico', 'name' => 'Mexican peso', 'symbol' => '&#77;&#101;&#120;&#36;'),
+	array('code' => 'MNT',    'countryname' => 'Mongolia', 'name' => 'Mongolian tögrög', 'symbol' => '&#8366;'),
+	array('code' => 'MZN',    'countryname' => 'Mozambique', 'name' => 'Mozambican metical', 'symbol' => '&#77;&#84;'),
+	array('code' => 'NAD',    'countryname' => 'Namibia', 'name' => 'Namibian dollar', 'symbol' => '&#78;&#36;'),
+	array('code' => 'NPR',    'countryname' => 'Federal Democratic Republic of Nepal', 'name' => 'Nepalese rupee', 'symbol' => '&#82;&#115;&#46;'),
+	array('code' => 'ANG',    'countryname' => 'Curaçao and Sint Maarten', 'name' => 'Netherlands Antillean guilder', 'symbol' => '&#402;'),
+	array('code' => 'NZD',    'countryname' => 'New Zealand, the Cook Islands, Niue, the Ross Dependency, Tokelau, the Pitcairn Islands', 'name' => 'New Zealand dollar', 'symbol' => '&#36;'),
+	array('code' => 'NIO',    'countryname' => 'Nicaragua', 'name' => 'Nicaraguan córdoba', 'symbol' => '&#67;&#36;'),
+	array('code' => 'NGN',    'countryname' => 'Nigeria', 'name' => 'Nigerian naira', 'symbol' => '&#8358;'),
+	array('code' => 'NOK',    'countryname' => 'Norway and its dependent territories', 'name' => 'Norwegian krone', 'symbol' => '&#107;&#114;'),
+	array('code' => 'OMR',    'countryname' => 'Oman', 'name' => 'Omani rial', 'symbol' => '&#65020;'),
+	array('code' => 'PKR',    'countryname' => 'Pakistan', 'name' => 'Pakistani rupee', 'symbol' => '&#82;&#115;'),
+	array('code' => 'PAB',    'countryname' => 'Panama', 'name' => 'Panamanian balboa', 'symbol' => '&#66;&#47;&#46;'),
+	array('code' => 'PYG',    'countryname' => 'Paraguay', 'name' => 'Paraguayan Guaraní', 'symbol' => '&#8370;'),
+	array('code' => 'PEN',    'countryname' => 'Peru', 'name' => 'Sol', 'symbol' => '&#83;&#47;&#46;'),
+	array('code' => 'PHP',    'countryname' => 'Philippines', 'name' => 'Philippine peso', 'symbol' => '&#8369;'),
+	array('code' => 'PLN',    'countryname' => 'Poland', 'name' => 'Polish złoty', 'symbol' => '&#122;&#322;'),
+	array('code' => 'QAR',    'countryname' => 'State of Qatar', 'name' => 'Qatari Riyal', 'symbol' => '&#65020;'),
+	array('code' => 'RON',    'countryname' => 'Romania', 'name' => 'Romanian leu (Leu românesc)', 'symbol' => '&#76;'),
+	array('code' => 'RUB',    'countryname' => 'Russian Federation, Abkhazia and South Ossetia, Donetsk and Luhansk', 'name' => 'Russian ruble', 'symbol' => '&#8381;'),
+	array('code' => 'SHP',    'countryname' => 'Saint Helena, Ascension and Tristan da Cunha', 'name' => 'Saint Helena pound', 'symbol' => '&#163;'),
+	array('code' => 'SAR',    'countryname' => 'Saudi Arabia', 'name' => 'Saudi riyal', 'symbol' => '&#65020;'),
+	array('code' => 'RSD',    'countryname' => 'Serbia', 'name' => 'Serbian dinar', 'symbol' => '&#100;&#105;&#110;'),
+	array('code' => 'SCR',    'countryname' => 'Seychelles', 'name' => 'Seychellois rupee', 'symbol' => '&#82;&#115;'),
+	array('code' => 'SGD',    'countryname' => 'Singapore', 'name' => 'Singapore dollar', 'symbol' => '&#83;&#36;'),
+	array('code' => 'SBD',    'countryname' => 'Solomon Islands', 'name' => 'Solomon Islands dollar', 'symbol' => '&#83;&#73;&#36;'),
+	array('code' => 'SOS',    'countryname' => 'Somalia', 'name' => 'Somali shilling', 'symbol' => '&#83;&#104;&#46;&#83;&#111;'),
+	array('code' => 'ZAR',    'countryname' => 'South Africa', 'name' => 'South African rand', 'symbol' => '&#82;'),
+	array('code' => 'LKR',    'countryname' => 'Sri Lanka', 'name' => 'Sri Lankan rupee', 'symbol' => '&#82;&#115;'),
+	array('code' => 'SEK',    'countryname' => 'Sweden', 'name' => 'Swedish krona', 'symbol' => '&#107;&#114;'),
+	array('code' => 'CHF',    'countryname' => 'Switzerland', 'name' => 'Swiss franc', 'symbol' => '&#67;&#72;&#102;'),
+	array('code' => 'SRD',    'countryname' => 'Suriname', 'name' => 'Suriname Dollar', 'symbol' => '&#83;&#114;&#36;'),
+	array('code' => 'SYP',    'countryname' => 'Syria', 'name' => 'Syrian pound', 'symbol' => '&#163;&#83;'),
+	array('code' => 'TWD',    'countryname' => 'Taiwan', 'name' => 'New Taiwan dollar', 'symbol' => '&#78;&#84;&#36;'),
+	array('code' => 'THB',    'countryname' => 'Thailand', 'name' => 'Thai baht', 'symbol' => '&#3647;'),
+	array('code' => 'TTD',    'countryname' => 'Trinidad and Tobago', 'name' => 'Trinidad and Tobago dollar', 'symbol' => '&#84;&#84;&#36;'),
+	array('code' => 'TRY',    'countryname' => 'Turkey, Turkish Republic of Northern Cyprus', 'name' => 'Turkey Lira', 'symbol' => '&#8378;'),
+	array('code' => 'TVD',    'countryname' => 'Tuvalu', 'name' => 'Tuvaluan dollar', 'symbol' => '&#84;&#86;&#36;'),
+	array('code' => 'UAH',    'countryname' => 'Ukraine', 'name' => 'Ukrainian hryvnia', 'symbol' => '&#8372;'),
+	array('code' => 'GBP',    'countryname' => 'United Kingdom, Jersey, Guernsey, the Isle of Man, Gibraltar, South Georgia and the South Sandwich Islands, the British Antarctic Territory, and Tristan da Cunha', 'name' => 'Pound sterling', 'symbol' => '&#163;'),
+	array('code' => 'UGX',    'countryname' => 'Uganda', 'name' => 'Ugandan shilling', 'symbol' => '&#85;&#83;&#104;'),
+	array('code' => 'USD',    'countryname' => 'United States', 'name' => 'United States dollar', 'symbol' => '&#36;'),
+	array('code' => 'UYU',    'countryname' => 'Uruguayan', 'name' => 'Peso Uruguayolar', 'symbol' => '&#36;&#85;'),
+	array('code' => 'UZS',    'countryname' => 'Uzbekistan', 'name' => 'Uzbekistani soʻm', 'symbol' => '&#1083;&#1074;'),
+	array('code' => 'VEF',    'countryname' => 'Venezuela', 'name' => 'Venezuelan bolívar', 'symbol' => '&#66;&#115;'),
+	array('code' => 'VND',    'countryname' => 'Vietnam', 'name' => 'Vietnamese dong (Đồng)', 'symbol' => '&#8363;'),
+	array('code' => 'VND',    'countryname' => 'Yemen', 'name' => 'Yemeni rial', 'symbol' => '&#65020;'),
+	array('code' => 'ZWD',    'countryname' => 'Zimbabwe', 'name' => 'Zimbabwean dollar', 'symbol' => '&#90;&#36;'),
+];
+
+
+$currency_short = [];
+$ci = 0;
+while ($ci < count($currency_list)) {
+	// echo json_encode($currency_list[$ci]) . "<br>";
+	// echo $currency_list[$ci]['symbol'];
+	if(empty($currency_list[$ci]['symbol'])){
+		array_push($currency_short, $currency_list[$ci]['code']);
+	}else{
+		array_push($currency_short, $currency_list[$ci]['code'] . ' (' . $currency_list[$ci]['symbol'] . ')');
+	}
+	$ci++;
+}
+// echo json_encode($currency_short);

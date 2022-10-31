@@ -119,10 +119,10 @@ $input_field = new InputField();
                 </div>
                 <div class="row mb-3">
                     <?php
-                    echo $input_field->inputSelect("country", $cy, false, $fmbi_result->country, $countries_code);
-                    // echo $input_field->inputPhone("phone", $pn, false, false, $fmbi_result->phone);
-
-                    echo $input_field->inputPhone("phone", $pn, false, true, $phone_code, $fmbi_result->phone);
+                    // var_dump($fmbi_result);
+                    $county_proper = trim(explode('(', $fmbi_result->country)[0]);
+                    echo $input_field->inputSelect("country", $cy, false, $county_proper, $pure_code_of_country);
+                    echo $input_field->inputPhone("phone", $pn, false, true, $pure_country_code, $fmbi_result->phone);
                     ?>
                 </div>
                 <div class="row mb-3">

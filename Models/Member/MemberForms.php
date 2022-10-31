@@ -173,6 +173,8 @@ class MemberForms extends Member
         // exit();
         $unique_govt_id_name = $this->uploadFileToServer($govt_id_proof, $this->ROOT, "/pack_single/?stockvell_id=$stockvell_id&");
         $unique_address_name = $this->uploadFileToServer($address_proof, $this->ROOT, "/pack_single/?stockvell_id=$stockvell_id&");
+        // echo json_encode(array($unique_govt_id_name, $unique_address_name));
+        // exit();
         if ($this->requestToBeTheLeader($member_id, $stockvell_id, $unique_govt_id_name, $unique_address_name)) {
             header("Location: /pack_single/?stockvell_id=$stockvell_id&error=none");
             exit();

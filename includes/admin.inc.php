@@ -34,12 +34,12 @@ if (isset($_POST["login_admin_submit"])) {
 }
 
 
-if (isset($_POST["approve_stockvell"])) {
+if (isset($_POST["approve_stockvell_pack"])) {
     $stockvell_form = new AdminStockvellForms();
     $stockvell_id = $_GET["stockvell_id"];
     $leader_id = $_GET["leader_id"];
     // update
-    $stockvell_form->approveStockvellByAdmin($stockvell_id, array("status" => "APPROVED"), $leader_id);
+    $stockvell_form->approveStockvellByAdmin($stockvell_id);
 }
 
 // reject_stockvell_pack

@@ -37,7 +37,11 @@ require_once($ROOT . "/includes/packs.inc.php");
                                     <h4 class="h4">ID#<?= $asr_key['id'] ?></h4>
                                     <div class="d-flex justify-content-between w-full">
                                         <p><?= __("Monthly deposit"); ?></p>
-                                        <p>$<?= $asr_key['payment'] ?></p>
+                                        <?php
+                                        $currency_symbol_temp = explode('(', $asr_key['currency'])[1];
+                                        $currency_symbol = explode(')', $currency_symbol_temp)[0];
+                                        ?>
+                                        <p><?= $currency_symbol . ' ' .  $asr_key['payment']; ?></p>
                                     </div>
                                     <div class="d-flex justify-content-between w-full">
                                         <p><?= __("Category"); ?></p>

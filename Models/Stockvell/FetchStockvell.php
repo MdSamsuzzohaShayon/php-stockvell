@@ -73,8 +73,10 @@ class FetchStockvell extends Stockvell
                 'category' => $stockvell_result->category,
                 'max_member' => $stockvell_result->max_member,
                 'payment' => $stockvell_result->payment,
+                'currency' => $stockvell_result->currency,
                 'payment_frequency' => $stockvell_result->payment_frequency,
                 'withdraw_frequency' => $stockvell_result->withdraw_frequency,
+                'withdraw_at' => $stockvell_result->withdraw_at,
                 'total_members' => 0,
                 'members' => [],
             ];
@@ -95,7 +97,7 @@ class FetchStockvell extends Stockvell
             // LEFT JOIN stockvells s ON sm.stockvell_id=s.id 
             // WHERE sm.stockvell_id=:stockvell_id
             // GROUP BY sm.stockvell_id";
-            $stockvell_sql = "SELECT sm.id, sm.stockvell_id, s.link, s.agreement, s.description, s.goal, s.leader_id, s.withdraw_member_id, s.category, s.max_member, s.payment, s.payment_frequency, s.withdraw_frequency, s.name, s.status,
+            $stockvell_sql = "SELECT sm.id, sm.stockvell_id, s.link, s.agreement, s.description, s.goal, s.leader_id, s.withdraw_member_id, s.withdraw_at, s.category, s.max_member, s.payment, s.currency, s.payment_frequency, s.withdraw_frequency, s.name, s.status,
         sm.member_id, m.firstname, m.surname, m.profession, m.country
         FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id=s.id LEFT JOIN members m ON sm.member_id=m.id WHERE s.id=:stockvell_id;";
             $stockvell_stmt = $this->connect()->prepare($stockvell_sql);
@@ -134,8 +136,10 @@ class FetchStockvell extends Stockvell
                 'category' => $single_stockvell["category"],
                 'max_member' => $single_stockvell["max_member"],
                 'payment' => $single_stockvell["payment"],
+                'currency' => $single_stockvell["currency"],
                 'payment_frequency' => $single_stockvell["payment_frequency"],
                 'withdraw_frequency' => $single_stockvell["withdraw_frequency"],
+                'withdraw_at' => $single_stockvell["withdraw_at"],
                 'total_members' => $total_members,
                 'members' => $members,
             ];
@@ -163,7 +167,7 @@ class FetchStockvell extends Stockvell
         } else {
             // All stockvell of a member
 
-            $sql = "SELECT sm.id, s.name, s.status, s.category, s.max_member, s.payment, s.currency, s.payment_frequency, s.withdraw_frequency FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id=s.id WHERE sm.member_id=:member_id AND status=:status";
+            $sql = "SELECT sm.id, s.name, s.status, s.goal, s.category,  s.max_member, s.payment, s.currency, s.payment_frequency, s.withdraw_frequency FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id=s.id WHERE sm.member_id=:member_id AND status=:status";
 
             $stmt = $this->connect()->prepare($sql);
             $stmt->bindParam('status', $status, \PDO::PARAM_STR);

@@ -10529,7 +10529,7 @@ header .toggle-menu {
   }
 }
 .home .section-1 {
-  min-height: 70vh;
+  padding: 3rem 0;
 }
 .home .section-1 .landing-img {
   width: 50%;
@@ -10609,7 +10609,6 @@ header .toggle-menu {
 .admin .section-1 {
   margin: 7rem 0;
 }
-
 .admin .section-2 .sidebar-menus {
   min-height: 80vh;
 }
@@ -10671,6 +10670,9 @@ header .toggle-menu {
     width: 20% !important;
     text-align: center !important;
     align-items: center !important;
+  }
+  .dashboard .section-1 .sidebar-menus .menu-item-text {
+    font-size: 0.7rem;
   }
 }
 

@@ -92,7 +92,8 @@ $input_field = new InputField();
                         <?php
                         $pn = "Phone*";
                         // echo $input_field->inputPhone("phone", $pn, true, true);
-                        echo $input_field->inputPhone("phone", $pn, true, true, $phone_code, "+229");
+                        // echo $input_field->inputPhone("phone", $pn, true, true, $phone_code, "+229");
+                        echo $input_field->inputPhone("phone", $pn, true, true, $pure_country_code, "+229");
                         ?>
                     </div>
                     <div class="row row-no-input mb-3">

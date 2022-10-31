@@ -48,7 +48,7 @@ class ErrorHandler
                     break;
                 }
             case 'invalidusername': {
-                    $this->errors =  __("The username should be more than one character long!");
+                    $this->errors =  __("The username should be more than one character long and it can not have any special charecter!");
                     break;
                 }
             case 'invalidphone': {

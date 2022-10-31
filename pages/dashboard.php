@@ -33,6 +33,7 @@ use Models\Member\FetchMember;
 use Models\Stockvell\FetchStockvell;
 
 
+
 $stockvell_control = new FetchStockvell(); // Variables getting from dashboard.php
 $stockvell_control->setMember($member_email, $member_id);
 $cmr_result = $stockvell_control->getCurrentMember(); // cm = current member result
@@ -72,23 +73,23 @@ $gl = __('Generate Link');
             <ul class="d-flex justify-content-between sidebar-menu-items flex-md-column bg-secondary position-md-sticky sticky-md-bottom sticky-md-top p-0 m-0 w-full">
                <li role="button" data-item="profile" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row active">
                   <img class="mx-md-4 mx-0" src="/public/icons/profile.svg" alt="">
-                  <p class="m-0 px-3"><?= __("Profile"); ?></p>
+                  <p class="m-0 px-3 menu-item-text"><?= __("Profile"); ?></p>
                </li>
                <li role="button" data-item="my-pack" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row" aria-current="true">
                   <img class="mx-md-4 mx-0" src="/public/icons/my-pack.svg" alt="">
-                  <p class="m-0 px-3"><?= __("My Pack"); ?></p>
+                  <p class="m-0 px-3 menu-item-text"><?= __("My Pack"); ?></p>
                </li>
                <li role="button" data-item="pending-pack" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row">
                   <img class="mx-md-4 mx-0" src="/public/icons/pending-pack.svg" alt="">
-                  <p class="m-0 px-3"><?= __("Pending Pack"); ?></p>
+                  <p class="m-0 px-3 menu-item-text"><?= __("Pending Pack"); ?></p>
                </li>
                <li role="button" data-item="close-pack" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row">
                   <img class="mx-md-4 mx-0" src="/public/icons/close-pack.svg" alt="">
-                  <p class="m-0 px-3"><?= __("Close Pack"); ?></p>
+                  <p class="m-0 px-3 menu-item-text"><?= __("Closed Packs"); ?></p>
                </li>
                <li role="button" data-item="add-pack" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row">
                   <img class="mx-md-4 mx-0" src="/public/icons/add-pack.svg" alt="">
-                  <p class="m-0 px-3"><?= __("Add Pack"); ?></p>
+                  <p class="m-0 px-3 menu-item-text"><?= __("Add Pack"); ?></p>
                </li>
             </ul>
          </div>
@@ -96,6 +97,7 @@ $gl = __('Generate Link');
 
          <!-- sidebar content start  -->
          <div class="col-md-9 sidebar-content">
+
             <!-- profile content start  -->
             <div class="content my-4 profile-content d-block">
                <div class="signup-caption text-center">
@@ -139,9 +141,10 @@ $gl = __('Generate Link');
                   </div>
                   <div class="row mb-3 mx-0">
                      <?php
-                     echo $input_field->inputSelect("country", $cy, false, $cmr_result->country, $countries_code);
-                     // echo $input_field->inputPhone("phone", $pn, false, false, $cmr_result->phone);
-                     echo $input_field->inputPhone("phone", $pn, false, true, $phone_code, $cmr_result->phone);
+                     // echo $cmr_result->country;
+                     $county_proper = trim(explode('(', $cmr_result->country)[0]);
+                     echo $input_field->inputSelect("country", $cy, false, $county_proper, $pure_code_of_country);
+                     echo $input_field->inputPhone("phone", $pn, false, true, $pure_country_code, $cmr_result->phone);
                      ?>
                   </div>
                   <div class="row mb-3 mx-0">
@@ -174,6 +177,7 @@ $gl = __('Generate Link');
                <!-- Signup Form end  -->
             </div>
             <!-- profile content end  -->
+
             <!-- my pack content start  -->
             <div class="content my-pack-content d-none">
                <?php
@@ -339,6 +343,7 @@ $gl = __('Generate Link');
                ?>
             </div>
             <!-- my pack content end  -->
+
             <!-- pending content start  -->
             <div class="content pending-pack-content d-none">
                <h1 class="h1"><?= __("All pending packs!") ?></h1>
@@ -396,6 +401,7 @@ $gl = __('Generate Link');
 
             </div>
             <!-- pending content end  -->
+
             <!-- closed content start  -->
             <div class="content close-pack-content d-none">
                <h1 class="h1"><?= __("All close packs!") ?></h1>
@@ -453,6 +459,7 @@ $gl = __('Generate Link');
 
             </div>
             <!-- closed content end  -->
+
             <!-- add pack content start -->
             <div class="content add-pack-content d-none my-4">
                <div class="signup-caption text-center">
@@ -483,7 +490,7 @@ $gl = __('Generate Link');
                   <div class="row mb-3 mx-0">
                      <?php
                      echo $input_field->inputText('payment', $pyt, false, 'number', true);
-                     echo $input_field->inputSelect('currency', $ccc, false, 'CFA', $currency_short);
+                     echo $input_field->inputSelect('currency', $ccc, false, strtoupper('XOF (CFA)'), $currency_short);
                      ?>
                   </div>
                   <div class="row mb-3 mx-0">
@@ -531,6 +538,7 @@ $gl = __('Generate Link');
                <!-- Form end  -->
             </div>
             <!-- add pack content end -->
+
          </div>
          <!-- sidebar content end  -->
       </div>

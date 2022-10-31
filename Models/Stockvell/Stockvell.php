@@ -43,15 +43,59 @@ class Stockvell extends Database
 
 
     // Approved or not approved
-    protected function getSingleStockvell($stockvell_id){
-        $sql = "SELECT * FROM stockvells WHERE id=:stockvell_id";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->execute(array("stockvell_id" => $stockvell_id));
-        $ss_result = $stmt->fetch(\PDO::FETCH_OBJ); // ss = single stockvell
-        return $ss_result; 
+    public function getSingleStockvell($stockvell_id)
+    {
+        try {
+            $sql = "SELECT * FROM stockvells WHERE id=:stockvell_id";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->execute(array("stockvell_id" => $stockvell_id));
+            $ss_result = $stmt->fetch(\PDO::FETCH_OBJ); // ss = single stockvell
+            return $ss_result;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            exit();
+        }
+        return null;
     }
 
-   
+
+    protected function getFirstMemberOfAStockvellPack($stockvell_id)
+    {
+        try {
+            $sql = "SELECT sm.id, sm.member_id, sm.stockvell_id, m.firstname, m.email, m.country, m.city, m.phone, m.gender,  m.profession, m.interest, m.govt_id, m.is_verified, m.source, m.role  
+            FROM stockvell_to_member sm LEFT JOIN members m ON sm.member_id = m.id WHERE sm.stockvell_id=:stockvell_id LIMIT 1";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->execute(array("stockvell_id" => $stockvell_id));
+            $first_result = $stmt->fetch(\PDO::FETCH_OBJ); // ss = single stockvell
+            return $first_result;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            exit();
+        }
+        return null;
+    }
+
+
+    public function getNextMemberOfAStockvellPack($stockvell_id, $previous_member_id)
+    {
+        // echo $stockvell_id;
+        try {
+            $sql = "SELECT sm.id, sm.member_id, sm.stockvell_id, m.firstname, m.email, m.country, m.city, m.phone, m.gender,  m.profession, m.interest, m.govt_id, m.is_verified, m.source, m.role  
+            FROM stockvell_to_member sm LEFT JOIN members m ON sm.member_id = m.id WHERE sm.stockvell_id=:stockvell_id AND sm.member_id > :previous_member_id LIMIT 1";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->execute(array("stockvell_id" => $stockvell_id, "previous_member_id"=> $previous_member_id));
+            $next_result = $stmt->fetch(\PDO::FETCH_OBJ); // ss = single stockvell
+            // echo $next_result->member_id;
+            // exit();
+            return $next_result;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            exit();
+        }
+        return null;
+    }
+
+
 
 
 
@@ -91,14 +135,15 @@ class Stockvell extends Database
     }
 
 
-    protected function deleteAllLeaderRequestOfAStockvell($stockvell_id){
+    protected function deleteAllLeaderRequestOfAStockvell($stockvell_id)
+    {
         try {
             //code...
             $sql = "DELETE FROM stockvell_lr_member WHERE stockvell_id=:stockvell_id";
             $stmt = $this->connect()->prepare($sql);
-            if($stmt->execute(array('stockvell_id'=>$stockvell_id))){
+            if ($stmt->execute(array('stockvell_id' => $stockvell_id))) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         } catch (\PDOException $err) {
@@ -109,14 +154,15 @@ class Stockvell extends Database
         return false;
     }
 
-    protected function deleteAllMembersOfAStockvell($stockvell_id){
+    protected function deleteAllMembersOfAStockvell($stockvell_id)
+    {
         try {
             //code...
             $sql = "DELETE FROM stockvell_to_member WHERE stockvell_id=:stockvell_id";
             $stmt = $this->connect()->prepare($sql);
-            if($stmt->execute(array('stockvell_id'=>$stockvell_id))){
+            if ($stmt->execute(array('stockvell_id' => $stockvell_id))) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         } catch (\PDOException $err) {
@@ -127,14 +173,15 @@ class Stockvell extends Database
         return false;
     }
 
-    protected function deleteAllAStockvellPack($stockvell_id){
+    protected function deleteAllAStockvellPack($stockvell_id)
+    {
         try {
             //code...
             $sql = "DELETE FROM stockvells WHERE id=:stockvell_id";
             $stmt = $this->connect()->prepare($sql);
-            if($stmt->execute(array('stockvell_id'=>$stockvell_id))){
+            if ($stmt->execute(array('stockvell_id' => $stockvell_id))) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         } catch (\PDOException $err) {
@@ -144,6 +191,4 @@ class Stockvell extends Database
         }
         return false;
     }
-
-    
 }

@@ -27,6 +27,8 @@ use Models\Admin\FetchAdmin;
 use Models\Member\FetchMember;
 use Utils\PeriodConvert;
 
+
+
 /**
  * @ fetch essential data
  */
@@ -113,7 +115,7 @@ $dl = __("Detail");
                   </li>
                   <li role="button" data-item="close-pack" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row">
                      <img class="mx-md-4 mx-0" src="/public/icons/close-pack.svg" alt="">
-                     <p class="m-0 px-3 d-md-block d-none"><?= __("Close"); ?></p>
+                     <p class="m-0 px-3 d-md-block d-none"><?= __("Closed Packs"); ?></p>
                   </li>
                   <li role="button" data-item="add-pack" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row">
                      <img class="mx-md-4 mx-0" src="/public/icons/add-pack.svg" alt="">
@@ -138,7 +140,7 @@ $dl = __("Detail");
                      <div class="row mb-3">
                         <?php
                         $pn = __("Phone");
-                        echo $input_field->inputPhone("phone", $pn, true, false, $phone_code, $fabi_result->phone);
+                        echo $input_field->inputPhone("phone", $pn, true, false, $pure_country_code, $fabi_result->phone);
                         ?>
                      </div>
                      <div class="row mb-3">
@@ -172,7 +174,7 @@ $dl = __("Detail");
                               <colgroup span="11"></colgroup>
                               <colgroup span="3"></colgroup>
                               <tr class="bg-warning text-white border-primary" scope="colgroup">
-                                 <th colspan="11">Properties</th>
+                                 <th colspan="11">User Details</th>
                                  <th colspan="3">Action</th>
                               </tr>
                               <tr class="bg-warning text-white border-primary">
@@ -378,7 +380,7 @@ $dl = __("Detail");
                                           <td>" . $aasr_key["currency"] . "</td>
                                           <td>" . $aasr_key["payment_frequency"] . "</td>
                                           <td>" . $leader_detail->firstname . " " . $leader_detail->surname . "</td>
-                                          <<td>" . $with_per->convertFromIntToText($aasr_key["withdraw_frequency"]) . "</td>
+                                          <td>" . $with_per->convertFromIntToText($aasr_key["withdraw_frequency"]) . "</td>
                                           <td><a href='/pack_single/?stockvell_id=" . $aasr_key["id"] . "' class='btn btn-primary'>$vw</a></td>
                                           <td><a href='/edit_stockvell/?stockvell_id=" . $aasr_key["id"] . "' class='btn btn-primary'>$et</a></td>
                                           <td><a href='/admin/?stockvell_id=" . $aasr_key["id"] . "' class='btn btn-primary' >$dl</a></td>
@@ -535,7 +537,7 @@ $dl = __("Detail");
                                           <td>" . $with_per->convertFromIntToText($apsr_key["withdraw_frequency"]) . "</td>
                                           <td>
                                              <form class='p-0 m-0' action='/includes/admin.inc.php?stockvell_id=" . $apsr_key["id"] . "&leader_id=" . $apsr_key["leader_id"] . "' method='post'>
-                                             <button type='submit' name='approve_stockvell' class='btn btn-primary'>$av</button>  
+                                             <button type='submit' name='approve_stockvell_pack' class='btn btn-primary'>$av</button>  
                                              </form>
                                           </td>
                                           <td><a href='/edit_stockvell/?stockvell_id=" . $apsr_key["id"] . "' class='btn btn-warning text-white'>Edit</a></td>
@@ -779,7 +781,7 @@ $dl = __("Detail");
    } else {
    ?>
       <!-- unauthenticated content start  -->
-      <div class="section-1">
+      <section class="section-1">
          <div class="container">
             <div class="admin-login-caption text-center">
                <h1 class="h1 text-center text-capitalize"><?= __("Login as Admin"); ?></h1>
@@ -797,7 +799,7 @@ $dl = __("Detail");
                <button type="submit" name="login_admin_submit" class="btn btn-primary"><?= __("Login"); ?></button>
             </form>
          </div>
-      </div>
+      </section>
       <!-- unauthenticated content end  -->
    <?php
    }

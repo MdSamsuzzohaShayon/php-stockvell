@@ -6,6 +6,7 @@ namespace Models\Stockvell;
 use Config\Database;
 use Models\Member\MemberForms;
 use Utils\PeriodConvert;
+use Models\Stockvell\Stockvell;
 
 class StockvellForms extends Database
 {
@@ -322,5 +323,30 @@ class StockvellForms extends Database
 
         header("Location: /$redirect_url?stockvell_id=$stockvell_id&error=none");
         exit();
+    }
+
+
+
+    // FIFO = First in first out 
+    public function setMemberToWithdrawFIFO($stockvell_id, $previous_member_id){
+        $stockvell_control = new Stockvell();
+        $next_withdraw_member = $stockvell_control->getNextMemberOfAStockvellPack($stockvell_id, $previous_member_id);
+        if($next_withdraw_member){
+            // Update withdraw member and date
+            $withdraw_frequency = 7;
+            $single_stockvell = $stockvell_control->getSingleStockvell($stockvell_id);
+            if($single_stockvell->withdraw_frequency){
+                $withdraw_frequency = $single_stockvell->withdraw_frequency;
+            }
+            $withdraw_date = date("Y-m-d");
+            $offsetted_widthdraw_date =  date('Y-m-d', strtotime($withdraw_date . ' + '. $withdraw_frequency .' days'));
+            $input_list = array("withdraw_member_id" => $next_withdraw_member->member_id, "withdraw_at" => $offsetted_widthdraw_date);
+            // echo json_encode($input_list);
+            // exit();
+            $this->updateStockvell($stockvell_id, $input_list);
+        }else{
+            // close the stockvell pack 
+            // echo "<div class='alert alert-primary'>All members withdrawn their money!</div>";
+        }
     }
 }

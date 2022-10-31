@@ -11,10 +11,10 @@ languageItems.forEach((lie) => {
     if (newUrl.includes("?")) {
       const params = new URLSearchParams(window.location.search);
       // console.log(params.get('lang'));
-      if(params.get('lang')){
-        newUrl = newUrl.replace(`lang=${params.get('lang')}`, `lang=${selectedLanguage}`);
+      if (params.get("lang")) {
+        newUrl = newUrl.replace(`lang=${params.get("lang")}`, `lang=${selectedLanguage}`);
         // console.log(`lang=${params.get('lang')}`);
-      }else{
+      } else {
         newUrl += `&lang=${selectedLanguage}`;
       }
     } else {
@@ -61,41 +61,72 @@ function countryCodePrefixForPhone(hasCountry) {
 
   let country_code = "+229"; // default
 
+  if(phonePrefixSelect){
+    if (phonePrefixSelect.value !== null || phonePrefixSelect.value !== "") country_code = phonePrefixSelect.value;
+  }
+
   if (hasCountry) {
     const countryInput = document.getElementById("country");
     // Changing code
-    countryInput.addEventListener("change", (cie) => {
-      // cie.preventDefault();
-      // country_code = cie.currentTarget.value.toString().match(pattern)[0];
-      // phonePrefix.textContent = country_code;
-      const pattern = /\W\d+/;
-      country_code = cie.currentTarget.value.toString().match(pattern)[0];
-      phonePrefixSelect.value = country_code;
+    if(countryInput){
+      countryInput.addEventListener("change", (cie) => {
+        // cie.preventDefault();
+        // country_code = cie.currentTarget.value.toString().match(pattern)[0];
+        // phonePrefix.textContent = country_code;
+        const targetedStr = cie.currentTarget.value.toString();
+        if (targetedStr.includes(")")) {
+          const pattern = new RegExp(/\+\d+/g);
+          phonePrefixSelect.value = pattern.exec(targetedStr)[0];
+          // console.log(pattern);
+        } 
+        // else {
+        //   const pattern = /\W\d+/;
+        //   country_code = targetedStr.match(pattern)[0];
+        //   phonePrefixSelect.value = country_code;
+        // }
+  
+        let formatted_code = `${country_code}_${phoneRawInput.value}`;
+        if (phoneRawInput.value === "") {
+          formatted_code = country_code;
+        }
+        phoneMainHidden.value = formatted_code;
+      });
+    }
+  }
 
-      let formatted_code = `${country_code}_${phoneRawInput.value}`;
-      if (phoneRawInput.value === "") {
-        formatted_code = country_code;
-      }
-      phoneMainHidden.value = formatted_code;
+  if(phoneRawInput){
+    phoneRawInput.addEventListener("change", (ccie) => {
+      // ccie.preventDefault();
+      phoneMainHidden.value = `${country_code}_${ccie.currentTarget.value}`;
+      phonePrefixSelect.value = country_code;
     });
   }
 
-  phoneRawInput.addEventListener("change", (ccie) => {
-    // ccie.preventDefault();
-    phoneMainHidden.value = `${country_code}_${ccie.currentTarget.value}`;
-    phonePrefixSelect.value = country_code;
-  });
+  if(phonePrefixSelect){
+    phonePrefixSelect.addEventListener("change", (ppse) => {
+      // ppse.preventDefault();
+      const targetedStr = ppse.currentTarget.value.toString();
+      if (targetedStr.includes("(")) {
+        const pattern = new RegExp(/\+\d+/g);
+        country_code = pattern.exec(targetedStr)[0];
+        if (phoneRawInput.value !== "") {
+          phoneMainHidden.value = `${country_code}_${phoneRawInput.value}`;
+        } else {
+          phoneMainHidden.value = `${country_code}`;
+        }
+      }
+    });
 
-  phonePrefixSelect.addEventListener("change", (ppse) => {
-    // ppse.preventDefault();
-    if (phoneRawInput.value !== "") {
-      // phonePrefixSelect.value = country_code;
-      phoneMainHidden.value = `${ppse.currentTarget.value}_${phoneRawInput.value}`;
-    } else {
-      phoneMainHidden.value = `${ppse.currentTarget.value}`;
+
+    const targetedStr = phonePrefixSelect.value.toString();
+    if (targetedStr.includes("(")) {
+      const pattern = new RegExp(/\+\d+/g);
+      country_code = pattern.exec(targetedStr)[0];
+      phoneMainHidden.value = `${country_code}_${phoneRawInput.value}`;
+      // console.log(pattern);
     }
-    country_code = ppse.currentTarget.value;
-  });
+  }
+
 }
 
 /**
@@ -201,6 +232,7 @@ function validateUploadedFile(event, fileFormants) {
   const matchFormat = fileFormants.find((f) => f === ext);
   if (!matchFormat) {
     const af = fileFormants.join(", ");
+    event.target.value = "";
     alert(`Invalid file formats, please use any of ${af} file type`);
   }
 }
@@ -241,7 +273,7 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
       }
     });
 
-    countryCodePrefixForPhone(false);
+    countryCodePrefixForPhone(true);
   }
 
   /**
@@ -255,6 +287,13 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     window.location.pathname === "/signup"
   ) {
     countryCodePrefixForPhone(true);
+
+    // Validate file types
+    const govtIdInput = document.querySelector("[name='govt_id']");
+    if (govtIdInput) {
+      // /(\.jpg|\.jpeg|\.png|\.gif)$/i
+      govtIdInput.addEventListener("change", (giie) => validateUploadedFile(giie, ["png", "jpg", "jpeg", "pdf"]));
+    }
   }
 
   /**
@@ -275,6 +314,20 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
 
     countryCodePrefixForPhone(true);
 
+    const govtIdInput = document.querySelector("[name='govt_id']");
+    const govtIdInputProof = document.querySelector("[name='govt_id_proof']");
+    const addressInputProof = document.querySelector("[name='address_proof']");
+    if (govtIdInput) {
+      // /(\.jpg|\.jpeg|\.png|\.gif)$/i
+      govtIdInput.addEventListener("change", (giie) => validateUploadedFile(giie, ["png", "jpg", "jpeg", "pdf"]));
+    }
+    if(govtIdInputProof){
+      govtIdInputProof.addEventListener("change", (gipe) => validateUploadedFile(gipe, ["png", "jpg", "jpeg", "pdf"]));
+    }
+    if(addressInputProof){
+      addressInputProof.addEventListener("change", (aipe) => validateUploadedFile(aipe, ["png", "jpg", "jpeg", "pdf"]));
+    }
+
     const agreement = document.getElementById("agreement");
     if (agreement) {
       // Work with ck editor
@@ -283,19 +336,17 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
       });
     }
 
-
-
     // generateLink.addEventListener('click', (gle)=>{
     //   gle.preventDefault();
     //   // console.log(gle.target.parentElement);
-      const params = new URLSearchParams(window.location.search);
-      const stockvellId = params.get('stockvell_id');
-     
-    //   // 1 = view, 2 = edit 
+    const params = new URLSearchParams(window.location.search);
+    const stockvellId = params.get("stockvell_id");
+
+    //   // 1 = view, 2 = edit
     //   const view = 1;
     //   const code = Math.floor(1000 + Math.random() * 9000); // random 4 digit code
     //   const newLink = `${window.location.origin}/pack_single/?stockvell_id=${stockvellId}&sharing=${code}${view}${stockvellId}`;
-      
+
     //   generateLinkDisplay.textContent = newLink;
 
     //   if(generateLinkDisplay.classList.contains('d-none')){
@@ -303,11 +354,13 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     //     generateLinkDisplay.classList.add('d-block');
     //   }
     // });
-    if(generateLinkDisplay){
-      if(generateLinkDisplay.textContent && generateLinkDisplay.textContent.toString().trim() !== ''){
-        const newLink = `${window.location.origin}/pack_single/?stockvell_id=${stockvellId}&sharing=${generateLinkDisplay.textContent.toString().trim()}`;
+    if (generateLinkDisplay) {
+      if (generateLinkDisplay.textContent && generateLinkDisplay.textContent.toString().trim() !== "") {
+        const newLink = `${
+          window.location.origin
+        }/pack_single/?stockvell_id=${stockvellId}&sharing=${generateLinkDisplay.textContent.toString().trim()}`;
         generateLinkDisplay.textContent = newLink;
-      }else{
+      } else {
         const newLink = `${window.location.origin}/pack_single/?stockvell_id=${stockvellId}`;
         generateLinkDisplay.textContent = newLink;
       }
@@ -326,11 +379,11 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     window.location.pathname === "/admin/" ||
     window.location.pathname === "/admin"
   ) {
+    countryCodePrefixForPhone(true);
     const url = new URLSearchParams(window.location.search);
-    if(url.get('stockvell_id')){
-      const singleStockvellPack = document.getElementById('single-stockvell-pack');
-      const approvedStockvellList = document.getElementById('approved-stockvell-list');
-
+    if (url.get("stockvell_id")) {
+      const singleStockvellPack = document.getElementById("single-stockvell-pack");
+      const approvedStockvellList = document.getElementById("approved-stockvell-list");
     }
     const logedinContent = document.querySelector(".section-2");
     if (logedinContent) {
@@ -389,7 +442,7 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
       }
     }
 
-    countryCodePrefixForPhone(false);
+    countryCodePrefixForPhone(true);
   }
 
   /**
@@ -419,7 +472,12 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     window.location.pathname === "/edit_member/" ||
     window.location.pathname === "/edit_member"
   ) {
-    countryCodePrefixForPhone(false);
+    countryCodePrefixForPhone(true);
+    const govtIdInput = document.querySelector("[name='govt_id']");
+    if (govtIdInput) {
+      // /(\.jpg|\.jpeg|\.png|\.gif)$/i
+      govtIdInput.addEventListener("change", (giie) => validateUploadedFile(giie, ["png", "jpg", "jpeg", "pdf"]));
+    }
   }
 
   /**
@@ -437,6 +495,7 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     const leaderRequestForm = document.getElementById("leader-request-form");
     const cancelLeaderRequest = document.getElementById("cancel-leader-request");
 
+    // Toggle form
     if (leaderRequestBtn) {
       leaderRequestBtn.addEventListener("click", (lrbe) => {
         lrbe.preventDefault();
@@ -464,9 +523,33 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
 
     // upload file validation
     const govtIdInput = document.querySelector("[name='govt_id_proof']");
+    const addressIdInput = document.querySelector("[name='address_proof']");
     if (govtIdInput) {
       // /(\.jpg|\.jpeg|\.png|\.gif)$/i
       govtIdInput.addEventListener("change", (giie) => validateUploadedFile(giie, ["png", "jpg", "jpeg", "pdf"]));
     }
+    if(addressIdInput){
+      addressIdInput.addEventListener("change", (aiie) => validateUploadedFile(aiie, ["png", "jpg", "jpeg", "pdf"]));
+    }
   }
+
+  // custom-header stickey-top
+    /**
+   * @page 9
+   * @page home
+   * Make the header stickey
+   */
+     if (
+      window.location.pathname === "/home.php" ||
+      window.location.pathname === "/home/" ||
+      window.location.pathname === "/home" ||
+      window.location.pathname === "/" ||
+      window.location.pathname === "/index.php"
+    ) {
+      // Stickey header 
+      const customHeader = document.querySelector('.custom-header');
+      // console.log({customHeader, loc: window.location.pathname});
+      customHeader.classList.add('sticky-top');
+    }
+  
 });

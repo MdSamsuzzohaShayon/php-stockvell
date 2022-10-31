@@ -65,3 +65,12 @@
 
 
 - Sub query or nested query (Works with insert, update, delete, and select query). [tutorial](https://www.youtube.com/watch?v=VxiF_MgePL8&list=PL0b6OzIxLPbzf12lu5etX_vjN-eUxgxnr&index=26)
+
+
+
+
+
+
+
+
+

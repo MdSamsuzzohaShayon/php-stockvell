@@ -85,8 +85,8 @@ $input_field = new InputField();
         </div>
         <div class="row mb-3">
           <?php
-          echo $input_field->inputSelect("country", $cy, false, "Benin (+229)", $countries_code);
-          echo $input_field->inputPhone("phone", $pn, false, true, $countries_code, "Benin (+229)");
+          echo $input_field->inputSelect("country", $cy, false, "Benin", $pure_code_of_country);
+          echo $input_field->inputPhone("phone", $pn, false, true, $pure_country_code, "+229");
           ?>
         </div>
         <div class="row mb-3">

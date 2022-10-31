@@ -55,7 +55,8 @@ header {
 
 .home {
   .section-1 {
-    min-height: $landing_section_height;
+    // min-height: $landing_section_height;
+    padding: 3rem 0;
     .landing-img {
       // width: 100%;
       width: 50%;
@@ -146,8 +147,6 @@ header {
   .section-1{
     margin: $section_gap;
   }
-}
-.admin{
   .section-2{
     .sidebar-menus{
       min-height: 80vh;
@@ -174,6 +173,7 @@ header {
     }
   }
 }
+
 
 .packs{
   min-height: $min_height_of_the_page ;
@@ -220,6 +220,9 @@ header {
             text-align: center !important;
             align-items: center !important;
           }
+        }
+        .menu-item-text{
+          font-size: 0.7rem;;
         }
       }
     }

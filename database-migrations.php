@@ -52,7 +52,7 @@ class DatabaseMigrations extends Database
 
 
     // If there are no table with this name create one
-    /*
+
     if (!$this->checkTableExist("members")) {
       $sql_query = "CREATE TABLE members(
             id INT NOT NULL AUTO_INCREMENT,
@@ -93,6 +93,7 @@ class DatabaseMigrations extends Database
         payment_frequency INT NOT NULL,
         withdraw_frequency INT NOT NULL,
         withdraw_member_id INT,
+        withdraw_at DATE,
         leader_id INT,
         link VARCHAR(100),
         max_member INT NOT NULL,
@@ -142,10 +143,10 @@ class DatabaseMigrations extends Database
         PRIMARY KEY(id)
         );";
       $this->createTable($sql_query, "admins");
-      $this->addToTheAdminsTable("admins", "stockvell_admin", "stockvellexample@gmail.com", "+880_1785208590", "Test1234");
+      $this->addToTheAdminsTable("admins", "stockvell_admin", "stockvelladmin@gmail.com", "+880_1785208590", "Test1234");
     }
 
-    */
+
 
 
 
@@ -160,18 +161,23 @@ class DatabaseMigrations extends Database
     $modify_sql = "ALTER TABLE stockvells ADD COLUMN description TEXT NOT NULL";
     */
 
-    // $modify_members_sql = "ALTER TABLE stockvells ADD COLUMN currency VARCHAR(60) NOT NULL";
-    // $this->specificTableModifications($modify_members_sql, "Added currency to members");
+    /*
+    $modify_members_sql = "ALTER TABLE stockvells ADD COLUMN currency VARCHAR(60) NOT NULL";
+    $this->specificTableModifications($modify_members_sql, "Added currency to members");
 
-    // $modify_stockvell_sql = "ALTER TABLE stockvells ADD COLUMN max_member INT NOT NULL";
-    // $this->specificTableModifications($modify_stockvell_sql, "Added max_member to members");
+    $modify_stockvell_sql = "ALTER TABLE stockvells ADD COLUMN max_member INT NOT NULL";
+    $this->specificTableModifications($modify_stockvell_sql, "Added max_member to members");
 
-    // $modify_stockvell_sql = "ALTER TABLE stockvells ADD COLUMN link VARCHAR(100)";
-    // $this->specificTableModifications($modify_stockvell_sql, "Added link to members");
+    $modify_stockvell_sql = "ALTER TABLE stockvells ADD COLUMN link VARCHAR(100)";
+    $this->specificTableModifications($modify_stockvell_sql, "Added link to members");
 
 
-    // $modify_stockvell_withdraw_sql = "ALTER TABLE stockvells ADD COLUMN withdraw_member_id INTEGER FOREIGN KEY(withdraw_member_id) REFERENCES members(id)  ON DELETE CASCADE ON UPDATE CASCADE";
-    // $this->specificTableModifications($modify_stockvell_withdraw_sql, "Added withdraw_member_id to members");
+    $modify_stockvell_withdraw_sql = "ALTER TABLE stockvells ADD COLUMN withdraw_member_id INTEGER FOREIGN KEY(withdraw_member_id) REFERENCES members(id)  ON DELETE CASCADE ON UPDATE CASCADE";
+    $this->specificTableModifications($modify_stockvell_withdraw_sql, "Added withdraw_member_id to members");
+    */
+
+    // $modify_members_sql = "ALTER TABLE stockvells ADD COLUMN withdraw_at DATE";
+    // $this->specificTableModifications($modify_members_sql, "Added withdraw_at to stockvells");
   }
 
 
@@ -276,4 +282,4 @@ $dbMigrate = new DatabaseMigrations();
 
 ?>
 
-<h2>Database migrations</h2>
+<h2 style="color:green;font-size:4rem;">All database migrations successfully</h2>
