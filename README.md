@@ -79,8 +79,13 @@ Registration Page
  - Button to cancel is missing 😎
 
 ### Modifications - 2
+ - Signup phone input code js is not working
+ - When admin will create a pack - there will be no member so make null withdraw member for that, and prevent assigning anything
  - Address image not uploading when a user requested to the leader
  - Validate image or file size using javascript
+ - Setup email server to send mail
+ - Setup sms gateway to send message
+
 
 
 Login Page
