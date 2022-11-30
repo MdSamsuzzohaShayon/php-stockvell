@@ -36,18 +36,18 @@ if (isset($_POST["login_admin_submit"])) {
 
 if (isset($_POST["approve_stockvell_pack"])) {
     $stockvell_form = new AdminStockvellForms();
-    $stockvell_id = $_GET["stockvell_id"];
+    $stockvel_id = $_GET["stockvel_id"];
     $leader_id = $_GET["leader_id"];
     // update
-    $stockvell_form->approveStockvellByAdmin($stockvell_id);
+    $stockvell_form->approveStockvellByAdmin($stockvel_id);
 }
 
 // reject_stockvell_pack
 if (isset($_POST["reject_stockvell_pack"])) {
     $stockvell_form = new AdminStockvellForms();
-    $stockvell_id = $_GET["stockvell_id"];
+    $stockvel_id = $_GET["stockvel_id"];
     // update
-    $stockvell_form->rejectStockvellPackByAdmin($stockvell_id, "admin/");
+    $stockvell_form->rejectStockvellPackByAdmin($stockvel_id, "admin/");
     // echo $stockvell_id;
     // exit();
 }
@@ -88,6 +88,8 @@ if (isset($_POST["create_stockvell_pack"])) {
     $currency = $_POST["currency"];
     $description = $_POST["description"];
     $payment_frequency = $_POST["payment_frequency"];
+    $start_at = $_POST["start_at"];
+    $end_at = $_POST["end_at"];
     $category = $_POST["category"];
     $max_member = $_POST["max_member"];
     $withdraw_frequency = $_POST["withdraw_frequency"];
@@ -105,7 +107,7 @@ if (isset($_POST["create_stockvell_pack"])) {
     // exit();
 
     $stockvell_control = new StockvellForms();
-    $stockvell_control->setStockvell($name, $goal, $payment, $description, $payment_frequency, $category, $max_member, $withdraw_frequency, $agreement, $currency);
+    $stockvell_control->setStockvell($name, $payment, $description, $payment_frequency, $category, $max_member, $withdraw_frequency, $agreement, $currency, $start_at, $end_at);
     $stockvell_control->validateAndCreate();
 }
 
@@ -132,7 +134,7 @@ if(isset($_POST["suspend_leader_submit"])){
 // close_stockvell_pack
 if(isset($_POST["close_stockvell_pack"])){
     $stockvell_form = new AdminStockvellForms();
-    $stockvell_id = $_GET["stockvell_id"];
+    $stockvel_id = $_GET["stockvel_id"];
     // update
-    $stockvell_form->closeStockvellByAdmin($stockvell_id, "admin/");
+    $stockvell_form->closeStockvellByAdmin($stockvel_id, "admin/");
 }

@@ -118,7 +118,7 @@ class InputField
             exit();
         }
     }
-    public function inputTextarea($input_name, $input_text, $single_input, $required = false, $default_value = null, $row = 2, $additional_con_class = null, $additional_class = null)
+    public function inputTextarea($input_name, $input_text, $single_input, $required = false, $default_value = null, $row = 2, $additional_con_class = null, $additional_class = null, $desc_tooltip = null)
     {
         try {
             $translated_text = __($input_text);
@@ -126,7 +126,13 @@ class InputField
             $required_input = $this->setRequired($required);
             $new_default = $this->setDefaultValue($default_value);
             $input_class = $this->setInputClass($additional_class);
-            return "<div class='$input_con_class'>
+            $tooltip = "";
+            if ($desc_tooltip) {
+                $tooltip = $desc_tooltip;
+            } else {
+                $tooltip = $input_text;
+            }
+            return "<div class='$input_con_class' data-bs-toggle='tooltip' data-bs-placement='top' title='$tooltip'>
                         <label for='$input_name' class='$this->input_label_class'>$translated_text</label>
                         <textarea $required_input rows='$row' name='$input_name' class='$input_class' id='$input_name'> $new_default </textarea>
                     </div>";
@@ -146,6 +152,8 @@ class InputField
 
             // make option list
             $option_list = $this->makeOptionList($item_list, $new_default);
+            // echo "<h1>$input_name</h1>";
+            // var_dump($option_list);
 
             return "<div class='$input_con_class' >
                         <label for='$input_name' class='$this->input_label_class'>$translated_text</label>
@@ -224,6 +232,24 @@ class InputField
                             </div>
                     </div>
                     ";
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
+    public function inputDate($input_name, $input_text, $single_input, $required = false, $default_value = null, $additional_con_class = null, $additional_class = null)
+    {
+        try {
+            $translated_text = __($input_text);
+            $input_con_class = $this->setConClass($single_input, $additional_con_class);
+            $required_input = $this->setRequired($required);
+            $new_default = $this->setDefaultValue($default_value);
+            $input_class = $this->setInputClass($additional_class);
+            return "<div class='$input_con_class'>
+                        <label for='$input_name' class='$this->input_label_class'>$translated_text</label>
+                        <input $required_input type='date' value='$new_default' name='$input_name' class='$input_class' id='$input_name'>
+                    </div>";
         } catch (\Exception $e) {
             echo $e->getMessage();
             exit();

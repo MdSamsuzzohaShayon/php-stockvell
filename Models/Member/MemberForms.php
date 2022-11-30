@@ -15,7 +15,7 @@ class MemberForms extends Member
         $this->ROOT = $_SERVER['DOCUMENT_ROOT'];
     }
 
-    public function setMember($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city)
+    public function setMember($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $source, $city)
     {
         $this->firstname = $firstname;
         $this->surname = $surname;
@@ -27,7 +27,6 @@ class MemberForms extends Member
         $this->gender = $gender;
         $this->profession = $profession;
         $this->interest = $interest;
-        $this->govt_id = $govt_id;
         $this->source = $source;
         $this->city = $city;
     }
@@ -80,18 +79,18 @@ class MemberForms extends Member
             $this->password = $hashedPassword;
         }
 
-        $unique_file_name = null;
-        if ($this->govt_id['name']) {
-            $file_sql = "SELECT * FROM members WHERE id=:member_id";
-            $stmt = $this->connect()->prepare($file_sql);
-            $stmt->bindParam('member_id', $member_id);
-            $stmt->execute();
-            $found_file = $stmt->fetch(\PDO::FETCH_OBJ);
-            if ($found_file->govt_id) {
-                $this->deletePrevFileFromServer($found_file->govt_id, $this->ROOT);
-            }
-            $unique_file_name = $this->uploadFileToServer($this->govt_id, $this->ROOT, "/dashboard/?");
-        }
+        // $unique_file_name = null;
+        // if ($this->govt_id['name']) {
+        //     $file_sql = "SELECT * FROM members WHERE id=:member_id";
+        //     $stmt = $this->connect()->prepare($file_sql);
+        //     $stmt->bindParam('member_id', $member_id);
+        //     $stmt->execute();
+        //     $found_file = $stmt->fetch(\PDO::FETCH_OBJ);
+        //     if ($found_file->govt_id) {
+        //         $this->deletePrevFileFromServer($found_file->govt_id, $this->ROOT);
+        //     }
+        //     $unique_file_name = $this->uploadFileToServer($this->govt_id, $this->ROOT, "/dashboard/?");
+        // }
         $this->input_list = array(
             'firstname' => $this->firstname,
             'surname' => $this->surname,
@@ -103,7 +102,6 @@ class MemberForms extends Member
             'gender' => $this->gender,
             'profession' => $this->profession,
             'interest' => $this->interest,
-            'govt_id' => $unique_file_name,
             'source' => $this->source,
             'city' => $this->city,
         );
@@ -119,14 +117,17 @@ class MemberForms extends Member
         }
         if ($this->updateMember($cols, $member_id)) {
             header("Location: /edit_member/?member_id=$member_id&error=none");
+            exit();
         } else {
             header("Location: /edit_member/?member_id=$member_id&error=stmtfailed");
+            exit();
         }
     }
+
     public function memberJoinPack($member_id, $stockvell_id, $redirect_url)
     {
         if (empty($member_id) || empty($stockvell_id)) {
-            header("Location: $redirect_url/?stockvell_id=$stockvell_id&error=emptyinput");
+            header("Location: $redirect_url/?stockvel_id=$stockvell_id&error=emptyinput");
             exit();
         }
 
@@ -140,6 +141,7 @@ class MemberForms extends Member
             if (intval($stockvell_detail->withdraw_frequency)) {
                 $withdraw_frequency = intval($stockvell_detail->withdraw_frequency);
             }
+            // Set withdraw date automitically
             $withdraw_date = date("Y-m-d");
             $offsetted_widthdraw_date =  date('Y-m-d', strtotime($withdraw_date . ' + ' . $withdraw_frequency . ' days'));
             $input_list["withdraw_member_id"] = $first_widthdraw_member_id;
@@ -152,7 +154,7 @@ class MemberForms extends Member
         // exit();
         if ($stockvell_detail) {
             if ($stockvell_detail->max_member <= $stockvell_detail->total_members) {
-                header("Location: $redirect_url/?stockvell_id=$stockvell_id&error=reachlimit");
+                header("Location: $redirect_url/?stockvel_id=$stockvell_id&error=reachlimit");
                 exit();
             }
         }
@@ -160,15 +162,15 @@ class MemberForms extends Member
         $find_relation = $this->findByMemberStockvellRelation($member_id, $stockvell_id);
         if ($find_relation) {
             // error - return or redirect
-            header("Location: $redirect_url/?stockvell_id=$stockvell_id&error=alreadymember");
+            header("Location: $redirect_url/?stockvel_id=$stockvell_id&error=alreadymember");
             exit();
         } else {
             // create a new relation 
             if ($this->joinTheStockvellPack($member_id, $stockvell_id)) {
-                header("Location: $redirect_url/?stockvell_id=$stockvell_id&error=none");
+                header("Location: $redirect_url/?stockvel_id=$stockvell_id&error=none");
                 exit();
             } else {
-                header("Location: $redirect_url/?stockvell_id=$stockvell_id&error=stmtfailed");
+                header("Location: $redirect_url/?stockvel_id=$stockvell_id&error=stmtfailed");
                 exit();
             }
         }
@@ -177,7 +179,7 @@ class MemberForms extends Member
     public function submitLeaderRequest($member_id,  $stockvell_id, $govt_id_proof, $address_proof)
     {
         if (empty($member_id) || empty($stockvell_id)) {
-            header("Location: /pack_single/?stockvell_id=$stockvell_id&error=emptyinput");
+            header("Location: /pack_single/?stockvel_id=$stockvell_id&error=emptyinput");
             exit();
         }
         // echo json_encode(
@@ -189,15 +191,15 @@ class MemberForms extends Member
         //     )
         // );
         // exit();
-        $unique_govt_id_name = $this->uploadFileToServer($govt_id_proof, $this->ROOT, "/pack_single/?stockvell_id=$stockvell_id&");
-        $unique_address_name = $this->uploadFileToServer($address_proof, $this->ROOT, "/pack_single/?stockvell_id=$stockvell_id&");
+        $unique_govt_id_name = $this->uploadFileToServer($govt_id_proof, $this->ROOT, "/pack_single/?stockvel_id=$stockvell_id&");
+        $unique_address_name = $this->uploadFileToServer($address_proof, $this->ROOT, "/pack_single/?stockvel_id=$stockvell_id&");
         // echo json_encode(array($unique_govt_id_name, $unique_address_name));
         // exit();
         if ($this->requestToBeTheLeader($member_id, $stockvell_id, $unique_govt_id_name, $unique_address_name)) {
-            header("Location: /pack_single/?stockvell_id=$stockvell_id&error=none");
+            header("Location: /pack_single/?stockvel_id=$stockvell_id&error=none");
             exit();
         } else {
-            header("Location: /pack_single/?stockvell_id=$stockvell_id&error=stmtfaild");
+            header("Location: /pack_single/?stockvel_id=$stockvell_id&error=stmtfaild");
             exit();
         }
     }
@@ -206,7 +208,7 @@ class MemberForms extends Member
     {
         echo "Working";
         if (empty($stockvell_id)) {
-            header("Location: $reqirect_url/?stockvell_id=$stockvell_id&error=emptyinput");
+            header("Location: $reqirect_url/?stockvel_id=$stockvell_id&error=emptyinput");
             exit();
         }
 
@@ -217,7 +219,7 @@ class MemberForms extends Member
 
 
             $stmt->execute(array('stockvell_id' => $stockvell_id));
-            header("Location: $reqirect_url/?stockvell_id=$stockvell_id&error=none");
+            header("Location: $reqirect_url/?stockvel_id=$stockvell_id&error=none");
             exit();
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -229,22 +231,46 @@ class MemberForms extends Member
     public function memberLeavePack($member_id, $stockvell_id, $redirect_url)
     {
         if (empty($member_id) || empty($stockvell_id)) {
-            header("Location: /pack_single/?stockvell_id=$stockvell_id&error=emptyinput");
+            header("Location: /pack_single/?stockvel_id=$stockvell_id&error=emptyinput");
             exit();
         }
         $find_relation = $this->findByMemberStockvellRelation($member_id, $stockvell_id);
         if ($find_relation) {
             // remove from relation 
             if ($this->leaveFromStockvellPack($member_id, $stockvell_id)) {
-                header("Location: /pack_single/?stockvell_id=$stockvell_id&error=none");
+                header("Location: /pack_single/?stockvel_id=$stockvell_id&error=none");
                 exit();
             } else {
-                header("Location: /pack_single/?stockvell_id=$stockvell_id&error=stmtfailed");
+                header("Location: /pack_single/?stockvel_id=$stockvell_id&error=stmtfailed");
                 exit();
             }
         } else {
             // error - return or redirect
-            header("Location: /pack_single/?stockvell_id=$stockvell_id&error=alreadymember");
+            header("Location: /pack_single/?stockvel_id=$stockvell_id&error=alreadymember");
+            exit();
+        }
+    }
+
+
+    public function memberApproveToPack($member_id, $stockvell_id, $redirect_url = '/')
+    {
+        if (empty($member_id) || empty($stockvell_id)) {
+            header("Location: $redirect_url/?stockvel_id=$stockvell_id&error=emptyinput");
+            exit();
+        }
+        try {
+            $sql = "UPDATE stockvell_to_member SET status=:status WHERE member_id=:member_id AND stockvell_id=:stockvell_id";
+            $stmt = $this->connect()->prepare($sql);
+            $new_status = "APPROVED";
+            if ($stmt->execute(array('status' => $new_status, "member_id" => $member_id, "stockvell_id" => $stockvell_id))) {
+                header("Location: $redirect_url/?stockvel_id=$stockvell_id&error=none");
+                exit();
+            } else {
+                header("Location: $redirect_url/?stockvel_id=$stockvell_id&error=stmtfailed");
+                exit();
+            }
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
             exit();
         }
     }

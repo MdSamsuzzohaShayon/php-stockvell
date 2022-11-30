@@ -20,15 +20,16 @@ if(isset($_POST['create_stockvell_pack'])){
    * @var getting all inputs
    */
   $name = $_POST["name"];
-  $goal = $_POST["goal"];
   $payment = $_POST["payment"];
   $payment_frequency = $_POST["payment_frequency"];
   $category = $_POST["category"];
   $max_member = $_POST["max_member"];
   $withdraw_frequency = $_POST["withdraw_frequency"];
-  $desc = $_POST["desc"];
+  $description = $_POST["description"];
   $agreement = $_POST["agreement"];
   $currency = $_POST["currency"];
+  $start_at = $_POST["start_at"];
+  $end_at = $_POST["end_at"];
   
   $member_id = $_POST["member_id"];
   $address_proof = $_FILES["address_proof"];
@@ -44,7 +45,7 @@ if(isset($_POST['create_stockvell_pack'])){
   // exit();
   
   $stockvell_form = new StockvellForms();
-  $stockvell_form->setStockvell($name, $goal, $payment, $desc, $payment_frequency, $category, $max_member, $withdraw_frequency, $agreement, $currency );
+  $stockvell_form->setStockvell($name, $payment, $description, $payment_frequency, $category, $max_member, $withdraw_frequency, $agreement, $currency, $start_at, $end_at );
   $stockvell_form->createStockvellPackByMember($member_id, $address_proof, $govt_id_proof);
 
 }

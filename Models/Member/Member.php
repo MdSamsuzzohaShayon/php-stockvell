@@ -37,7 +37,8 @@ class Member extends Database
         return $member_found;
     }
 
-    protected function membersLimitationExceed($stockvell_id){
+    protected function membersLimitationExceed($stockvell_id)
+    {
         try {
             //code...
             $sql = "SELECT sm.stockvell_id, s.name, s.status, s.max_member, s.withdraw_frequency, COUNT(sm.stockvell_id) AS total_members FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id=s.id  WHERE stockvell_id=:stockvell_id GROUP BY sm.stockvell_id;";
@@ -48,7 +49,7 @@ class Member extends Database
             // var_dump(array("mid"=> $member_id, "sid"=> $stockvell_id));
             // exit();
             $stockvell_detail = $stmt->fetch(\PDO::FETCH_OBJ);
-            
+
             if (!$stockvell_detail) return null;
             return $stockvell_detail;
         } catch (\PDOException $err) {
@@ -56,30 +57,42 @@ class Member extends Database
             //throw $th;
         }
     }
-    
+
 
 
 
     protected function findByMemberStockvellRelation($member_id, $stockvell_id)
     {
-        $sql = "SELECT * FROM stockvell_to_member  WHERE member_id=:member_id AND stockvell_id=:stockvell_id";
-        $stmt = $this->connect()->prepare($sql);
-        if (!$stmt->execute(array(':member_id' => $member_id, ':stockvell_id' => $stockvell_id))) {
-            return null;
+        try {
+            $sql = "SELECT * FROM stockvell_to_member  WHERE member_id=:member_id AND stockvell_id=:stockvell_id";
+            $stmt = $this->connect()->prepare($sql);
+            if (!$stmt->execute(array(':member_id' => $member_id, ':stockvell_id' => $stockvell_id))) {
+                return null;
+            }
+            // var_dump(array("mid"=> $member_id, "sid"=> $stockvell_id));
+            // exit();
+            $member_found = $stmt->fetch(\PDO::FETCH_OBJ);
+            if (!$member_found) return null;
+            return $member_found;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            exit();
         }
-        // var_dump(array("mid"=> $member_id, "sid"=> $stockvell_id));
-        // exit();
-        $member_found = $stmt->fetch(\PDO::FETCH_OBJ);
-        if (!$member_found) return null;
-        return $member_found;
+        return null;
     }
 
-    public function joinTheStockvellPack($member_id, $stockvell_id)
+    public function joinTheStockvellPack($member_id, $stockvell_id, $is_approved = false)
     {
-        $sql = "INSERT INTO stockvell_to_member (member_id, stockvell_id) VALUES(:member_id, :stockvell_id)";
-        $stmt = $this->connect()->prepare($sql);
-        if (!$stmt->execute(array(':member_id' => $member_id, ':stockvell_id' => $stockvell_id))) {
-            return false;
+        try {
+            $sql = "INSERT INTO stockvell_to_member (member_id, stockvell_id, status) VALUES(:member_id, :stockvell_id, :status)";
+            $stmt = $this->connect()->prepare($sql);
+            $status = $is_approved ? "APPROVED" : "PENDING";
+            if (!$stmt->execute(array(':member_id' => $member_id, ':stockvell_id' => $stockvell_id, ':status' => $status))) {
+                return false;
+            }
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            exit();
         }
         return true;
     }
@@ -133,7 +146,7 @@ class Member extends Database
     {
         try {
             $stmt = $this->connect()->prepare("SELECT id, firstname, phone, email  FROM members WHERE phone = :phone;");
-    
+
             if (!$stmt->execute(array("phone" => $phone))) {
                 $stmt = null;
                 header("Location: /$redirect_url?error=stmtfailed");
@@ -194,7 +207,7 @@ class Member extends Database
     {
         $target_dir = $ROOT . "/uploads/";
         $uploaded_file_name = str_replace(' ', '_', $uploadedFile["name"]);
-        $unique_file_name = basename("m_" . date("Ymd_"). rand(100, 999) . '_' . $uploaded_file_name);
+        $unique_file_name = basename("m_" . date("Ymd_") . rand(100, 999) . '_' . $uploaded_file_name);
         $imageFileType = strtolower(pathinfo($uploadedFile["name"], PATHINFO_EXTENSION));
         $target_file = $target_dir . basename($unique_file_name);
 
@@ -232,6 +245,4 @@ class Member extends Database
         // echo "uploads/" . $uploadedFile["name"];
         return $unique_file_name;
     }
-
-
 }

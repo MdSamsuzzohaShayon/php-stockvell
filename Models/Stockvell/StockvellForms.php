@@ -5,8 +5,11 @@ namespace Models\Stockvell;
 
 use Config\Database;
 use Models\Member\MemberForms;
+use Models\Member\FetchMember;
 use Utils\PeriodConvert;
 use Models\Stockvell\Stockvell;
+use Utils\SendEmail;
+use Utils\SendSMS;
 
 class StockvellForms extends Database
 {
@@ -21,45 +24,58 @@ class StockvellForms extends Database
     public function __construct()
     {
         $this->ROOT = $_SERVER['DOCUMENT_ROOT'];
-    }
 
-    public function setStockvellPropertyArray($stockvell_id, $name, $description, $payment, $payment_frequency, $category, $withdraw_frequency, $agreement)
+    }
+    
+    public function setStockvellPropertyArray($stockvel_id, $name, $payment, $currency,  $payment_frequency, $withdraw_frequency, $category, $max_member, $start_at, $end_at, $description, $agreement)
     {
-        $this->stockvell_id = $stockvell_id;
+        $period_freq = new PeriodConvert();
+        $this->stockvell_id = $stockvel_id;
         $this->name = $name;
         $this->description = $description;
         $this->payment = $payment;
-        $this->payment_frequency = $payment_frequency;
+        $this->currency = $currency;
+        $new_payment_freq = $period_freq->convertFromTextToInt($payment_frequency);
+        $new_withdraw_freq = $period_freq->convertFromTextToInt($withdraw_frequency);
+        $this->payment_frequency = $new_payment_freq;
+        $this->withdraw_frequency = $new_withdraw_freq;
         $this->category = $category;
-        $this->withdraw_frequency = $withdraw_frequency;
+        $this->max_member = $max_member;
+        $this->start_at = $start_at;
+        $this->end_at = $end_at;
         $this->agreement = $agreement;
 
         return $this->input_list = array(
-            "stockvell_id" => $stockvell_id,
+            "stockvell_id" => $stockvel_id,
             "name" => $name,
             "description" => $description,
             "payment" => $payment,
-            "payment_frequency" => $payment_frequency,
+            "currency" => $currency,
+            "payment_frequency" => $new_payment_freq,
+            "withdraw_frequency" => $new_withdraw_freq,
             "category" => $category,
-            "withdraw_frequency" => $withdraw_frequency,
+            "max_member" => $max_member,
+            "start_at" => $start_at,
+            "end_at" => $end_at,
             "agreement" => $agreement
         );
     }
 
-    public function setStockvell($name, $goal, $payment, $description, $payment_frequency, $category, $max_member, $withdraw_frequency, $agreement, $currency)
+    public function setStockvell($name, $payment, $description, $payment_frequency, $category, $max_member, $withdraw_frequency, $agreement, $currency, $start_at, $end_at)
     {
+        $period_freq = new PeriodConvert();
         $this->name = $name;
-        $this->goal = $goal;
         $this->payment = $payment;
         $this->description = $description;
-        $this->payment_frequency = $payment_frequency;
+        $this->payment_frequency = $period_freq->convertFromTextToInt($payment_frequency);
         $this->category = $category;
         $this->max_member = $max_member;
-        $period_freq = new PeriodConvert();
         $new_withdraw_frequency = $period_freq->convertFromTextToInt($withdraw_frequency);
         $this->withdraw_frequency = $new_withdraw_frequency;
         $this->agreement = $agreement;
         $this->currency = $currency;
+        $this->start_at = $start_at;
+        $this->end_at = $end_at;
     }
 
 
@@ -76,20 +92,21 @@ class StockvellForms extends Database
                 }
                 if (!empty($val) && $key !== "password2")   $cols[] = "$key = '$val'";
             }
-    
+
             $updateElement = implode(', ', $cols);
-    
-    
-    
-    
+            // echo $updateElement;
+            // exit();
+
+
+
             /// Update element 
             $sql = "UPDATE stockvells SET $updateElement WHERE id=:stockvell_id";
             $stmt = $this->connect()->prepare($sql);
             $stmt->bindParam('stockvell_id', $stockvell_id);
-    
-    
+
+
             if (!$stmt->execute()) {
-                
+
                 return false;
             }
             return true;
@@ -102,27 +119,29 @@ class StockvellForms extends Database
 
 
 
-    public function generateStockvellLink($stockvell_id, $redirect_url){
+    public function generateStockvellLink($stockvell_id, $redirect_url)
+    {
         // rand ( 10000 , 99999 );
         $random_digit = rand(1000, 9999);
         $view = 1; // edit = 2
         $link = strval($random_digit) . strval($view) . strval($stockvell_id);
-        $updateElement = array("link"=> $link);
-        if($this->updateStockvell($stockvell_id, $updateElement)){
+        $updateElement = array("link" => $link);
+        if ($this->updateStockvell($stockvell_id, $updateElement)) {
             header("Location: /$redirect_url?stockvell_id=$stockvell_id&error=none");
             exit();
-        }else{
+        } else {
             header("Location: /$redirect_url?stockvell_id=$stockvell_id&error=smtpfailed");
             exit();
         }
     }
 
-    public function setWithdrawMember($stockvell_id, $withdraw_member_id, $redirect_url){
+    public function setWithdrawMember($stockvell_id, $withdraw_member_id, $redirect_url)
+    {
         $updateElement = array("withdraw_member_id" => intval($withdraw_member_id));
-        if($this->updateStockvell($stockvell_id, $updateElement)){
+        if ($this->updateStockvell($stockvell_id, $updateElement)) {
             header("Location: /$redirect_url?stockvell_id=$stockvell_id&error=none");
             exit();
-        }else{
+        } else {
             header("Location: /$redirect_url?stockvell_id=$stockvell_id&error=smtpfailed");
             exit();
         }
@@ -131,20 +150,20 @@ class StockvellForms extends Database
 
 
 
+    // Get last member
     private function createStockvellPack($redirect)
     {
-        $conn= $this->connect();
+        $conn = $this->connect();
         $conn->beginTransaction();
 
         try {
-            $sql = "INSERT INTO stockvells(name, agreement, goal, category, max_member, status, description, payment, payment_frequency, withdraw_frequency, currency) VALUES 
-                                        (:name, :agreement, :goal, :category, :max_member, :status, :description, :payment, :payment_frequency, :withdraw_frequency, :currency)";
+            $sql = "INSERT INTO stockvells(name, agreement, category, max_member, status, description, payment, payment_frequency, withdraw_frequency, currency, start_at, end_at) VALUES 
+                                        (:name, :agreement, :category, :max_member, :status, :description, :payment, :payment_frequency, :withdraw_frequency, :currency, :start_at, :end_at)";
             $stmt = $conn->prepare($sql);
-    
+
             $stmt->bindParam('name', $this->name, \PDO::PARAM_STR);
             $agreement = preg_replace('/\s+/', '', $this->agreement);
             $stmt->bindParam('agreement', $agreement);
-            $stmt->bindParam('goal', $this->goal, \PDO::PARAM_STR);
             $stmt->bindParam('category', $this->category, \PDO::PARAM_STR);
             $stmt->bindParam('max_member', intval($this->max_member, 10), \PDO::PARAM_INT);
             $status = "PENDING";
@@ -152,6 +171,8 @@ class StockvellForms extends Database
             $stmt->bindParam('description', $this->description, \PDO::PARAM_STR);
             $stmt->bindParam('payment', intval($this->payment, 10), \PDO::PARAM_INT);
             $stmt->bindParam('currency', $this->currency, \PDO::PARAM_STR);
+            $stmt->bindParam('start_at', $this->start_at);
+            $stmt->bindParam('end_at', $this->end_at);
             $stmt->bindParam('payment_frequency', intval($this->payment_frequency, 10), \PDO::PARAM_INT);
             $stmt->bindParam('withdraw_frequency', intval($this->withdraw_frequency, 10), \PDO::PARAM_INT);
             //code...
@@ -175,12 +196,12 @@ class StockvellForms extends Database
     public function validateAndCreate()
     {
 
-        if (empty($this->name) || empty($this->goal) || empty($this->payment) || empty($this->currency) || empty($this->description) || empty($this->payment_frequency) || empty($this->category) || empty($this->max_member) || empty($this->withdraw_frequency) || empty($this->agreement)) {
+        if (empty($this->name) || empty($this->payment) || empty($this->currency) || empty($this->description) || empty($this->payment_frequency) || empty($this->category) || empty($this->max_member) || empty($this->withdraw_frequency) || empty($this->agreement)) {
             header("Location: /admin/?error=emptyinput");
             exit();
         }
 
-        if($this->createStockvellPack("/admin")){
+        if ($this->createStockvellPack("/admin")) {
             header("Location: /admin/?error=none");
             exit();
         }
@@ -191,40 +212,83 @@ class StockvellForms extends Database
         // echo json_encode(array(
         //     "name" => $this->name,
         //     // "agreement" => $this->agreement,
-        //     "goal" => $this->goal,
         //     "category" => $this->category,
         //     "description" => $this->description,
         //     "payment" => intval($this->payment, 10),
         //     "payment_frequency" => intval($this->payment_frequency, 10),
         //     "category" => $this->category,
         //     "withdraw_frequency" => intval($this->withdraw_frequency, 10),
+        //     "start_at" => $this->start_at,
+        //     "end_at" => $this->end_at,
+        //     "govt_id_proof" => $govt_id_proof["name"],
         //     "address_proof" => $address_proof["name"],
         //     "govt_id_proof" => $govt_id_proof["name"],
         // ));
         // exit();
 
-        if (empty($this->name) || empty($this->goal) || empty($this->payment) || empty($this->description) || empty($this->payment_frequency) || empty($this->category) || empty($this->max_member) || empty($this->withdraw_frequency) || empty($this->agreement) || empty($this->currency) || empty($member_id) || empty($govt_id_proof["name"]) || empty($address_proof["name"])) {
+        if (
+            empty($this->name) || empty($this->payment) || empty($this->description) || empty($this->payment_frequency)
+            || empty($this->category) || empty($this->max_member) || empty($this->withdraw_frequency) || empty($this->agreement)
+            || empty($this->start_at) || empty($this->end_at)
+            || empty($this->currency) || empty($member_id) || empty($govt_id_proof["name"]) || empty($address_proof["name"])
+        ) {
             header("Location: /dashboard/?error=emptyinput");
             exit();
         }
 
-        
-        
+
+
         $stockvell_id = $this->createStockvellPack("/dashboard");
-        
+
 
 
         $member_controler = new MemberForms();
-        $member_controler->joinTheStockvellPack($member_id, $stockvell_id);
+        $member_controler->joinTheStockvellPack($member_id, $stockvell_id, true); // by default approved member
         $unique_govt_id_name = $member_controler->uploadFileToServer($govt_id_proof, $this->ROOT, "/dashboard/?stockvell_id=$stockvell_id&");
         $unique_address_name = $member_controler->uploadFileToServer($address_proof, $this->ROOT, "/dashboard/?stockvell_id=$stockvell_id&");
 
 
         if ($member_controler->requestToBeTheLeader($member_id, $stockvell_id, $unique_govt_id_name, $unique_address_name)) {
-            header("Location: /dashboard/?stockvell_id=$stockvell_id&error=none");
+            $email_controler = new SendEmail();
+            $sms_controller = new SendSMS();
+            $member_fetch = new FetchMember();
+            $find_member = $member_fetch->findMemberByID($member_id, '/dashobard');
+            if ($find_member) {
+                $find_member_email = $find_member->email;
+                $find_member_phone = $find_member->phone;
+                $pack_name = $this->name;
+                $pack_category = $this->category;
+                $pack_payment = $this->payment;
+                $backend_url = $_ENV['FRONTEND_URL'];
+
+                // Get last stockvell
+                // http://localhost/pack_single.php?stockvel_id=3
+
+                $html_body = "
+                        <h1 >You have created a stockvell pack</h1>
+                        <p>Name: $pack_name </p>
+                        <p>Category: $pack_category </p>
+                        <p>Payment: $pack_payment </p>
+                        <a href='$backend_url/pack_single/?stockvel_id=$stockvell_id'>Link of the pack</a>
+                    ";
+                $email_controler->sendMessage($find_member_email, $html_body, "Stockvell pack created");
+                $new_phone_num = str_replace("_", "", $find_member_phone);
+                $smsBody = "You have created a pack in Stockvel that is under review. URL: $backend_url/pack_single/?stockvel_id=$stockvell_id";
+                $sent_sms = $sms_controller->sendTwilioSMS($new_phone_num, $smsBody);
+                // if($sent_sms){
+                //     echo "<h1 class='alert alert-danger'>SMS is been sent</h1>";
+                //  }else{
+                //     echo "<h1 class='alert alert-danger'>SMS is not been sent</h1>";
+                //  }                 
+                // echo "Phone Number - " . $new_phone_num;
+                // exit();
+            }
+            // Send email and sms
+            // $email_controler->sendMessage($this->)
+            header("Location: /dashboard/?stockvel_id=$stockvell_id&error=none");
             exit();
         } else {
-            header("Location: /dashboard/?stockvell_id=$stockvell_id&error=stmtfaild");
+            header("Location: /dashboard/?stockvel_id=$stockvell_id&error=stmtfaild");
             exit();
         }
     }
@@ -263,37 +327,43 @@ class StockvellForms extends Database
         }
     }
 
-    protected function updateMemberToLeader($stockvell_id, $member_id)
+    public function updateMemberToLeader($stockvell_id, $member_id)
     {
-        $sql = "UPDATE stockvells SET leader_id=:leader_id WHERE id=:stockvell_id";
-        $stmt = $this->connect()->prepare($sql);
-        if ($stmt->execute(array(":leader_id" => $member_id, ":stockvell_id" => $stockvell_id))) {
-            return true;
+        try {
+            $sql = "UPDATE stockvells SET leader_id=:leader_id WHERE id=:stockvell_id";
+            $stmt = $this->connect()->prepare($sql);
+            if ($stmt->execute(array(":leader_id" => $member_id, ":stockvell_id" => $stockvell_id))) {
+                return true;
+            }
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            exit();
         }
         return false;
     }
 
 
-    public function requestToCloseStockvell($leader_id, $stockvell_id, $redirect_url){
+    public function requestToCloseStockvell($leader_id, $stockvell_id, $redirect_url)
+    {
         // make status approved to close 
         try {
             //code...
-        $sql = "UPDATE stockvells SET status=:status WHERE id=:stockvell_id AND leader_id=:leader_id";
-        $stmt = $this->connect()->prepare($sql);
-        $status = "CLOSE_REQUESTED";
-        if($stmt->execute(array(":status" => $status, ":stockvell_id" => $stockvell_id, ":leader_id"=> $leader_id))){
-            header("Location: /$redirect_url?stockvell_id=$stockvell_id&error=none");
-            exit();
-        }else{
-            header("Location: /$redirect_url?stockvell_id=$stockvell_id&error=smtpfailed");
-            exit();
-        }
+            $sql = "UPDATE stockvells SET status=:status WHERE id=:stockvell_id AND leader_id=:leader_id";
+            $stmt = $this->connect()->prepare($sql);
+            $status = "CLOSE_REQUESTED";
+            if ($stmt->execute(array(":status" => $status, ":stockvell_id" => $stockvell_id, ":leader_id" => $leader_id))) {
+                header("Location: /$redirect_url?stockvel_id=$stockvell_id&error=none");
+                exit();
+            } else {
+                header("Location: /$redirect_url?stockvel_id=$stockvell_id&error=smtpfailed");
+                exit();
+            }
         } catch (\PDOException $err) {
             // throw $err;
             echo $err->getMessage();
             exit();
         }
-        header("Location: /$redirect_url?stockvell_id=$stockvell_id&error=stockvellnotfound");
+        header("Location: /$redirect_url?stockvel_id=$stockvell_id&error=stockvellnotfound");
         exit();
     }
 
@@ -301,12 +371,12 @@ class StockvellForms extends Database
     public function makeLeaderOfThePack($sm_id, $member_id, $stockvell_id, $redirect_url)
     {
         if (empty($sm_id) || empty($member_id) || empty($stockvell_id)) {
-            header("Location: /$redirect_url?stockvell_id=$stockvell_id");
+            header("Location: /$redirect_url?stockvel_id=$stockvell_id");
             exit();
         }
         $rl_result =  $this->findRequestOfMemberToBeLeaderByID($sm_id); // $rl = request leader
         if ($rl_result === null) {
-            header("Location: /$redirect_url?stockvell_id=$stockvell_id&error=stockvellnotfound");
+            header("Location: /$redirect_url?stockvel_id=$stockvell_id&error=stockvellnotfound");
             exit();
         }
         $this->deletePrevFileFromServer($rl_result->govt_id_proof, $this->ROOT);
@@ -317,34 +387,35 @@ class StockvellForms extends Database
 
 
         if (!$this->removeFromLeaderRequest($sm_id)) {
-            header("Location: /$redirect_url?stockvell_id=$stockvell_id&error=stmtfailed");
+            header("Location: /$redirect_url?stockvel_id=$stockvell_id&error=stmtfailed");
             exit();
         }
 
-        header("Location: /$redirect_url?stockvell_id=$stockvell_id&error=none");
+        header("Location: /$redirect_url?stockvel_id=$stockvell_id&error=none");
         exit();
     }
 
 
 
     // FIFO = First in first out 
-    public function setMemberToWithdrawFIFO($stockvell_id, $previous_member_id){
+    public function setMemberToWithdrawFIFO($stockvell_id, $previous_member_id)
+    {
         $stockvell_control = new Stockvell();
         $next_withdraw_member = $stockvell_control->getNextMemberOfAStockvellPack($stockvell_id, $previous_member_id);
-        if($next_withdraw_member){
+        if ($next_withdraw_member) {
             // Update withdraw member and date
             $withdraw_frequency = 7;
             $single_stockvell = $stockvell_control->getSingleStockvell($stockvell_id);
-            if($single_stockvell->withdraw_frequency){
+            if ($single_stockvell->withdraw_frequency) {
                 $withdraw_frequency = $single_stockvell->withdraw_frequency;
             }
             $withdraw_date = date("Y-m-d");
-            $offsetted_widthdraw_date =  date('Y-m-d', strtotime($withdraw_date . ' + '. $withdraw_frequency .' days'));
+            $offsetted_widthdraw_date =  date('Y-m-d', strtotime($withdraw_date . ' + ' . $withdraw_frequency . ' days'));
             $input_list = array("withdraw_member_id" => $next_withdraw_member->member_id, "withdraw_at" => $offsetted_widthdraw_date);
             // echo json_encode($input_list);
             // exit();
             $this->updateStockvell($stockvell_id, $input_list);
-        }else{
+        } else {
             // close the stockvell pack 
             // echo "<div class='alert alert-primary'>All members withdrawn their money!</div>";
         }

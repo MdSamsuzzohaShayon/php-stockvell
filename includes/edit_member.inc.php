@@ -24,10 +24,9 @@ if(isset($_POST["member_update_submit"])){
     $profession = $_POST["profession"];
     $interest = $_POST["interest"];
     $source = $_POST["source"];
-    $govt_id = $_FILES["govt_id"];
     // echo json_encode($govt_id);
     
     $member_forms = new MemberForms();
-    $member_forms->setMember($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city);
+    $member_forms->setMember($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $source, $city);
     $member_forms->updateDynamicMember($member_id, "edit_member/");
 }

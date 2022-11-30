@@ -64,7 +64,7 @@ if (isset($_GET["error"])) {
    $err_handler->setCommonErrors($_GET["error"]);
 }
 
-$single_stockvell_id = $_GET["stockvell_id"];
+$single_stockvel_id = $_GET["stockvel_id"];
 
 
 $input_field = new InputField();
@@ -119,15 +119,19 @@ $dl = __("Detail");
                   </li>
                   <li role="button" data-item="add-pack" class="border-bottom menu-item border-primary py-3 bg-transparent d-flex flex-column flex-md-row">
                      <img class="mx-md-4 mx-0" src="/public/icons/add-pack.svg" alt="">
-                     <p class="m-0 px-3 d-md-block d-none"><?= __("Add Pack"); ?></p>
+                     <p class="m-0 px-3 d-md-block d-none"><?= __("Add pack!"); ?></p>
                   </li>
                </ul>
             </div>
             <div class="col-md-9 sidebar-content">
                <?php if ($has_error) echo $err_handler->displayErrors(); ?>
+               <!-- 
+                  PROFILE CONTENT START
+                  =================================================================================================
+               -->
                <div class="content my-4 admin-profile-content d-block">
                   <h1 class="h1 text-center"><?= __("Admin Profile!"); ?></h1>
-                  <p class="text-center"><?= __("Edit admin's informations"); ?></p>
+                  <p class="text-center"><?= __("Edit admins information"); ?></p>
                   <form action="/includes/admin.inc.php" method="post">
                      <div class="row mb-3">
                         <?php
@@ -140,7 +144,7 @@ $dl = __("Detail");
                      <div class="row mb-3">
                         <?php
                         $pn = __("Phone");
-                        echo $input_field->inputPhone("phone", $pn, true, false, $pure_country_code, $fabi_result->phone);
+                        echo $input_field->inputPhone("phone", $pn, true, false, $country_code_list, $fabi_result->phone);
                         ?>
                      </div>
                      <div class="row mb-3">
@@ -156,9 +160,18 @@ $dl = __("Detail");
                         echo $input_field->inputHidden('admin_id', $admin_id);
                         ?>
                      </div>
-                     <button type="submit" name="update_profile_submit" class="btn btn-primary"><?= __("Update"); ?></button>
+                     <button type="submit" name="update_profile_submit" class="btn btn-primary"><?= __("Update Pack"); ?></button>
                   </form>
                </div>
+               <!-- 
+                  PROFILE CONTENT END
+                  =================================================================================================
+               -->
+
+               <!-- 
+                  ALL MEMBERS CONTENT START
+                  =================================================================================================
+               -->
                <div class="content my-4 all-members-content d-none">
                   <h1 class="h1 text-center"><?= __("All members"); ?>!</h1>
                   <p class="text-center"><?= __("All members pieces of information which are verified or not"); ?></p>
@@ -171,11 +184,11 @@ $dl = __("Detail");
                      <div class="table-responsive">
                         <table class="table table-bordered border-warning">
                            <thead class="bg-warning text-capitalize">
-                              <colgroup span="11"></colgroup>
-                              <colgroup span="3"></colgroup>
+                              <colgroup span="10"></colgroup>
+                              <colgroup span="2"></colgroup>
                               <tr class="bg-warning text-white border-primary" scope="colgroup">
-                                 <th colspan="11">User Details</th>
-                                 <th colspan="3">Action</th>
+                                 <th colspan="10"><?= __("User Details") ?></th>
+                                 <th colspan="2">Action</th>
                               </tr>
                               <tr class="bg-warning text-white border-primary">
                                  <th>#<?= __("ID"); ?></th>
@@ -189,9 +202,7 @@ $dl = __("Detail");
                                  <th scope="col"><?= __("Profession"); ?></th>
                                  <th scope="col"><?= __("Interest"); ?></th>
                                  <th scope="col"><?= __("Source"); ?></th>
-                                 <th scope="col"><?= __("Role"); ?></th>
 
-                                 <th scope="col"><?= __("Government ID"); ?></th>
                                  <th scope="col"><?= $et ?></th>
                                  <th scope="col"><?= __("Verification"); ?></th>
                               </tr>
@@ -224,9 +235,7 @@ $dl = __("Detail");
                                              <td>" . $amr_key["profession"] . "</td>
                                              <td>" . $amr_key["interest"] . " </td>
                                              <td>" . $amr_key["source"] . "</td>
-                                             <td>" . $amr_key["role"] . "</td>
 
-                                             <td><a href='/uploads/" . $amr_key["govt_id"] . "' class='btn btn-primary'>$vw</a></td>
                                              <td><a href='/edit_member/?member_id=" . $amr_key['id'] . "' class='btn btn-primary'>$et</a></td>
                                              <td>$verified_content</td>
                                           </tr>
@@ -239,13 +248,22 @@ $dl = __("Detail");
                      </div>
                   <?php }                  ?>
                </div>
+               <!-- 
+                  ALL MEMBERS CONTENT END
+                  =================================================================================================
+               -->
+
+               <!-- 
+                  AAPPROVED PACK CONTENT START
+                  =================================================================================================
+               -->
                <div class="content approved-pack-content d-none">
                   <?php
                   // psr = pending stockvell result 
                   // $psr_result - getting from dashboard.inc.php
-                  if (isset($single_stockvell_id)) {
-                     $rpl_result = $stockvell_pack->allMembersWhoRequestToBeLeader($single_stockvell_id); // rpl = request pack leaders
-                     $ssr_result = $stockvell_pack->getASingleApprovedStockvell($single_stockvell_id); // ssr = single stockvell result
+                  if (isset($single_stockvel_id)) {
+                     $rpl_result = $stockvell_pack->allMembersWhoRequestToBeLeader($single_stockvel_id); // rpl = request pack leaders
+                     $ssr_result = $stockvell_pack->getASingleApprovedStockvell($single_stockvel_id); // ssr = single stockvell result
                      $leader = $member_controler->findMemberByID($ssr_result['leader_id'], '/admin');
                   ?>
                      <!-- stockvell detail start  -->
@@ -255,7 +273,7 @@ $dl = __("Detail");
                         <p><?= $ssr_result['category']; ?></p>
                         <p> <?= __('Member limit:') . $ssr_result['max_member']; ?></p>
                         <?php if ($leader) {
-                           $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvell_id);
+                           $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvel_id);
                            $lr = __('Leader');
                            $sl = __('Suspend Leader');
                            echo "<div class='d-flex'> 
@@ -297,7 +315,7 @@ $dl = __("Detail");
 
                                        <?php
                                        // rpl = requestd pack leader
-                                       $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvell_id);
+                                       $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvel_id);
 
                                        foreach ($rpl_result as $rpl_key) {
 
@@ -336,7 +354,7 @@ $dl = __("Detail");
                      <!-- All stockvells (approved, pending, rejected)
                   See whoever requested to become leader -->
                      <h1 class="h1 text-center"><?= __("All approved packs"); ?>!</h1>
-                     <p class="text-center"><?= __("You can find all the stockvell pack that is made and requested for approvals. N.B. If you can not find a pack that you have created, in that case, the pack is been rejected. Try creating another one with proper pieces of information."); ?>!</p>
+                     <p class="text-center"><?= __("You can find all the stockvel packs that are made or requested for approval. If you cannot find a pack that you have created, the pack has been rejected. Try creating another one with proper information!"); ?>!</p>
                      <?php
                      $nf = __("No pack found");
                      if (count($aasr_result) <= 0) {
@@ -381,9 +399,9 @@ $dl = __("Detail");
                                           <td>" . $aasr_key["payment_frequency"] . "</td>
                                           <td>" . $leader_detail->firstname . " " . $leader_detail->surname . "</td>
                                           <td>" . $with_per->convertFromIntToText($aasr_key["withdraw_frequency"]) . "</td>
-                                          <td><a href='/pack_single/?stockvell_id=" . $aasr_key["id"] . "' class='btn btn-primary'>$vw</a></td>
-                                          <td><a href='/edit_stockvell/?stockvell_id=" . $aasr_key["id"] . "' class='btn btn-primary'>$et</a></td>
-                                          <td><a href='/admin/?stockvell_id=" . $aasr_key["id"] . "' class='btn btn-primary' >$dl</a></td>
+                                          <td><a href='/pack_single/?stockvel_id=" . $aasr_key["id"] . "' class='btn btn-primary'>$vw</a></td>
+                                          <td><a href='/edit_stockvell/?stockvel_id=" . $aasr_key["id"] . "' class='btn btn-primary'>$et</a></td>
+                                          <td><a href='/admin/?stockvel_id=" . $aasr_key["id"] . "' class='btn btn-primary' >$dl</a></td>
                                        </tr>
                                     ";
                                  }
@@ -395,11 +413,20 @@ $dl = __("Detail");
                   }
                   ?>
                </div>
+               <!-- 
+                  AAPPROVED PACK CONTENT END
+                  =================================================================================================
+               -->
+
+               <!-- 
+                  PENDING PACK CONTENT START
+                  =================================================================================================
+               -->
                <div class="content pending-pack-content d-none">
                   <?php
-                  if (isset($single_stockvell_id)) {
-                     $rpl_result = $stockvell_pack->allMembersWhoRequestToBeLeader($single_stockvell_id); // rpl = request pack leaders
-                     $ssr_result = $stockvell_pack->getASingleApprovedStockvell($single_stockvell_id); // ssr = single stockvell result
+                  if (isset($single_stockvel_id)) {
+                     $rpl_result = $stockvell_pack->allMembersWhoRequestToBeLeader($single_stockvel_id); // rpl = request pack leaders
+                     $ssr_result = $stockvell_pack->getASingleApprovedStockvell($single_stockvel_id); // ssr = single stockvell result
                      $leader = $member_controler->findMemberByID($ssr_result['leader_id'], '/admin');
                   ?>
                      <div class="row">
@@ -408,7 +435,7 @@ $dl = __("Detail");
                         <p><?= $ssr_result['category']; ?></p>
                         <p> <?= __('Member limit:') . $ssr_result['max_member']; ?></p>
                         <?php if ($leader) {
-                           $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvell_id);
+                           $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvel_id);
                            $lr = __('Leader');
                            $sl = __('Suspend Leader');
                            echo "<div class='d-flex'> 
@@ -449,7 +476,7 @@ $dl = __("Detail");
 
                                        <?php
                                        // rpl = requestd pack leader
-                                       $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvell_id);
+                                       $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvel_id);
 
                                        foreach ($rpl_result as $rpl_key) {
 
@@ -487,7 +514,7 @@ $dl = __("Detail");
                   ?>
                      <!-- // Pending pack details start  -->
                      <h1 class="h1 text-center"><?= __("All pending packs!"); ?></h1>
-                     <p class="text-center"><?= __("You can find all the stockvell pack that is made and requested for approvals. N.B. If you can not find a pack that you have created, in that case, the pack is been rejected. Try creating another one with proper informations!"); ?></p>
+                     <p class="text-center"><?= __("You can find all the stockvel packs that are made or requested for approval. If you cannot find a pack that you have created, the pack has been rejected. Try creating another one with proper information!"); ?></p>
                      <?php
                      // psr = pending stockvell result 
                      // $apsr_result - getting from dashboard.inc.php
@@ -501,8 +528,8 @@ $dl = __("Detail");
                                  <colgroup span="8"></colgroup>
                                  <colgroup span="4"></colgroup>
                                  <tr class="bg-warning text-white border-primary">
-                                    <th colspan="8">Properties</th>
-                                    <th colspan="4">Action</th>
+                                    <th colspan="8"><?= __("User Details") ?></th>
+                                    <th colspan="4"><?= __("Action"); ?></th>
                                  </tr>
                                  <tr class="bg-warning text-white border-primary">
                                     <th scope="col">#<?= __("ID"); ?></th>
@@ -536,14 +563,14 @@ $dl = __("Detail");
                                           <td>" . $apsr_key["payment_frequency"] . "</td>
                                           <td>" . $with_per->convertFromIntToText($apsr_key["withdraw_frequency"]) . "</td>
                                           <td>
-                                             <form class='p-0 m-0' action='/includes/admin.inc.php?stockvell_id=" . $apsr_key["id"] . "&leader_id=" . $apsr_key["leader_id"] . "' method='post'>
+                                             <form class='p-0 m-0' action='/includes/admin.inc.php?stockvel_id=" . $apsr_key["id"] . "&leader_id=" . $apsr_key["leader_id"] . "' method='post'>
                                              <button type='submit' name='approve_stockvell_pack' class='btn btn-primary'>$av</button>  
                                              </form>
                                           </td>
-                                          <td><a href='/edit_stockvell/?stockvell_id=" . $apsr_key["id"] . "' class='btn btn-warning text-white'>Edit</a></td>
-                                          <td><a href='/admin/?stockvell_id=" . $apsr_key["id"] . "' class='btn btn-primary' >$dl</a></td>
+                                          <td><a href='/edit_stockvell/?stockvel_id=" . $apsr_key["id"] . "' class='btn btn-warning text-white'>Edit</a></td>
+                                          <td><a href='/admin/?stockvel_id=" . $apsr_key["id"] . "' class='btn btn-primary' >$dl</a></td>
                                           <td>
-                                             <form class='p-0 m-0' action='/includes/admin.inc.php?stockvell_id=" . $apsr_key["id"] . "' method='post'>
+                                             <form class='p-0 m-0' action='/includes/admin.inc.php?stockvel_id=" . $apsr_key["id"] . "' method='post'>
                                              <button type='submit' name='reject_stockvell_pack' class='btn btn-danger'>$rj</button>  
                                              </form>
                                           </td>
@@ -559,11 +586,20 @@ $dl = __("Detail");
                   }
                   ?>
                </div>
+               <!-- 
+                  PENDING PACK CONTENT END
+                  =================================================================================================
+               -->
+
+               <!-- 
+                  CLOSE PACK CONTENT START
+                  =================================================================================================
+               -->
                <div class="content close-pack-content d-none">
                   <?php
-                  if (isset($single_stockvell_id)) {
-                     $rpl_result = $stockvell_pack->allMembersWhoRequestToBeLeader($single_stockvell_id); // rpl = request pack leaders
-                     $ssr_result = $stockvell_pack->getASingleApprovedStockvell($single_stockvell_id); // ssr = single stockvell result
+                  if (isset($single_stockvel_id)) {
+                     $rpl_result = $stockvell_pack->allMembersWhoRequestToBeLeader($single_stockvel_id); // rpl = request pack leaders
+                     $ssr_result = $stockvell_pack->getASingleApprovedStockvell($single_stockvel_id); // ssr = single stockvell result
                      $leader = $member_controler->findMemberByID($ssr_result['leader_id'], '/admin');
                   ?>
                      <div class="row">
@@ -572,7 +608,7 @@ $dl = __("Detail");
                         <p><?= $ssr_result['category']; ?></p>
                         <p> <?= __('Member limit:') . $ssr_result['max_member']; ?></p>
                         <?php if ($leader) {
-                           $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvell_id);
+                           $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvel_id);
                            $lr = __('Leader');
                            $sl = __('Suspend Leader');
                            echo "<div class='d-flex'> 
@@ -613,7 +649,7 @@ $dl = __("Detail");
 
                                        <?php
                                        // rpl = requestd pack leader
-                                       $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvell_id);
+                                       $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvel_id);
 
                                        foreach ($rpl_result as $rpl_key) {
 
@@ -651,7 +687,7 @@ $dl = __("Detail");
                   ?>
                      <!-- // Pending pack details start  -->
                      <h1 class="h1 text-center"><?= __("All close requested packs!"); ?></h1>
-                     <p class="text-center"><?= __("All packs that is completed and the leader requested to close the pack"); ?></p>
+                     <p class="text-center"><?= __("All packs are completed and the leader requested to close the pack."); ?></p>
                      <?php
                      // psr = pending stockvell result 
                      // $acrsr_result - getting from dashboard.inc.php
@@ -666,8 +702,8 @@ $dl = __("Detail");
                                  <colgroup span="8"></colgroup>
                                  <colgroup span="4"></colgroup>
                                  <tr class="bg-warning text-white border-primary">
-                                    <th colspan="8">Properties</th>
-                                    <th colspan="4">Action</th>
+                                    <th colspan="8"><?= __("User Details"); ?></th>
+                                    <th colspan="4"><?= __("Action"); ?></th>
                                  </tr>
                                  <tr class="bg-warning text-white border-primary">
                                     <th scope="col">#<?= __("ID"); ?></th>
@@ -700,12 +736,12 @@ $dl = __("Detail");
                                           <td>" . $acrsr_key["payment_frequency"] . "</td>
                                           <td>" . $with_per->convertFromIntToText($acrsr_key["withdraw_frequency"]) . "</td>
                                           <td>
-                                             <form class='p-0 m-0' action='/includes/admin.inc.php?stockvell_id=" . $acrsr_key["id"] . "&leader_id=" . $acrsr_key["leader_id"] . "' method='post'>
+                                             <form class='p-0 m-0' action='/includes/admin.inc.php?stockvel_id=" . $acrsr_key["id"] . "&leader_id=" . $acrsr_key["leader_id"] . "' method='post'>
                                              <button type='submit' name='close_stockvell_pack' class='btn btn-danger'>$cl</button>  
                                              </form>
                                           </td>
-                                          <td><a href='/edit_stockvell/?stockvell_id=" . $acrsr_key["id"] . "' class='btn btn-warning text-white'>Edit</a></td>
-                                          <td><a href='/admin/?stockvell_id=" . $acrsr_key["id"] . "' class='btn btn-primary' >$dl</a></td>
+                                          <td><a href='/edit_stockvell/?stockvel_id=" . $acrsr_key["id"] . "' class='btn btn-warning text-white'>Edit</a></td>
+                                          <td><a href='/admin/?stockvel_id=" . $acrsr_key["id"] . "' class='btn btn-primary' >$dl</a></td>
                                        </tr>
                                     ";
                                  }
@@ -718,8 +754,18 @@ $dl = __("Detail");
                   }
                   ?>
                </div>
+               <!-- 
+                  CLOSE PACK CONTENT END
+                  =================================================================================================
+               -->
+
+
+               <!-- 
+                  ADD PACK CONTENT START
+                  =================================================================================================
+               -->
                <div class="content add-pack-content d-none my-4">
-                  <h1 class="h1 text-center"><?= __("Add stockvell pack"); ?>!</h1>
+                  <h1 class="h1 text-center"><?= __("Add pack!"); ?>!</h1>
                   <p class="text-center"><?= __("This pack will be added as a pending pack that will don't be available to everyone until the admin approves it."); ?>!</p>
 
                   <!-- Form start  -->
@@ -729,13 +775,12 @@ $dl = __("Detail");
                         $nm = __("Name*");
                         $gl = __("Goal*");
                         $pyt = __("Payment*");
-                        $pytf = __("Payment Frequency(days)*");
-                        $wdf = __("Withdraw Frequency(days)*");
+                        $pytf = __("Payment Frequency");
+                        $wdf = __("Withdraw Frequency");
                         $ct = __("Category*");
                         $dsc = __("Description*");
-                        $agmt = __("You Must Write Agreement About This Stockvell Pack*");
-                        echo $input_field->inputText("name", $nm, false, "text", true);
-                        echo $input_field->inputText("goal", $gl, false, "text", true);
+                        $agmt = __("You Must Write Agreement About This Stockvel Pack*");
+                        echo $input_field->inputText("name", $nm, true, "text", true);
                         ?>
 
                      </div>
@@ -747,7 +792,8 @@ $dl = __("Detail");
                      </div>
                      <div class="row mb-3">
                         <?php
-                        echo $input_field->inputSelect("payment_frequency", $pytf, false, null, $freq_days);
+                        // echo $input_field->inputSelect("payment_frequency", $wdf, false, 'Weekly', $freq_days);
+                        echo $input_field->inputSelect("payment_frequency", $pytf, false, 'Weekly', $with_freq);
                         echo $input_field->inputSelect("withdraw_frequency", $wdf, false, 'Weekly', $with_freq);
                         ?>
                      </div>
@@ -759,20 +805,32 @@ $dl = __("Detail");
                      </div>
                      <div class="row mb-3">
                         <?php
-                        echo $input_field->inputTextarea("description", $dsc, true, true);
+                        echo $input_field->inputDate('start_at', $sa, false, true);
+                        echo $input_field->inputDate('end_at', $ea, false, true);
                         ?>
                      </div>
                      <div class="row mb-3">
                         <?php
-                        echo $input_field->inputTextarea("agreement", $agmt, true, true)
+                        $desc_tooltip = "Describe your pack, what is the goal of your pack, and more.";
+                        echo $input_field->inputTextarea("description", $dsc, true, true, null, 2, null, null, $desc_tooltip);
+                        ?>
+                     </div>
+                     <div class="row mb-3">
+                        <?php
+                        $default_agreement = __("<h2>Thegoalofthepack&nbsp;</h2><p><strong>Rulesandregulations</strong>&nbsp;</p><ul><li>rule1&nbsp;</li><li>rule2&nbsp;</li><li>rule3&nbsp;</li><li>rule4&nbsp;</li><li>rule5</li></ul>");
+                        echo $input_field->inputTextarea("agreement", $agmt, true, true, $default_agreement);
                         ?>
                      </div>
 
 
-                     <button type="submit" name="create_stockvell_pack" class="btn btn-primary"><?= __("Create Stockvell") ?></button>
+                     <button type="submit" name="create_stockvell_pack" class="btn btn-primary"><?= __("Create Stockvel") ?></button>
                   </form>
                   <!-- Form end  -->
                </div>
+               <!-- 
+                  ADD PACK CONTENT END
+                  =================================================================================================
+               -->
             </div>
          </div>
       </section>

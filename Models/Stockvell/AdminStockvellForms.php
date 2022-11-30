@@ -3,7 +3,9 @@
 namespace Models\Stockvell;
 
 use Config\Database;
+use Exception;
 use Models\Stockvell\Stockvell;
+use Models\Stockvell\StockvellForms;
 
 class AdminStockvellForms extends Stockvell
 {
@@ -29,7 +31,7 @@ class AdminStockvellForms extends Stockvell
                 $withdraw_date = date("Y-m-d");
                 $offsetted_widthdraw_date =  date('Y-m-d', strtotime($withdraw_date . ' + ' . $withdraw_frequency . ' days'));
                 $input_list["withdraw_member_id"] = $first_widthdraw_member_id;
-                $input_list['withdraw_at'] = $offsetted_widthdraw_date ;
+                $input_list['withdraw_at'] = $offsetted_widthdraw_date;
             }
             $cols = array();
             // Remove blank inputs and password2
@@ -39,7 +41,7 @@ class AdminStockvellForms extends Stockvell
             $updateElement = implode(', ', $cols);
 
 
-            /// Update element 
+            /// Update stockvells 
             $sql = "UPDATE stockvells SET $updateElement WHERE id=:stockvell_id";
             $stmt = $this->connect()->prepare($sql);
             $stmt->bindParam('stockvell_id', $stockvell_id);
@@ -50,9 +52,17 @@ class AdminStockvellForms extends Stockvell
             }
 
 
-            // make many to many relationship 
-            // $this->addMemberToStockvell($stockvell_id, $leader_id);
-
+            // make admin of the pack
+            if ($first_member_of_pack) {
+                $stockvell_form = new StockvellForms();
+                if ($stockvell_form->updateMemberToLeader($stockvell_id, $first_member_of_pack->member_id)) {
+                    header('Location: /admin/?error=none');
+                    exit();
+                } else {
+                    header('Location: /admin/?error=stmtfailed');
+                    exit();
+                }
+            }
             header('Location: /admin/?error=none');
             exit();
         } catch (\PDOException $e) {
@@ -97,15 +107,19 @@ class AdminStockvellForms extends Stockvell
 
     public function addMemberToStockvell($stockvell_id, $member_id)
     {
-        $sql = "INSERT INTO stockvell_to_member(stockvell_id, member_id) VALUES (:stockvell_id, :member_id)";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam('stockvell_id', $stockvell_id);
-        $stmt->bindParam('member_id', $member_id);
-        if (!$stmt->execute()) {
-            header('Location: /admin.php?error=stmtfailed');
+        try {
+            $sql = "INSERT INTO stockvell_to_member(stockvell_id, member_id) VALUES (:stockvell_id, :member_id)";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam('stockvell_id', $stockvell_id);
+            $stmt->bindParam('member_id', $member_id);
+            if (!$stmt->execute()) {
+                header('Location: /admin.php?error=stmtfailed');
+                exit();
+            }
+            header('Location: /admin.php?error=none');
             exit();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
         }
-        header('Location: /admin.php?error=none');
-        exit();
     }
 }

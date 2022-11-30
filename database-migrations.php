@@ -67,7 +67,6 @@ class DatabaseMigrations extends Database
             gender VARCHAR(60) NOT NULL,
             profession VARCHAR(100) NOT NULL,
             interest TEXT,
-            govt_id VARCHAR(100) NOT NULL,
             is_verified BOOLEAN NOT NULL DEFAULT false,
             source TEXT,
             role VARCHAR(255) NOT NULL DEFAULT 'GENERAL',
@@ -85,7 +84,6 @@ class DatabaseMigrations extends Database
         name VARCHAR(100) NOT NULL,
         description TEXT NOT NULL,
         agreement TEXT NOT NULL,
-        goal VARCHAR(100) NOT NULL,
         category VARCHAR(100) NOT NULL,
         status VARCHAR(100) NOT NULL DEFAULT 'PENDING',
         payment INT NOT NULL,
@@ -97,6 +95,8 @@ class DatabaseMigrations extends Database
         leader_id INT,
         link VARCHAR(100),
         max_member INT NOT NULL,
+        start_at DATE ,
+        end_at DATE ,
         PRIMARY KEY(id),
         FOREIGN KEY(leader_id) REFERENCES members(id) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY(withdraw_member_id) REFERENCES members(id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -109,6 +109,7 @@ class DatabaseMigrations extends Database
         id BIGINT NOT NULL AUTO_INCREMENT, 
         stockvell_id INT  NOT NULL,
         member_id INT  NOT NULL,
+        status VARCHAR(50) NOT NULL DEFAULT 'PENDING',
         PRIMARY KEY(id),
         FOREIGN KEY(stockvell_id) REFERENCES stockvells(id) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY(member_id) REFERENCES members(id)  ON DELETE CASCADE ON UPDATE CASCADE
@@ -143,7 +144,7 @@ class DatabaseMigrations extends Database
         PRIMARY KEY(id)
         );";
       $this->createTable($sql_query, "admins");
-      $this->addToTheAdminsTable("admins", "stockvell_admin", "stockvelladmin@gmail.com", "+880_1785208590", "Test1234");
+      $this->addToTheAdminsTable("admins", "stockvell_admin", "dev@stockvell.allinone-office.com", "+880_1785208590", "Test1234");
     }
 
 
@@ -174,10 +175,25 @@ class DatabaseMigrations extends Database
 
     $modify_stockvell_withdraw_sql = "ALTER TABLE stockvells ADD COLUMN withdraw_member_id INTEGER FOREIGN KEY(withdraw_member_id) REFERENCES members(id)  ON DELETE CASCADE ON UPDATE CASCADE";
     $this->specificTableModifications($modify_stockvell_withdraw_sql, "Added withdraw_member_id to members");
-    */
 
-    // $modify_members_sql = "ALTER TABLE stockvells ADD COLUMN withdraw_at DATE";
-    // $this->specificTableModifications($modify_members_sql, "Added withdraw_at to stockvells");
+    $modify_members_sql = "ALTER TABLE stockvells ADD COLUMN withdraw_at DATE";
+    $this->specificTableModifications($modify_members_sql, "Added withdraw_at to stockvells");
+    
+    $modify_members_sql = "ALTER TABLE members DROP COLUMN govt_id;";
+    $this->specificTableModifications($modify_members_sql, "remove govt_id from members");
+    
+    $modify_members_sql = "ALTER TABLE stockvells DROP COLUMN goal;";
+    $this->specificTableModifications($modify_members_sql, "remove goal from stockvells");
+    
+    $modify_stockvell_sql = "ALTER TABLE stockvell_to_member ADD COLUMN status VARCHAR(50) NOT NULL DEFAULT 'PENDING'";
+    $this->specificTableModifications($modify_stockvell_sql, "add column to stockvell_to_member");    
+    
+    $modify_stockvell_sql = "ALTER TABLE stockvells ADD COLUMN start_at DATE";
+    $this->specificTableModifications($modify_stockvell_sql, "add start at column to stockvells");
+
+    $modify_stockvell_sql = "ALTER TABLE stockvells ADD COLUMN end_at DATE";
+    $this->specificTableModifications($modify_stockvell_sql, "add end at column to stockvells");
+    */
   }
 
 

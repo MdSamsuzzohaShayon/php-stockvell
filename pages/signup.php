@@ -43,13 +43,13 @@ $input_field = new InputField();
   <section class="section-1">
     <div class="container">
       <div class="signup-caption text-center">
-        <h1 class="h1"><?= __("Welcome to stockvell"); ?></h1>
+        <h1 class="h1"><?= __("Welcome to stockvel"); ?></h1>
         <p><?= __("Please enter the followings"); ?></p>
       </div>
 
       <?php if ($has_error) echo $err_handler->displayErrors(); ?>
       <!-- Signup Form start  -->
-      <form action="/includes/signup.inc.php" method="POST" enctype="multipart/form-data">
+      <form action="/includes/signup.inc.php" method="POST" id="signup-form" >
         <div class="row mb-3">
           <?php
           $fn = __('Firstname*');
@@ -64,7 +64,10 @@ $input_field = new InputField();
           $pro = __('Profession*');
           $ist = __("Interest (Optional comma-separated list)");
           $gid = __("Government ID*");
-          $src = __('How did you hear about the Stockvell platform? (Optional)');
+          $src = __('How did you hear about the Stockvel platform? (Optional)');
+          $app = __("Agree on Privacy Policy");
+          $h = __("Here");
+          
 
           //echo inputElement("firstname", $fn, false, 'text', null, null, null, [], true);
           echo $input_field->inputText("firstname", $fn, false, "text", true);
@@ -85,8 +88,8 @@ $input_field = new InputField();
         </div>
         <div class="row mb-3">
           <?php
-          echo $input_field->inputSelect("country", $cy, false, "Benin", $pure_code_of_country);
-          echo $input_field->inputPhone("phone", $pn, false, true, $pure_country_code, "+229");
+          echo $input_field->inputSelect("country", $cy, false, "Benin", $country_list);
+          echo $input_field->inputPhone("phone", $pn, false, true, $country_code_list, "+229");
           ?>
         </div>
         <div class="row mb-3">
@@ -97,8 +100,7 @@ $input_field = new InputField();
         </div>
         <div class="row mb-3">
           <?php
-          echo $input_field->inputSelect("profession", $pro, false, null, $professions);
-          echo $input_field->inputFile("govt_id", $gid, false);
+          echo $input_field->inputSelect("profession", $pro, true, null, $professions);
           ?>
         </div>
         <div class="row mb-3">
@@ -115,7 +117,7 @@ $input_field = new InputField();
         </div>
         <div class="row mb-3 d-flex">
           <?php
-            echo $input_field->inputCheckbox('pp', "Agree Privacy Policy", false) . '<a href="/privacypolicy" class="w-fit">here</a>';
+            echo $input_field->inputCheckbox('pp', $app, false) . '<a href="/privacypolicy" class="w-fit">' . $h . '</a>';
           ?>
         </div>
         <div class="row row-no-input mb-3 d-flex justify-content-start">

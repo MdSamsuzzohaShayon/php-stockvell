@@ -23,7 +23,7 @@ class Stockvell extends Database
 
     public function getCurrentMember()
     {
-        $sql = "SELECT id, firstname, surname, email, country, phone, gender, profession, interest, govt_id, source, city, role FROM members WHERE email=:email";
+        $sql = "SELECT id, firstname, surname, email, country, phone, gender, profession, interest, source, city, role FROM members WHERE email=:email";
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam('email', $this->member_email);
         $stmt->execute();
@@ -34,11 +34,18 @@ class Stockvell extends Database
 
     public function getAllMembers()
     {
-        $sql = "SELECT id, firstname, surname, email, country, phone, gender, profession, interest, govt_id, source, is_verified, role FROM members";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->execute();
-        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        return $result;
+        try {
+            //code...
+            $sql = "SELECT id, firstname, surname, email, country, phone, gender, profession, interest, source, is_verified, role FROM members";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            return $result;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            exit();
+        }
+        return [];
     }
 
 
@@ -62,7 +69,7 @@ class Stockvell extends Database
     protected function getFirstMemberOfAStockvellPack($stockvell_id)
     {
         try {
-            $sql = "SELECT sm.id, sm.member_id, sm.stockvell_id, m.firstname, m.email, m.country, m.city, m.phone, m.gender,  m.profession, m.interest, m.govt_id, m.is_verified, m.source, m.role  
+            $sql = "SELECT sm.id, sm.member_id, sm.stockvell_id, m.firstname, m.email, m.country, m.city, m.phone, m.gender,  m.profession, m.interest, m.is_verified, m.source, m.role  
             FROM stockvell_to_member sm LEFT JOIN members m ON sm.member_id = m.id WHERE sm.stockvell_id=:stockvell_id LIMIT 1";
             $stmt = $this->connect()->prepare($sql);
             $stmt->execute(array("stockvell_id" => $stockvell_id));
@@ -80,10 +87,11 @@ class Stockvell extends Database
     {
         // echo $stockvell_id;
         try {
-            $sql = "SELECT sm.id, sm.member_id, sm.stockvell_id, m.firstname, m.email, m.country, m.city, m.phone, m.gender,  m.profession, m.interest, m.govt_id, m.is_verified, m.source, m.role  
-            FROM stockvell_to_member sm LEFT JOIN members m ON sm.member_id = m.id WHERE sm.stockvell_id=:stockvell_id AND sm.member_id > :previous_member_id LIMIT 1";
+            $sql = "SELECT sm.id, sm.member_id, sm.stockvell_id, m.firstname, m.email, m.country, m.city, m.phone, m.gender,  m.profession, m.interest, m.is_verified, m.source, m.role  
+            FROM stockvell_to_member sm LEFT JOIN members m ON sm.member_id = m.id WHERE sm.stockvell_id=:stockvell_id AND sm.status=:status AND sm.member_id > :previous_member_id LIMIT 1";
             $stmt = $this->connect()->prepare($sql);
-            $stmt->execute(array("stockvell_id" => $stockvell_id, "previous_member_id"=> $previous_member_id));
+            $new_status = "APPROVED";
+            $stmt->execute(array("stockvell_id" => $stockvell_id, "previous_member_id" => $previous_member_id, "status"=> $new_status));
             $next_result = $stmt->fetch(\PDO::FETCH_OBJ); // ss = single stockvell
             // echo $next_result->member_id;
             // exit();
@@ -101,19 +109,28 @@ class Stockvell extends Database
 
     public function isMemberBelongToStockvell($stockvell_id, $member_id)
     {
-        // echo $stockvell_id . $member_id;
-        // exit();
-        $mpSql = "SELECT * FROM stockvell_to_member WHERE stockvell_id=:stockvell_id AND member_id=:member_id";
-        $mpStmt = $this->connect()->prepare($mpSql);
-        // $tmid = 4;
-        $mpStmt->bindParam("member_id", $member_id);
-        $mpStmt->bindParam("stockvell_id", $stockvell_id);
-        $mpStmt->execute();
-        $mp_result = $mpStmt->fetch(\PDO::FETCH_OBJ);
-        if (empty($mp_result->id)) {
-            return false;
+        try {
+            //code...
+            // echo $stockvell_id . $member_id;
+            // exit();
+            $new_status = "APPROVED";
+            $mpSql = "SELECT * FROM stockvell_to_member WHERE stockvell_id=:stockvell_id AND member_id=:member_id AND status=:status";
+            $mpStmt = $this->connect()->prepare($mpSql);
+            // $tmid = 4;
+            $mpStmt->bindParam("member_id", $member_id);
+            $mpStmt->bindParam("stockvell_id", $stockvell_id);
+            $mpStmt->bindParam("status", $new_status);
+            $mpStmt->execute();
+            $mp_result = $mpStmt->fetch(\PDO::FETCH_OBJ);
+            if (empty($mp_result->id)) {
+                return false;
+            }
+            return true;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            exit();
         }
-        return true;
+        return false;
     }
 
 

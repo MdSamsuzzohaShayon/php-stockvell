@@ -36,7 +36,7 @@ class ErrorHandler
                     break;
                 }
             case 'usernotfound': {
-                    $this->errors =  __("This email address is not in our database. Use a registered email address!");
+                    $this->errors =  __("The information provided does not match our records!");
                     break;
                 }
             case 'stockvellnotfound': {

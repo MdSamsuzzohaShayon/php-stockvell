@@ -27,7 +27,6 @@ if (isset($_POST["member_signup_submit"])) {
   $profession = $_POST["profession"];
   $interest = $_POST["interest"];
   $source = $_POST["source"];
-  $govt_id = $_FILES["govt_id"];
 
   // $input_list = array(
   //   'firstname' => $firstname,
@@ -54,7 +53,7 @@ if (isset($_POST["member_signup_submit"])) {
   // exit();
   $signup = new Signup();
 
-  $signup->setMember($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city);
+  $signup->setMember($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $source, $city);
   $signup->signupMember();
 
   header("location: /login.php");

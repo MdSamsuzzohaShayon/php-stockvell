@@ -34,7 +34,7 @@ class SendEmail
         try {
 
             //Recipients
-            $this->mail->setFrom($_ENV["EMAIL_ADMIN"], 'Stockvell');
+            $this->mail->setFrom($_ENV["EMAIL_ADMIN"], 'Stockvel');
             $this->mail->addAddress($sendTo, 'Md Shayon');     //Add a recipient
             // $this->mail->addAddress('ellen@example.com');               //Name is optional
             // $this->mail->addReplyTo('admin@thesportsanctum.com', 'Information');

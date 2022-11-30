@@ -3,6 +3,20 @@ const mobileExpandMenu = document.getElementById("mobile-expand-menu");
 
 const languageItems = document.querySelectorAll(".dropdown-item");
 
+/**
+ * Bootstrap coding
+ */
+const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+if (tooltipTriggerList) {
+  const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+}
+
+/**
+ * Change language and stay on the same page
+ * ==========================================================
+ */
 languageItems.forEach((lie) => {
   lie.addEventListener("click", (liie) => {
     liie.preventDefault();
@@ -61,14 +75,14 @@ function countryCodePrefixForPhone(hasCountry) {
 
   let country_code = "+229"; // default
 
-  if(phonePrefixSelect){
+  if (phonePrefixSelect) {
     if (phonePrefixSelect.value !== null || phonePrefixSelect.value !== "") country_code = phonePrefixSelect.value;
   }
 
   if (hasCountry) {
     const countryInput = document.getElementById("country");
     // Changing code
-    if(countryInput){
+    if (countryInput) {
       countryInput.addEventListener("change", (cie) => {
         // cie.preventDefault();
         // country_code = cie.currentTarget.value.toString().match(pattern)[0];
@@ -78,13 +92,13 @@ function countryCodePrefixForPhone(hasCountry) {
           const pattern = new RegExp(/\+\d+/g);
           phonePrefixSelect.value = pattern.exec(targetedStr)[0];
           // console.log(pattern);
-        } 
+        }
         // else {
         //   const pattern = /\W\d+/;
         //   country_code = targetedStr.match(pattern)[0];
         //   phonePrefixSelect.value = country_code;
         // }
-  
+
         let formatted_code = `${country_code}_${phoneRawInput.value}`;
         if (phoneRawInput.value === "") {
           formatted_code = country_code;
@@ -94,7 +108,7 @@ function countryCodePrefixForPhone(hasCountry) {
     }
   }
 
-  if(phoneRawInput){
+  if (phoneRawInput) {
     phoneRawInput.addEventListener("change", (ccie) => {
       // ccie.preventDefault();
       phoneMainHidden.value = `${country_code}_${ccie.currentTarget.value}`;
@@ -102,7 +116,7 @@ function countryCodePrefixForPhone(hasCountry) {
     });
   }
 
-  if(phonePrefixSelect){
+  if (phonePrefixSelect) {
     phonePrefixSelect.addEventListener("change", (ppse) => {
       // ppse.preventDefault();
       const targetedStr = ppse.currentTarget.value.toString();
@@ -117,7 +131,6 @@ function countryCodePrefixForPhone(hasCountry) {
       }
     });
 
-
     const targetedStr = phonePrefixSelect.value.toString();
     if (targetedStr.includes("(")) {
       const pattern = new RegExp(/\+\d+/g);
@@ -126,7 +139,6 @@ function countryCodePrefixForPhone(hasCountry) {
       // console.log(pattern);
     }
   }
-
 }
 
 /**
@@ -219,7 +231,7 @@ function sidebarElementToggle(allMenuItems, allContent) {
 }
 
 /**
- * @extra function 2
+ * @extra function 3
  * @click event for validating uploaded file
  */
 function validateUploadedFile(event, fileFormants) {
@@ -237,10 +249,36 @@ function validateUploadedFile(event, fileFormants) {
   }
 }
 
+function errorMessageElement(errMsg) {
+  const errString = `
+                    <div class='alert alert-danger'>
+                      <div class='err-msg d-flex align-items-center'>
+                          <img src='/public/icons/error.svg' width='25' alt='error-message' class='error-message mx-3'>
+                          <p class='m-0'>${errMsg}</p>
+                      </div>
+                    </div>
+                    `;
+  const domParser = new DOMParser();
+  const errMsgElement = domParser.parseFromString(errString, "text/html");
+  return errMsgElement.activeElement.childNodes[0];
+}
+
+/**
+ * @extra function 4
+ * ==========================================================
+ */
+function textInputValidate(textVal, minLen = 1) {
+  if (textVal === null || textVal === "" || textVal?.length < minLen) {
+    return false;
+  }
+  return true;
+}
+
 document.addEventListener("DOMContentLoaded", (dcle) => {
   /**
    * @page 1
    * @page login
+   * ==========================================================
    */
   if (
     window.location.pathname === "/login.php" ||
@@ -273,19 +311,59 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
       }
     });
 
-    countryCodePrefixForPhone(true);
+    countryCodePrefixForPhone(false);
   }
 
   /**
    * @page 2
    * @page signup
    * Select mobile number
+   * ==========================================================
    */
   if (
     window.location.pathname === "/signup.php" ||
     window.location.pathname === "/signup/" ||
     window.location.pathname === "/signup"
   ) {
+    // const memberSignupSubmit = document.querySelector('input[ name="member_signup_submit"]');
+    // memberSignupSubmit.addEventListener("click", (mse) => {
+    //   mse.preventDefault();
+    // });
+
+    const signupForm = document.getElementById("signup-form");
+    signupForm.addEventListener("submit", (event) => {
+      try {
+        let valudationSucceed = true;
+        /*
+        const allTextInput = signupForm.querySelectorAll('input[type="text"]');
+        allTextInput.forEach((ati) => {
+          // console.log({ name: ati?.name, value: ati.value });
+          valudationSucceed = textInputValidate(ati.value);
+        });
+        if (!valudationSucceed) return event.preventDefault();
+        */
+        const privacyPolicyInput = signupForm.querySelector("input[name='pp']");
+        // console.log(privacyPolicyInput.checked);
+        valudationSucceed = privacyPolicyInput.checked;
+        // console.log({ valudationSucceed });
+        if (valudationSucceed === false) {
+          // Show error message
+          const msgElement = errorMessageElement("You must agree with our privacy policy.");
+          signupForm.parentElement.insertBefore(msgElement, signupForm);
+          signupForm.parentElement.scrollIntoView();
+          return event.preventDefault();
+        }
+        // const allInputs = signupForm.querySelectorAll('input');
+        // allInputs.forEach((ipt)=>{
+        //   console.log(ipt.value);
+        // });
+        // return event.preventDefault();
+      } catch (subErr) {
+        console.log(subErr);
+        event.preventDefault();
+      }
+    });
+
     countryCodePrefixForPhone(true);
 
     // Validate file types
@@ -321,10 +399,10 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
       // /(\.jpg|\.jpeg|\.png|\.gif)$/i
       govtIdInput.addEventListener("change", (giie) => validateUploadedFile(giie, ["png", "jpg", "jpeg", "pdf"]));
     }
-    if(govtIdInputProof){
+    if (govtIdInputProof) {
       govtIdInputProof.addEventListener("change", (gipe) => validateUploadedFile(gipe, ["png", "jpg", "jpeg", "pdf"]));
     }
-    if(addressInputProof){
+    if (addressInputProof) {
       addressInputProof.addEventListener("change", (aipe) => validateUploadedFile(aipe, ["png", "jpg", "jpeg", "pdf"]));
     }
 
@@ -340,12 +418,12 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     //   gle.preventDefault();
     //   // console.log(gle.target.parentElement);
     const params = new URLSearchParams(window.location.search);
-    const stockvellId = params.get("stockvell_id");
+    const stockvelId = params.get("stockvel_id");
 
     //   // 1 = view, 2 = edit
     //   const view = 1;
     //   const code = Math.floor(1000 + Math.random() * 9000); // random 4 digit code
-    //   const newLink = `${window.location.origin}/pack_single/?stockvell_id=${stockvellId}&sharing=${code}${view}${stockvellId}`;
+    //   const newLink = `${window.location.origin}/pack_single/?stockvell_id=${stockvelId}&sharing=${code}${view}${stockvelId}`;
 
     //   generateLinkDisplay.textContent = newLink;
 
@@ -354,14 +432,15 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     //     generateLinkDisplay.classList.add('d-block');
     //   }
     // });
+    // console.log({text: generateLinkDisplay.textContent.toString().trim()});
     if (generateLinkDisplay) {
-      if (generateLinkDisplay.textContent && generateLinkDisplay.textContent.toString().trim() !== "") {
+      if (generateLinkDisplay.textContent && generateLinkDisplay.textContent.toString().trim() !== "" && generateLinkDisplay.textContent.toString().trim() !== "null") {
         const newLink = `${
           window.location.origin
-        }/pack_single/?stockvell_id=${stockvellId}&sharing=${generateLinkDisplay.textContent.toString().trim()}`;
+        }/pack_single/?stockvel_id=${stockvelId}&sharing=${generateLinkDisplay.textContent.toString().trim()}`;
         generateLinkDisplay.textContent = newLink;
       } else {
-        const newLink = `${window.location.origin}/pack_single/?stockvell_id=${stockvellId}`;
+        const newLink = `${window.location.origin}/pack_single/?stockvel_id=${stockvelId}`;
         generateLinkDisplay.textContent = newLink;
       }
     }
@@ -442,7 +521,7 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
       }
     }
 
-    countryCodePrefixForPhone(true);
+    countryCodePrefixForPhone(false);
   }
 
   /**
@@ -528,28 +607,27 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
       // /(\.jpg|\.jpeg|\.png|\.gif)$/i
       govtIdInput.addEventListener("change", (giie) => validateUploadedFile(giie, ["png", "jpg", "jpeg", "pdf"]));
     }
-    if(addressIdInput){
+    if (addressIdInput) {
       addressIdInput.addEventListener("change", (aiie) => validateUploadedFile(aiie, ["png", "jpg", "jpeg", "pdf"]));
     }
   }
 
   // custom-header stickey-top
-    /**
+  /**
    * @page 9
    * @page home
    * Make the header stickey
    */
-     if (
-      window.location.pathname === "/home.php" ||
-      window.location.pathname === "/home/" ||
-      window.location.pathname === "/home" ||
-      window.location.pathname === "/" ||
-      window.location.pathname === "/index.php"
-    ) {
-      // Stickey header 
-      const customHeader = document.querySelector('.custom-header');
-      // console.log({customHeader, loc: window.location.pathname});
-      customHeader.classList.add('sticky-top');
-    }
-  
+  if (
+    window.location.pathname === "/home.php" ||
+    window.location.pathname === "/home/" ||
+    window.location.pathname === "/home" ||
+    window.location.pathname === "/" ||
+    window.location.pathname === "/index.php"
+  ) {
+    // Stickey header
+    const customHeader = document.querySelector(".custom-header");
+    // console.log({customHeader, loc: window.location.pathname});
+    customHeader.classList.add("sticky-top");
+  }
 });

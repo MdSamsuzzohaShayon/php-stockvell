@@ -2,10 +2,14 @@
 session_start(); // In every single page we should start our session at the top of our code
 // $member_email = $_SESSION['member_email'];
 // $member_id = $_SESSION['member_id'];
-if (!isset($_SESSION['member_id']) && !isset($_SESSION['admin_id'])) {
-    header("Location: /login.php");
-    exit();
-}
+
+/**
+ * This page is public now, anyone can access
+*/
+// if (!isset($_SESSION['member_id']) && !isset($_SESSION['admin_id'])) {
+//     header("Location: /login.php");
+//     exit();
+// }
 
 // !isset($_SESSION['admin_id'])
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
@@ -20,15 +24,16 @@ require_once($ROOT . "/includes/packs.inc.php");
     <section class="section-1">
         <div class="container">
             <div class="pack-caption text-center">
-                <h1 class="h1"><?= __("All Stockvell Pack"); ?></h1>
-                <p><?= __("All the packs created by any members and approved by the admin will show here"); ?> </p>
+                <h1 class="h1"><?= __("Stockvel Packs"); ?></h1>
+                <p><?= __("All the packs created by any members and approved by the admin will show here."); ?> </p>
             </div>
 
             <div class="pack-list">
                 <div class="d-flex flex-wrap justify-content-between">
                     <?php
+                    $npf = __("No pack found");
                     if (count($asr_result) <= 0) {
-                        echo "<div class='alert alert-warning'>No pack found</div>";
+                        echo "<div class='alert alert-warning w-full'>$npf</div>";
                     } else {
                         // psr = pending stockvell result 
                         foreach ($asr_result as $asr_key) { ?>
@@ -51,7 +56,7 @@ require_once($ROOT . "/includes/packs.inc.php");
                                         <p><?= __("Goal"); ?></p>
                                         <p><?= $asr_key['goal'] ?></p>
                                     </div>
-                                    <a href="/pack_single.php?stockvell_id=<?= $asr_key['id'] ?>" class="btn btn-warning text-decoration-none text-white"><?= __("Details"); ?></a>
+                                    <a href="/pack_single.php?stockvel_id=<?= $asr_key['id'] ?>" class="btn btn-warning text-decoration-none text-white"><?= __("Details"); ?></a>
                                 </div>
                             </div>
                     <?php }

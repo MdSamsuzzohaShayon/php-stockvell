@@ -6,12 +6,21 @@ require_once($ROOT . "/vendor/autoload.php");
 use Models\Member\MemberForms;
 use Models\Stockvell\StockvellForms;
 
+// Request to join the pack
 if(isset($_POST["member_join_pack"])){
     $member_id = $_POST["member_id"];
     $stockvell_id = $_POST["stockvell_id"];
 
     $member_controler = new MemberForms();
     $member_controler->memberJoinPack($member_id, $stockvell_id, "/pack_single");
+}
+
+if(isset($_POST["make_member_of_pack_submit"])){
+    $member_id = $_POST["member_id"];
+    $stockvell_id = $_POST["stockvell_id"];
+
+    $member_controler = new MemberForms();
+    $member_controler->memberApproveToPack($member_id, $stockvell_id, '/pack_single');
 }
 
 if(isset($_POST["member_resign_leadership"])){

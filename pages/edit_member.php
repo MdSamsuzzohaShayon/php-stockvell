@@ -80,7 +80,7 @@ $input_field = new InputField();
 
             <!-- Update information start  -->
             <div class="signup-caption text-center">
-                <h1 class="h1"><?= __("Update member informations!") ?></h1>
+                <h1 class="h1"><?= __("Update member information!") ?></h1>
                 <p><?= __("You can change any field") ?></p>
             </div>
             <!-- Signup Form start  -->
@@ -99,7 +99,7 @@ $input_field = new InputField();
                     $pro = __('Profession');
                     $ist = __("Interest (Optional comma-separated list)");
                     $gid = __("Government ID");
-                    $src = __('How did you hear about the Stockvell platform? (Optional)');
+                    $src = __('How did you hear about the Stockvel platform? (Optional)');
 
                     echo $input_field->inputText("firstname", $fn, false, "text", false, $fmbi_result->firstname);
                     echo $input_field->inputText("surname", $sn, false, "text", false, $fmbi_result->surname);
@@ -120,9 +120,9 @@ $input_field = new InputField();
                 <div class="row mb-3">
                     <?php
                     // var_dump($fmbi_result);
-                    $county_proper = trim(explode('(', $fmbi_result->country)[0]);
-                    echo $input_field->inputSelect("country", $cy, false, $county_proper, $pure_code_of_country);
-                    echo $input_field->inputPhone("phone", $pn, false, true, $pure_country_code, $fmbi_result->phone);
+                    // echo $input_field->inputSelect("country", $cy, false, $county_proper, $pure_code_of_country);
+                    echo $input_field->inputSelect("country", $cy, false, $fmbi_result->country, $country_list);
+                    echo $input_field->inputPhone("phone", $pn, false, true, $country_code_list, $fmbi_result->phone);
                     ?>
                 </div>
                 <div class="row mb-3">
@@ -133,8 +133,7 @@ $input_field = new InputField();
                 </div>
                 <div class="row mb-3">
                     <?php
-                    echo $input_field->inputSelect("profession", $pro, false, $fmbi_result->profession, $professions);
-                    echo $input_field->inputFile("govt_id", $gid, false);
+                    echo $input_field->inputSelect("profession", $pro, true, $fmbi_result->profession, $professions);
                     ?>
                 </div>
                 <div class="row mb-3">

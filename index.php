@@ -31,9 +31,10 @@ if ($router === '/' || $router === '/home' || $router === '/index.php' || $route
     include($ROOT . '/pages/forget_password.php');
 } elseif ($router === preg_match("/single\/[0-9]/i", $router)) {
     include('single-product-page.php');
-}elseif ($router === '/includes/signup.inc.php') {
-    include('/includes/signup.inc.php');
 }
+// elseif ($router === '/includes/signup.inc.php') {
+//     include('/includes/signup.inc.php');
+// }
 // elseif ($router === '/example' || $router === '/example.php'  || $router === '/example/') {
 //     include($ROOT . '/pages/example.php');
 // } 

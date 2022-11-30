@@ -90,10 +90,11 @@ $input_field = new InputField();
                 <form class="d-none phone-form form-content" action="/includes/forget_password.inc.php" method="POST">
                     <div class="row mb-3">
                         <?php
-                        $pn = "Phone*";
+                        $pn = "Phone" . "*";
                         // echo $input_field->inputPhone("phone", $pn, true, true);
                         // echo $input_field->inputPhone("phone", $pn, true, true, $phone_code, "+229");
-                        echo $input_field->inputPhone("phone", $pn, true, true, $pure_country_code, "+229");
+                        // echo $input_field->inputPhone("phone", $pn, true, true, $pure_country_code, "+229");
+                        echo $input_field->inputPhone("phone", $pn, true, true, $country_code_list, $cmr_result->phone);
                         ?>
                     </div>
                     <div class="row row-no-input mb-3">

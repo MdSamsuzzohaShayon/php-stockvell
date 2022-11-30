@@ -4,10 +4,10 @@ $ROOT = $_SERVER['DOCUMENT_ROOT'];
 <div class="container">
   <div class="d-flex flex-wrap justify-content-between py-4 ">
     <a href="/" class="d-flex align-items-center text-decoration-none">
-      <span class="fs-4 text-secondary">Stockvell</span>
+      <span class="fs-4 text-secondary">Stockvel</span>
     </a>
     <div class="logo">
-      <a href="/" class="text-decoration-none">Stockvell</a>
+      <a href="/" class="text-decoration-none">Stockvel</a>
     </div>
     <div class="d-block d-md-none" id="mobile-expand-menu-icon">
       <!-- <i class="bi bi-list text-secondary menu-icon"></i> -->
@@ -37,7 +37,15 @@ $ROOT = $_SERVER['DOCUMENT_ROOT'];
       <li class="mx-md-3 list-group-item">
         <div class="dropdown">
           <div class="dropdown-toggle text-secondary" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <?= __("Lang") ?>
+            <?php
+            if($_SESSION["lang"] === "en"){
+              echo "English";
+            }else if($_SESSION["lang"] === "fr"){
+              echo "Français";
+            }else{
+              echo "English";
+            }
+            ?>
           </div>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" data-lang="fr" id="lang-fn" href="/?lang=fr">Français</a></li>

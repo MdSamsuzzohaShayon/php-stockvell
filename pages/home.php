@@ -16,8 +16,8 @@ require_once($ROOT . '/layouts/header.php');
     <div class="container d-flex flex-column content justify-content-center">
       <div class="row mx-0 flex-column-reverse flex-md-row">
         <div class="col-12 col-md-6">
-          <h1 class="h1 text-primary heading"><?= __("Stockvell Makes Saving for Life Easy") ?></h1>
-          <p class="text-primary"><?= __("Families have saved over $1 Billion for college using Stackvell. Receive a $5.29 bonus when you sign up and $25 when you link a 529 plan.") ?></p>
+          <h1 class="h1 text-primary heading"><?= __("Stockvel Makes Saving for Life Easy") ?></h1>
+          <p class="text-primary"><?= __("A platform for Income Generation and Wealth Creation. A platform where members share a common savings goal, such as a December party, New Year's Eve, or a wedding, or investing in real estate or the stock market.") ?></p>
           <?php if ($is_member) { ?>
             <a href="/packs.php" class="btn btn-warning text-primary"><?= __("Join Now") ?></a>
           <?php } else { ?>
@@ -36,11 +36,8 @@ require_once($ROOT . '/layouts/header.php');
       <div class="d-flex justify-content-between flex-column flex-md-row">
         <div class="border border-warning p-3 my-3 my-md-0 explain-box">
           <img src="public/icons/groupsavings.svg" alt="">
-          <h3 class="h3 text-primary"><?= __("Connect to your College Savings") ?></h3>
-          <p class="text-primary"><?= __("Create a free Upromise account, link it to
-            your 529 plan or any checking or savings
-            account, and claim $30 in instant Welcome
-            Bonuses.") ?></p>
+          <h3 class="h3 text-primary"><?= __("Connect to your savings") ?></h3>
+          <p class="text-primary"><?= __("Create a free account, join a pack or create your pack, and claim in an instant Welcome Bonuses.") ?></p>
         </div>
         <div class="border border-warning p-3 my-3 my-md-0 explain-box">
           <img src="public/icons/groupagreement.svg" alt="">
@@ -50,7 +47,7 @@ require_once($ROOT . '/layouts/header.php');
         <div class="border border-warning p-3 my-3 my-md-0 explain-box">
           <img src="public/icons/groupwithdraw.svg" alt="">
           <h3 class="h3 text-primary"><?= __("Withdraw money at the end") ?></h3>
-          <p class="text-primary"><?= __("Stockvell will automatically deposit your cash rewards & bonuses into your linked account with monthly contributions for maximum savings potential.") ?></p>
+          <p class="text-primary"><?= __("Stockvel will automatically deposit your cash rewards & bonuses into your linked account with monthly contributions for maximum savings potential.") ?></p>
         </div>
       </div>
     </div>
@@ -60,8 +57,7 @@ require_once($ROOT . '/layouts/header.php');
       <div class="row">
         <div class="col-md-6"><img class="trust_each_other" src="public/img/trusteachother.svg" alt=""></div>
         <div class="col-md-6">
-          <h2 class="h2 text-primary mt-5"><?= __("Stackvell is saving for more than 20000
-            members of the Stackvell pack.") ?></h2>
+          <h2 class="h2 text-primary mt-5"><?= __("Stackvel is saving for more than 20000 members of the Stackvell pack.") ?></h2>
           <p><?= __("There’s a reason we’re the #1 Cash Back shopping companion. Don’t believe us? Just ask our community of 15+ million members.") ?></p>
         </div>
       </div>
@@ -94,7 +90,7 @@ require_once($ROOT . '/layouts/header.php');
         </div>
         <div class="col-md-6">
           <div class="shape-list d-flex justify-content-between">
-            <div class="box-shape border border-primary">
+            <!-- <div class="box-shape border border-primary">
               <img class="shape-image p-3" src="public/icons/shape-1.svg" alt="">
             </div>
             <div class="box-shape border border-primary">
@@ -102,7 +98,7 @@ require_once($ROOT . '/layouts/header.php');
             </div>
             <div class="box-shape border border-primary">
               <img class="shape-image p-3" src="public/icons/shape-3.svg" alt="">
-            </div>
+            </div> -->
           </div>
         </div>
       </div>

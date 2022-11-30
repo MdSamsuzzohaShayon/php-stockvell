@@ -4,6 +4,7 @@ namespace Models\Stockvell;
 
 use Config\Database;
 use Models\Stockvell\Stockvell;
+use PDOException;
 
 class FetchStockvell extends Stockvell
 {
@@ -26,20 +27,50 @@ class FetchStockvell extends Stockvell
 
     public function memberWhoRequestToBeLeader($member_id, $stockvell_id)
     {
-        $sql = "SELECT * FROM stockvell_lr_member WHERE stockvell_id=:stockvell_id AND member_id=:member_id";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->execute(array("stockvell_id" => $stockvell_id, "member_id" => $member_id));
-        $result = $stmt->fetch(\PDO::FETCH_OBJ);
-        return $result;
+        try {
+            $sql = "SELECT * FROM stockvell_lr_member WHERE stockvell_id=:stockvell_id AND member_id=:member_id";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->execute(array("stockvell_id" => $stockvell_id, "member_id" => $member_id));
+            $result = $stmt->fetch(\PDO::FETCH_OBJ);
+            return $result;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            exit();
+        }
+        return null;
     }
 
     public function allMembersWhoRequestToBeLeader($stockvell_id)
     {
-        $sql = "SELECT sm.id, sm.member_id, sm.stockvell_id, sm.govt_id_proof, sm.address_proof, s.name, s.goal, s.category, s.leader_id, m.firstname, m.surname, m.email, m.phone FROM stockvell_lr_member sm LEFT JOIN stockvells s ON sm.stockvell_id=s.id LEFT JOIN members m ON sm.member_id=m.id WHERE stockvell_id=:stockvell_id";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->execute(array("stockvell_id" => $stockvell_id));
-        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        return $result;
+        try {
+            $sql = "SELECT sm.id, sm.member_id, sm.stockvell_id, sm.govt_id_proof, sm.address_proof, s.name, s.category, s.leader_id, m.firstname, m.surname, m.email, m.phone FROM stockvell_lr_member sm LEFT JOIN stockvells s ON sm.stockvell_id=s.id LEFT JOIN members m ON sm.member_id=m.id WHERE sm.stockvell_id=:stockvell_id";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->execute(array("stockvell_id" => $stockvell_id));
+            $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            return $result;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            exit();
+        }
+        return null;
+    }
+
+    public function getAMemberOfThePack($stockvell_id, $member_id)
+    {
+        try {
+            $sql = "SELECT sm.member_id, sm.stockvell_id, sm.status, s.name, m.firstname, m.surname, m.email, m.phone 
+            FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id=s.id 
+            LEFT JOIN members m ON sm.member_id=m.id 
+            WHERE sm.stockvell_id=:stockvell_id AND sm.member_id=:member_id";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->execute(array("stockvell_id" => $stockvell_id, "member_id" => $member_id));
+            $result = $stmt->fetch(\PDO::FETCH_OBJ);
+            return $result;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            exit();
+        }
+        return null;
     }
 
 
@@ -67,7 +98,6 @@ class FetchStockvell extends Stockvell
                 'link' => $stockvell_result->link,
                 'agreement' => $stockvell_result->agreement,
                 'status' => $stockvell_result->status,
-                'goal' => $stockvell_result->goal,
                 'leader_id' => $stockvell_result->leader_id,
                 'withdraw_member_id' => $stockvell_result->withdraw_member_id,
                 'category' => $stockvell_result->category,
@@ -77,6 +107,8 @@ class FetchStockvell extends Stockvell
                 'payment_frequency' => $stockvell_result->payment_frequency,
                 'withdraw_frequency' => $stockvell_result->withdraw_frequency,
                 'withdraw_at' => $stockvell_result->withdraw_at,
+                'start_at' => $stockvell_result->start_at,
+                'end_at' => $stockvell_result->end_at,
                 'total_members' => 0,
                 'members' => [],
             ];
@@ -93,17 +125,20 @@ class FetchStockvell extends Stockvell
     public function getASingleApprovedStockvellWithMembers($stockvell_id)
     {
         try {
-            // $stockvell_sql = "SELECT s.id, s.goal, s.leader_id, s.category, s.payment, s.payment_frequency, s.withdraw_frequency, s.name, s.status, sm.stockvell_id, COUNT(sm.stockvell_id) as totel_members FROM stockvell_to_member sm 
+            // $stockvell_sql = "SELECT s.id, s.leader_id, s.category, s.payment, s.payment_frequency, s.withdraw_frequency, s.name, s.status, sm.stockvell_id, COUNT(sm.stockvell_id) as totel_members FROM stockvell_to_member sm 
             // LEFT JOIN stockvells s ON sm.stockvell_id=s.id 
             // WHERE sm.stockvell_id=:stockvell_id
             // GROUP BY sm.stockvell_id";
-            $stockvell_sql = "SELECT sm.id, sm.stockvell_id, s.link, s.agreement, s.description, s.goal, s.leader_id, s.withdraw_member_id, s.withdraw_at, s.category, s.max_member, s.payment, s.currency, s.payment_frequency, s.withdraw_frequency, s.name, s.status,
-        sm.member_id, m.firstname, m.surname, m.profession, m.country
-        FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id=s.id LEFT JOIN members m ON sm.member_id=m.id WHERE s.id=:stockvell_id;";
+            $stockvell_sql = "SELECT sm.id, sm.stockvell_id, s.link, s.agreement, s.description, s.leader_id, s.withdraw_member_id, s.withdraw_at, s.category, s.max_member, s.payment, s.currency, s.payment_frequency, s.withdraw_frequency, s.name, s.status, s.start_at, s.end_at,
+            sm.member_id, sm.status AS m_status, m.firstname, m.surname, m.profession, m.country
+            FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id=s.id LEFT JOIN members m ON sm.member_id=m.id WHERE s.id=:stockvell_id;";
             $stockvell_stmt = $this->connect()->prepare($stockvell_sql);
             $stockvell_stmt->bindParam('stockvell_id', $stockvell_id);
             $stockvell_stmt->execute();
             $stockvell_result = $stockvell_stmt->fetchAll(\PDO::FETCH_ASSOC);
+            // var_dump($stockvell_result);
+
+            // echo json_encode($stockvell_result);
 
 
 
@@ -117,6 +152,7 @@ class FetchStockvell extends Stockvell
                     "surname" => $stockvell_result[$i]['surname'],
                     "profession" => $stockvell_result[$i]['profession'],
                     "country" => $stockvell_result[$i]['country'],
+                    "m_status" => $stockvell_result[$i]['m_status'],
                 );
                 array_push($members, $new_single_member);
                 $i++;
@@ -130,7 +166,6 @@ class FetchStockvell extends Stockvell
                 'link' => $single_stockvell["link"],
                 'agreement' => $single_stockvell["agreement"],
                 'status' => $single_stockvell["status"],
-                'goal' => $single_stockvell["goal"],
                 'leader_id' => $single_stockvell["leader_id"],
                 'withdraw_member_id' => $single_stockvell["withdraw_member_id"],
                 'category' => $single_stockvell["category"],
@@ -140,6 +175,8 @@ class FetchStockvell extends Stockvell
                 'payment_frequency' => $single_stockvell["payment_frequency"],
                 'withdraw_frequency' => $single_stockvell["withdraw_frequency"],
                 'withdraw_at' => $single_stockvell["withdraw_at"],
+                'start_at' => $single_stockvell["start_at"],
+                'end_at' => $single_stockvell["end_at"],
                 'total_members' => $total_members,
                 'members' => $members,
             ];
@@ -159,24 +196,31 @@ class FetchStockvell extends Stockvell
 
     public function getAllPendingStockvell($status, $is_admin, $member_id)
     {
-        if ($is_admin) {
-            // All stockvell of a member
-            $sql = "SELECT s.id, s.leader_id, s.name, s.agreement, s.goal, s.category, s.max_member, s.status, s.payment, s.currency, s.payment_frequency, s.withdraw_frequency FROM stockvells s WHERE status=:status";
-            $stmt = $this->connect()->prepare($sql);
-            $stmt->bindParam('status', $status);
-        } else {
-            // All stockvell of a member
 
-            $sql = "SELECT sm.id, s.name, s.status, s.goal, s.category,  s.max_member, s.payment, s.currency, s.payment_frequency, s.withdraw_frequency FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id=s.id WHERE sm.member_id=:member_id AND status=:status";
+        try {
+            if ($is_admin) {
+                // All stockvells
+                $sql = "SELECT * FROM stockvells s WHERE s.status=:status";
+                $stmt = $this->connect()->prepare($sql);
+                $stmt->bindParam('status', $status);
+            } else {
+                // All stockvell of a member
+                $sql = "SELECT sm.stockvell_id AS id, s.name, s.status, s.category,  s.max_member, s.payment, s.currency, s.payment_frequency, s.withdraw_frequency 
+                FROM stockvell_to_member sm 
+                LEFT JOIN stockvells s ON sm.stockvell_id=s.id WHERE sm.member_id=:member_id AND s.status=:status";
 
-            $stmt = $this->connect()->prepare($sql);
-            $stmt->bindParam('status', $status, \PDO::PARAM_STR);
-            $stmt->bindParam('member_id', $member_id, \PDO::PARAM_INT);
+                $stmt = $this->connect()->prepare($sql);
+                $stmt->bindParam('status', $status);
+                $stmt->bindParam('member_id', $member_id, \PDO::PARAM_INT);
+            }
+            $stmt->execute();
+            $stockvell_result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            return $stockvell_result;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            exit();
         }
-        $stmt->execute();
-        $stockvell_result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-        return $stockvell_result;
+        return [];
     }
 
 
@@ -196,7 +240,7 @@ class FetchStockvell extends Stockvell
     // AASTHM = get all approved stockvells that has members
     public function getAASTHM($status)
     {
-        $sql = "SELECT s.id, s.goal, s.leader_id, s.category, s.payment, s.payment_frequency, s.withdraw_frequency, s.name, s.status, sm.stockvell_id, COUNT(sm.stockvell_id) as totel_members FROM stockvell_to_member sm 
+        $sql = "SELECT s.id, s.leader_id, s.category, s.payment, s.payment_frequency, s.withdraw_frequency, s.name, s.status, sm.stockvell_id, COUNT(sm.stockvell_id) as totel_members FROM stockvell_to_member sm 
         LEFT JOIN stockvells s ON sm.stockvell_id=s.id 
         WHERE s.status=:status 
         GROUP BY sm.stockvell_id";
@@ -213,22 +257,31 @@ class FetchStockvell extends Stockvell
 
     public function getAllApprovedStockvellOfAMember($member_id)
     {
-        $sql = "SELECT s.id, s.goal, s.leader_id, s.category, s.payment, s.currency, s.payment_frequency, s.withdraw_frequency, s.name, s.status, sm.stockvell_id, sm.member_id, m.firstname FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id = s.id LEFT JOIN members m ON sm.member_id=m.id WHERE sm.member_id=:member_id AND status=:status";
-        $stmt = $this->connect()->prepare($sql);
-        $approved = "APPROVED";
-        $stmt->bindParam('status', $approved);
-        $stmt->bindParam('member_id', $member_id);
-        $stmt->execute();
-        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        try {
+            $sql = "SELECT s.id, s.leader_id, s.category, s.payment, s.currency, s.payment_frequency, s.withdraw_frequency, s.name, s.status, sm.stockvell_id, sm.member_id, m.firstname 
+            FROM stockvell_to_member sm 
+            LEFT JOIN stockvells s ON sm.stockvell_id = s.id 
+            LEFT JOIN members m ON sm.member_id=m.id 
+            WHERE sm.member_id=:member_id AND s.status=:status";
+            $stmt = $this->connect()->prepare($sql);
+            $approved = "APPROVED";
+            $stmt->bindParam('status', $approved);
+            $stmt->bindParam('member_id', $member_id);
+            $stmt->execute();
+            $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-        return $result;
+            return $result;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+        return [];
     }
 
     public function getAllCoseStockvellOfAMember($member_id)
     {
         try {
             //code...
-            $sql = "SELECT s.id, s.goal, s.leader_id, s.category, s.payment, s.currency, s.payment_frequency, s.withdraw_frequency, s.name, s.status, sm.stockvell_id, sm.member_id, m.firstname FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id = s.id LEFT JOIN members m ON sm.member_id=m.id WHERE sm.member_id=:member_id AND status=:status";
+            $sql = "SELECT s.id, s.leader_id, s.category, s.payment, s.currency, s.payment_frequency, s.withdraw_frequency, s.name, s.status, sm.stockvell_id, sm.member_id, m.firstname FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id = s.id LEFT JOIN members m ON sm.member_id=m.id WHERE sm.member_id=:member_id AND status=:status";
             $stmt = $this->connect()->prepare($sql);
             $close_requested = "CLOSE_REQUESTED";
             $stmt->bindParam('status', $close_requested);

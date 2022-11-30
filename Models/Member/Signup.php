@@ -1,7 +1,10 @@
-<?php 
+<?php
+
 namespace Models\Member;
 // use Config\Database;
 use Models\Member\Member;
+use Utils\SendEmail;
+
 class Signup extends Member
 {
     public function __construct()
@@ -12,7 +15,8 @@ class Signup extends Member
 
 
 
-    public function setMember($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city){
+    public function setMember($firstname, $surname, $email, $password, $password2, $country, $phone, $gender, $profession, $interest, $source, $city)
+    {
         $this->firstname  = $firstname;
         $this->surname  = $surname;
         $this->email  = $email;
@@ -23,7 +27,6 @@ class Signup extends Member
         $this->gender  = $gender;
         $this->profession  = $profession;
         $this->interest  = $interest;
-        $this->govt_id  = $govt_id;
         $this->source  = $source;
         $this->city = $city;
     }
@@ -73,37 +76,51 @@ class Signup extends Member
 
 
 
-        $unique_file_name = $this->uploadFileToServer($this->govt_id, $this->ROOT, "/signup/?");
-        $this->saveMemberToDB($this->firstname, $this->surname, $this->email, $this->password, $this->country, $this->phone, $this->gender, $this->profession, $this->interest, $unique_file_name, $this->source, $this->city);
+        // $unique_file_name = $this->uploadFileToServer($this->govt_id, $this->ROOT, "/signup/?");
+        $this->saveMemberToDB($this->firstname, $this->surname, $this->email, $this->password, $this->country, $this->phone, $this->gender, $this->profession, $this->interest, $this->source, $this->city);
     }
 
 
-    private function saveMemberToDB($firstname, $surname, $email, $password, $country, $phone, $gender, $profession, $interest, $govt_id, $source, $city)
+    private function saveMemberToDB($firstname, $surname, $email, $password, $country, $phone, $gender, $profession, $interest, $source, $city)
     {
+        try {
+            //code...
 
-        $stmt = $this->connect()->prepare('INSERT INTO members(firstname, surname, email, password,  country, phone, gender, profession, interest, govt_id, source, role, city) VALUES (:firstname, :surname, :email, :password,  :country, :phone, :gender, :profession, :interest, :govt_id, :source, :role, :city);');
+            $stmt = $this->connect()->prepare('INSERT INTO members(firstname, surname, email, password,  country, phone, gender, profession, interest, source, role, city) VALUES (:firstname, :surname, :email, :password,  :country, :phone, :gender, :profession, :interest, :source, :role, :city);');
 
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $stmt->bindParam('firstname', $firstname, \PDO::PARAM_STR);
-        $stmt->bindParam('surname', $surname, \PDO::PARAM_STR);
-        $stmt->bindParam('email', $email, \PDO::PARAM_STR);
-        $stmt->bindParam('password', $hashedPassword, \PDO::PARAM_STR);
-        $stmt->bindParam('country', $country, \PDO::PARAM_STR);
-        $stmt->bindParam('city', $city, \PDO::PARAM_STR);
-        $stmt->bindParam('phone', $phone, \PDO::PARAM_STR);
-        $stmt->bindParam('gender', $gender, \PDO::PARAM_STR);
-        $stmt->bindParam('profession', $profession, \PDO::PARAM_STR);
-        $stmt->bindParam('interest', $interest, \PDO::PARAM_STR);
-        $stmt->bindParam('govt_id', $govt_id, \PDO::PARAM_STR);
-        $stmt->bindParam('source', $source, \PDO::PARAM_STR);
-        $role = "GENERAL";
-        $stmt->bindParam('role', $role, \PDO::PARAM_STR);
-        if (!$stmt->execute()) {
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $stmt->bindParam('firstname', $firstname, \PDO::PARAM_STR);
+            $stmt->bindParam('surname', $surname, \PDO::PARAM_STR);
+            $stmt->bindParam('email', $email, \PDO::PARAM_STR);
+            $stmt->bindParam('password', $hashedPassword, \PDO::PARAM_STR);
+            $stmt->bindParam('country', $country, \PDO::PARAM_STR);
+            $stmt->bindParam('city', $city, \PDO::PARAM_STR);
+            $stmt->bindParam('phone', $phone, \PDO::PARAM_STR);
+            $stmt->bindParam('gender', $gender, \PDO::PARAM_STR);
+            $stmt->bindParam('profession', $profession, \PDO::PARAM_STR);
+            $stmt->bindParam('interest', $interest, \PDO::PARAM_STR);
+            $stmt->bindParam('source', $source, \PDO::PARAM_STR);
+            $role = "GENERAL";
+            $stmt->bindParam('role', $role, \PDO::PARAM_STR);
+            if (!$stmt->execute()) {
+                $stmt = null;
+                header("Location: /signup/?error=stmtfailed");
+                exit();
+            }
+            // Send message // send sms
+            $send_email = new SendEmail();
+            $html_msg = "
+            <h3>Welcome to Stockvel</h3>
+            <p>We would like to contratulate you to make a great decision of creating account in Stockvel and saving money with us. We assure your desire from us will be full filled.</p>
+            <h3>Best of luck</h3>
+                        ";
+            $send_email->sendMessage($email, $html_msg, 'Account creation in Stockvel');
+
             $stmt = null;
-            header("Location: /signup/?error=stmtfailed");
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
             exit();
         }
-        $stmt = null;
     }
 
 
