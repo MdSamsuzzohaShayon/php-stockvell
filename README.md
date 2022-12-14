@@ -41,14 +41,24 @@
 
 
 ### Deployment Instructions
- - Install all packages of Composer
- - Connect via SSH `ssh -p 2222 aiocel@ssh.web11.us.cloudlogin.co`
- - Install php curl `sudo apt-get install php7.4-curl`
- - Run `database-migrations.php`
- - Setup `.htaccess` file for redirecting 
- - Change all `.env` variables
  - All file owner change `sudo chown -R www-data:www-data project-name`
  - All file previlages change `sudo chmod -R 775 project-name`
+ - Connect via SSH `ssh -p 2222 aiocel@ssh.web11.us.cloudlogin.co`
+ - Install php curl `sudo apt-get install php7.4-curl`
+ - Copy all file using file zilla, do not include bootstrap from `public/bootstrap`
+ - Install all packages of Composer 
+    ```
+    composer install
+    composer update
+    composer show
+    // or
+    php composer.phar install
+    php composer.phar update
+    php composer.phar update "vendor/*"
+    ```
+ - Change all `.env` variables
+ - Run `database-migrations.php`
+ - Setup `.htaccess` file for redirecting 
  - Database Migrations (Delete database and create database once again)
 
 ### Htaccess
@@ -269,7 +279,7 @@ Dominant - #C99127, Complementary - #809130, Accent - #2F4858, white - #ffffff, 
  - To help me to translate the page you can go to the file **languages/fr.php** and change text (It's an php array, if you still don't know how to do it let me know I will make a small video for you)
  - Input field already validated - some input fileds are required until you fill those it won't let you submit the form
 
-### Message to client
+### Message to client - 1
  - admin url http://stockvell.allinone-office.com/admin (You can change or add another admin on database lavel). user email `stockvellexample@gmail.com` password `Test1234`
  - If you want to wadd another admin add the line from below to the `__construct` of `DatabaseMigrations` class on `database-migrations.php` file or run `http://stockvell.allinone-office.com/database-migrations.php`
   
@@ -398,11 +408,37 @@ ________________________________________________________________________________
 96. Withdraw member- The Stockvell leader defines next member to withdraw funds (withdrawal can be random or first come, first withdrawn): Did you make First come First serve ? ➡️➡️➡️➡️➡️➡️➡️➡️ Yes I have updated that as first come first serve. Additionally, admin can assign any member manually to withdraw
 
 
-### Credentials
-Admin panel : http://stockvell.allinone-office.com/admin
-Email: stockvelladmin@gmail.com
-Password: Test1234
+### Client's message
 
+ - Add start and end dates as parameters to create stockvell pack
+ - Show pending pack in mypack but not active until it is approved 😎
+ - payment frequency getting 0 as input 😎
+ - Make the link to the pack shareable through WhatsApp, social media, phone 😎
+ - Member will make request to join the pack and admin will approve them (Create one more table) 😎
+ - Send sms to phone 😎
+ - signing up, there is no need of Gov ID 😎
+ - My password is incorrect or the information provided does not match our records 😎
+ - Login using phone : “+”  shows up 😎
+ - Country list does not have the “United States" 😎
+ - When you forget to check the “privacy policy” box, you should not lose some information 😎
+ - Now I create my account, but do not have any notification in my email. How about when I use a phone. 😎
+ - It might be better to keep the payment and withdrawal frequency the same, the same format. 😎
+ - Rename all stockvell to stockvel 😎
+ - show member requests on the dashboard page 😎
+ - Once you created your pack, get an email, text or phone notification with a link to the pack
+ - withdraw only approved member  😎
+ - Invite - __https://www.fiverr.com/referral_program?source=footer__
+ - Meeting link with https://www.when2meet.com/
+ - Send sms   😎
+
+    • Once you input all information to create pack, ask to review in a review page and then submit to create
+    • Once you created your pack, get an email, text or phone notification with a link to the pack  😎
+    • The pack leader should be able to invite people to his pack and send them the link to join the pack (sign up, sign in) based on the invite. The invitees could parent or people in his networks or contacts. How to connect to phone/email contacts? 
+    • Make the link to the pack shareable through WhatsApp, social media, phone   😎
+    • The leader of a pack should also be able once a pack is approved to admit see members who want to join his pack and allow them in up to the total members limit it was set when the pack was created.   😎
+    • Each pack must have a simple balance sheet tool and scheduling tool for meeting between the pack leader and members (Calendly, when2meet, etc…)
+    • Each pack leader should have access to payment tool (mobile money, bank, card, etc..) 
+    - Can we have tooltips for each block in the create pack?   😎
 
 
 

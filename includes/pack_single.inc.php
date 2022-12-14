@@ -19,6 +19,7 @@ if(isset($_POST["make_member_of_pack_submit"])){
     $member_id = $_POST["member_id"];
     $stockvell_id = $_POST["stockvell_id"];
 
+
     $member_controler = new MemberForms();
     $member_controler->memberApproveToPack($member_id, $stockvell_id, '/pack_single');
 }

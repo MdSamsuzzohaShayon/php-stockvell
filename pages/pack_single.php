@@ -26,6 +26,8 @@ if (!isset($_GET['stockvel_id'])) {
 $member_email = $_SESSION['member_email'];
 $member_id = $_SESSION['member_id'];
 $stockvel_id = $_GET['stockvel_id'];
+// $SITE_URL = $_ENV["FRONTEND_URL"];
+$SITE_URL = "http://stockvell.allinone-office.com";
 
 $is_admin = false;
 if (isset($_SESSION['admin_id'])) $is_admin = true;
@@ -499,16 +501,16 @@ $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $stockvel
             $shareable_link = "$backend_url/pack_single/?stockvel_id=$stockvel_id";
             ?>
             <div class="social-share d-flex justify-content-start align-items center">
-                <div class="fb-share-button p-0 me-2 shadow bg-body rounded" data-href="<?= $shareable_link; ?>" data-layout="button" data-size="large">
+                <div class="fb-share-button p-0 me-2 shadow bg-body rounded" data-href="<?= $SITE_URL . $shareable_link ?>" data-layout="button" data-size="large">
                     <a target="_blank" class="btn btn-white p-3" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">
                         <img src="/public/icons/fb.svg" alt="">
                     </a>
                 </div>
                 <!-- Share link to facebook end  -->
-                <a target="_blink" href="https://twitter.com/intent/tweet?text=<?= $shareable_link ?>" class="btn btn-white p-3 me-2 shadow bg-body rounded">
+                <a target="_blink" href="https://twitter.com/intent/tweet?text=<?= $SITE_URL . $shareable_link ?>" class="btn btn-white p-3 me-2 shadow bg-body rounded">
                     <img src="/public/icons/twitter.svg" alt="">
                 </a>
-                <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?= $shareable_link ?>" class="btn btn-white p-3 me-2 shadow bg-body rounded">
+                <a target="_blink" href="https://www.linkedin.com/shareArticle?mini=true&url=<?=  $SITE_URL . $shareable_link ?> ?>&title=LinkedIn%20Developer%20Network&summary=<?= $SITE_URL . $shareable_link  ?>&source=Stockvel" class="btn btn-white p-3 me-2 shadow bg-body rounded">
                     <img src="/public/icons/linkedin.svg" alt="">
                 </a>
             </div>

@@ -10,6 +10,8 @@ if (isset($_SESSION['admin_id'])) {
    exit();
 }
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
+$SITE_URL = "http://stockvell.allinone-office.com";
+
 
 $member_email = $_SESSION['member_email'];
 $member_id = $_SESSION['member_id'];
@@ -429,8 +431,14 @@ $npf =__("No pack found");
                         </div>
                         <div class="card-body">
                            <?php
-                           $new_link = $ssr_result['link'];
-                           echo "<div class='alert alert-primary' id='generated-link-display'> $new_link </div>";
+                           if ($ssr_result['link']) {
+                              $new_link = $SITE_URL . "/single_pack/stockvel_id=" . $single_stockvel_id . "&sharing=" . $ssr_result['link'];
+                              echo '<p class="card-text alert alert-primary"> ' . $new_link . ' </p>';
+                           }else{
+                              $new_link = $SITE_URL . "/single_pack/stockvel_id=" . $single_stockvel_id;
+                              echo "<div class='alert alert-primary' id='generated-link-display'> $new_link </div>";
+                           }
+                           // echo "Link - " . $new_link . "<br />";
                            ?>
                            <div class="d-flex justify-content-start">
                               <?php
@@ -443,11 +451,6 @@ $npf =__("No pack found");
                                           <button type='submit' class='btn mx-2 btn-primary' id='generate-link' name='stockvell_generate_link_submit' >$gl</button>
                                        </form>
                                        ";
-                              }
-                              ?>
-                              <?php
-                              if ($ssr_result['link']) {
-                                 echo '<p class="card-text alert alert-primary"> ' . $ssr_result['link'] . ' </p>';
                               }
                               ?>
                            </div>

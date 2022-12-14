@@ -281,7 +281,7 @@ class FetchStockvell extends Stockvell
     {
         try {
             //code...
-            $sql = "SELECT s.id, s.leader_id, s.category, s.payment, s.currency, s.payment_frequency, s.withdraw_frequency, s.name, s.status, sm.stockvell_id, sm.member_id, m.firstname FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id = s.id LEFT JOIN members m ON sm.member_id=m.id WHERE sm.member_id=:member_id AND status=:status";
+            $sql = "SELECT s.id, s.leader_id, s.category, s.payment, s.currency, s.payment_frequency, s.withdraw_frequency, s.name, s.status, sm.stockvell_id, sm.member_id, m.firstname FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id = s.id LEFT JOIN members m ON sm.member_id=m.id WHERE sm.member_id=:member_id AND sm.status=:status";
             $stmt = $this->connect()->prepare($sql);
             $close_requested = "CLOSE_REQUESTED";
             $stmt->bindParam('status', $close_requested);

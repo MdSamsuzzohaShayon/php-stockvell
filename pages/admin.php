@@ -80,6 +80,8 @@ $vd = __("Verified");
 $et = __("Edit");
 $lr = __("Leader Requests");
 $dl = __("Detail");
+$am = __("Approve member");
+
 ?>
 
 
@@ -265,15 +267,30 @@ $dl = __("Detail");
                      $rpl_result = $stockvell_pack->allMembersWhoRequestToBeLeader($single_stockvel_id); // rpl = request pack leaders
                      $ssr_result = $stockvell_pack->getASingleApprovedStockvell($single_stockvel_id); // ssr = single stockvell result
                      $leader = $member_controler->findMemberByID($ssr_result['leader_id'], '/admin');
+
+                     $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvel_id);
+
+                     $approved_members = [];
+                     $pending_members = [];
+                     $mi = 0;
+                     while ($mi < count($ssr_result['members'])) {
+                        if ($ssr_result['members'][$mi]['m_status'] === "PENDING") {
+                           array_push($pending_members, $ssr_result['members'][$mi]);
+                        }
+                        if ($ssr_result['members'][$mi]['m_status'] === "APPROVED") {
+                           array_push($approved_members, $ssr_result['members'][$mi]);
+                        }
+                        $mi += 1;
+                     }
+
                   ?>
                      <!-- stockvell detail start  -->
-                     <div class="row">
+                     <div class="row mb-3">
                         <h1 class="h1"><?= $ssr_result['name']; ?></h1>
                         <p><?php echo $ssr_result['description']; ?></p>
                         <p><?= $ssr_result['category']; ?></p>
                         <p> <?= __('Member limit:') . $ssr_result['max_member']; ?></p>
                         <?php if ($leader) {
-                           $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvel_id);
                            $lr = __('Leader');
                            $sl = __('Suspend Leader');
                            echo "<div class='d-flex'> 
@@ -289,7 +306,7 @@ $dl = __("Detail");
                      </div>
                      <!-- stockvell detail end  -->
                      <!-- Leader request starts  -->
-                     <div class="row">
+                     <div class="row mb-3">
                         <p>
                         <h2 class="h2" data-bs-toggle="collapse" href="#leaderCollapse" role="button" aria-expanded="false" aria-controls="leaderCollapse"> <span><img src="/public/icons/down-arrow.svg" height="30" alt=""></span> <?= __("Members requested to be a leader") ?></h2>
                         </p>
@@ -315,7 +332,6 @@ $dl = __("Detail");
 
                                        <?php
                                        // rpl = requestd pack leader
-                                       $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvel_id);
 
                                        foreach ($rpl_result as $rpl_key) {
 
@@ -348,6 +364,132 @@ $dl = __("Detail");
                         </div>
                      </div>
                      <!-- Leader request ends  -->
+
+                     <!-- approved members start  -->
+                     <div class="row mb-3">
+                        <p>
+                        <h2 class="h2" data-bs-toggle="collapse" href="#approvedMemberCollapse" role="button" aria-expanded="false" aria-controls="approvedMemberCollapse"> <span><img src="/public/icons/down-arrow.svg" height="30" alt=""></span> <?= __("Members") ?></h2>
+                        </p>
+                        <div class="collapse" id="approvedMemberCollapse">
+                           <?php
+                           if (count($approved_members) <= 0) {
+                              $nmjy = __("No member found");
+                              echo "<div class='alert alert-warning'>$nmjy</div>";
+                           } else { ?>
+                              <div class="table-responsive">
+                                 <table class="table table-bordered border-warning">
+                                    <thead class="bg-warning text-white border-primary">
+                                       <tr>
+                                          <th scope="col">#<?= __("ID") ?></th>
+                                          <th scope="col"><?= __("Name") ?></th>
+                                          <th scope="col"><?= __("Country") ?></th>
+                                          <th scope="col"><?= __("Profession") ?></th>
+                                          <th scope="col"><?= __("Status") ?></th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                       <?php
+                                       // amr = all member result
+                                       // id, firstname, surname, email, country, phone, gender, profession, interest, govt_id, source, role
+
+                                       $leader_user = null;
+                                       $withdraw_member = null;
+                                       foreach ($approved_members as $amr_key) {
+                                          if ($ssr_result["leader_id"] === $amr_key["id"]) {
+                                             $user_and_role = "<td class='text-danger'>" . $amr_key["firstname"] . " " . $amr_key["surname"] . __("(L)") . "</td>";
+                                             $leader_user = $amr_key;
+                                          } else if ($ssr_result["withdraw_member_id"] === $amr_key["id"]) {
+                                             $user_and_role = "<td>" . $amr_key["firstname"] . " " . $amr_key["surname"] . __("(W)") . "</td>";
+                                             $withdraw_member = $amr_key;
+                                          } else {
+                                             $user_and_role = "<td>" . $amr_key["firstname"] . " " . $amr_key["surname"] . "</td>";
+                                          }
+                                          echo "
+                                                    <tr class='text-capitalize'>
+                                                        <th>" . $amr_key["id"] . "</th>
+                                                        $user_and_role
+                                                        <td>" . $amr_key["country"] . "</td>
+                                                        <td>" . $amr_key["profession"] . "</td>
+                                                        $member_approval
+                                                        <td>" . $amr_key["m_status"] . "</td>
+                                                    </tr>
+                                                ";
+                                       }
+                                       ?>
+                                    </tbody>
+                                 </table>
+                              </div>
+                           <?php }                  ?>
+                        </div>
+                     </div>
+                     <!-- approved members end  -->
+
+                     <!-- Pending members start  -->
+                     <div class="row mb-3">
+                        <p>
+                        <h2 class="h2" data-bs-toggle="collapse" href="#unapprovedMemberCollapse" role="button" aria-expanded="false" aria-controls="unapprovedMemberCollapse"> <span><img src="/public/icons/down-arrow.svg" height="30" alt=""></span> <?= __("Member requests") ?></h2>
+                        </p>
+                        <div class="collapse" id="unapprovedMemberCollapse">
+                           <?php
+                           if (count($pending_members) <= 0) {
+                              $nmjy = __("No member found");
+                              echo "<div class='alert alert-warning'>$nmjy</div>";
+                           } else { ?>
+                              <div class="table-responsive">
+                                 <table class="table table-bordered border-warning">
+                                    <thead class="bg-warning text-white border-primary">
+                                       <tr>
+                                          <th scope="col">#<?= __("ID") ?></th>
+                                          <th scope="col"><?= __("Name") ?></th>
+                                          <th scope="col"><?= __("Country") ?></th>
+                                          <th scope="col"><?= __("Profession") ?></th>
+                                          <th scope="col"><?= __("Status") ?></th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                       <?php
+                                       // amr = all member result
+                                       // id, firstname, surname, email, country, phone, gender, profession, interest, govt_id, source, role
+
+                                       $leader_user = null;
+                                       $withdraw_member = null;
+                                       foreach ($pending_members as $amr_key) {
+                                          if ($ssr_result["leader_id"] === $amr_key["id"]) {
+                                             $user_and_role = "<td class='text-danger'>" . $amr_key["firstname"] . " " . $amr_key["surname"] . __("(L)") . "</td>";
+                                             $leader_user = $amr_key;
+                                          } else if ($ssr_result["withdraw_member_id"] === $amr_key["id"]) {
+                                             $user_and_role = "<td>" . $amr_key["firstname"] . " " . $amr_key["surname"] . __("(W)") . "</td>";
+                                             $withdraw_member = $amr_key;
+                                          } else {
+                                             $user_and_role = "<td>" . $amr_key["firstname"] . " " . $amr_key["surname"] . "</td>";
+                                          }
+                                          $member_approval = null;
+                                          $member_id_hidden_input = $input_field->inputHidden("member_id", $amr_key["id"]);
+                                          $member_approval = "<td>
+                                                                  <form method='post' action='/includes/pack_single.inc.php'>
+                                                                        $stockvell_id_hidden_input
+                                                                        $member_id_hidden_input
+                                                                        <button type='submit' name='make_member_of_pack_submit' class='btn btn-primary'>$am</button>
+                                                                  </form>
+                                                               </td>";
+                                          echo "
+                                                    <tr class='text-capitalize'>
+                                                        <th>" . $amr_key["id"] . "</th>
+                                                        $user_and_role
+                                                        <td>" . $amr_key["country"] . "</td>
+                                                        <td>" . $amr_key["profession"] . "</td>
+                                                        $member_approval
+                                                    </tr>
+                                                ";
+                                       }
+                                       ?>
+                                    </tbody>
+                                 </table>
+                              </div>
+                           <?php }                  ?>
+                        </div>
+                     </div>
+                     <!-- Pending members end  -->
                   <?php
                   } else {
                   ?>
@@ -428,14 +570,16 @@ $dl = __("Detail");
                      $rpl_result = $stockvell_pack->allMembersWhoRequestToBeLeader($single_stockvel_id); // rpl = request pack leaders
                      $ssr_result = $stockvell_pack->getASingleApprovedStockvell($single_stockvel_id); // ssr = single stockvell result
                      $leader = $member_controler->findMemberByID($ssr_result['leader_id'], '/admin');
+
+                     $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvel_id);
+
                   ?>
                      <div class="row">
                         <h1 class="h1"><?= $ssr_result['name']; ?></h1>
                         <p><?php echo $ssr_result['description']; ?></p>
                         <p><?= $ssr_result['category']; ?></p>
                         <p> <?= __('Member limit:') . $ssr_result['max_member']; ?></p>
-                        <?php if ($leader) {
-                           $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvel_id);
+                        <?php
                            $lr = __('Leader');
                            $sl = __('Suspend Leader');
                            echo "<div class='d-flex'> 
@@ -447,7 +591,7 @@ $dl = __("Detail");
                                     <button type='submit' name='suspend_leader_submit' class='btn btn-danger mx-3'>$sl</button>
                                  </form>
                               </div>";
-                        } ?>
+                        ?>
                      </div>
                      <!-- Leader request starts  -->
                      <div class="row">
@@ -476,7 +620,6 @@ $dl = __("Detail");
 
                                        <?php
                                        // rpl = requestd pack leader
-                                       $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvel_id);
 
                                        foreach ($rpl_result as $rpl_key) {
 
@@ -601,6 +744,8 @@ $dl = __("Detail");
                      $rpl_result = $stockvell_pack->allMembersWhoRequestToBeLeader($single_stockvel_id); // rpl = request pack leaders
                      $ssr_result = $stockvell_pack->getASingleApprovedStockvell($single_stockvel_id); // ssr = single stockvell result
                      $leader = $member_controler->findMemberByID($ssr_result['leader_id'], '/admin');
+
+                     $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvel_id);
                   ?>
                      <div class="row">
                         <h1 class="h1"><?= $ssr_result['name']; ?></h1>
@@ -608,7 +753,6 @@ $dl = __("Detail");
                         <p><?= $ssr_result['category']; ?></p>
                         <p> <?= __('Member limit:') . $ssr_result['max_member']; ?></p>
                         <?php if ($leader) {
-                           $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvel_id);
                            $lr = __('Leader');
                            $sl = __('Suspend Leader');
                            echo "<div class='d-flex'> 
@@ -649,7 +793,6 @@ $dl = __("Detail");
 
                                        <?php
                                        // rpl = requestd pack leader
-                                       $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $single_stockvel_id);
 
                                        foreach ($rpl_result as $rpl_key) {
 

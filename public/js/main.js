@@ -433,6 +433,8 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     //   }
     // });
     // console.log({text: generateLinkDisplay.textContent.toString().trim()});
+    
+    /*
     if (generateLinkDisplay) {
       if (generateLinkDisplay.textContent && generateLinkDisplay.textContent.toString().trim() !== "" && generateLinkDisplay.textContent.toString().trim() !== "null") {
         const newLink = `${
@@ -444,6 +446,7 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
         generateLinkDisplay.textContent = newLink;
       }
     }
+    */
     // console.log(generateLinkDisplay);
   }
 
