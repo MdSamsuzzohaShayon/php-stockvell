@@ -6,7 +6,9 @@ const languageItems = document.querySelectorAll(".dropdown-item");
 /**
  * Bootstrap coding
  */
-const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+const tooltipTriggerList = [].slice.call(
+  document.querySelectorAll('[data-bs-toggle="tooltip"]')
+);
 if (tooltipTriggerList) {
   const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl);
@@ -15,7 +17,7 @@ if (tooltipTriggerList) {
 
 /**
  * Change language and stay on the same page
- * ==========================================================
+ * ====================================================================================================================
  */
 languageItems.forEach((lie) => {
   lie.addEventListener("click", (liie) => {
@@ -26,7 +28,10 @@ languageItems.forEach((lie) => {
       const params = new URLSearchParams(window.location.search);
       // console.log(params.get('lang'));
       if (params.get("lang")) {
-        newUrl = newUrl.replace(`lang=${params.get("lang")}`, `lang=${selectedLanguage}`);
+        newUrl = newUrl.replace(
+          `lang=${params.get("lang")}`,
+          `lang=${selectedLanguage}`
+        );
         // console.log(`lang=${params.get('lang')}`);
       } else {
         newUrl += `&lang=${selectedLanguage}`;
@@ -48,18 +53,34 @@ mobileExpandMenuIcon.addEventListener("click", (meme) => {
   if (mobileExpandMenu.classList.contains("d-block") && expanded === true) {
     mobileExpandMenu.classList.remove("d-block");
     mobileExpandMenu.classList.add("d-none");
-    mobileExpandMenuIcon.querySelector(".menu-open-icon").classList.remove("d-none");
-    mobileExpandMenuIcon.querySelector(".menu-open-icon").classList.add("d-block");
-    mobileExpandMenuIcon.querySelector(".menu-close-icon").classList.remove("d-block");
-    mobileExpandMenuIcon.querySelector(".menu-close-icon").classList.add("d-none");
+    mobileExpandMenuIcon
+      .querySelector(".menu-open-icon")
+      .classList.remove("d-none");
+    mobileExpandMenuIcon
+      .querySelector(".menu-open-icon")
+      .classList.add("d-block");
+    mobileExpandMenuIcon
+      .querySelector(".menu-close-icon")
+      .classList.remove("d-block");
+    mobileExpandMenuIcon
+      .querySelector(".menu-close-icon")
+      .classList.add("d-none");
   }
   if (mobileExpandMenu.classList.contains("d-none") && expanded === false) {
     mobileExpandMenu.classList.remove("d-none");
     mobileExpandMenu.classList.add("d-block");
-    mobileExpandMenuIcon.querySelector(".menu-open-icon").classList.remove("d-block");
-    mobileExpandMenuIcon.querySelector(".menu-open-icon").classList.add("d-none");
-    mobileExpandMenuIcon.querySelector(".menu-close-icon").classList.remove("d-none");
-    mobileExpandMenuIcon.querySelector(".menu-close-icon").classList.add("d-block");
+    mobileExpandMenuIcon
+      .querySelector(".menu-open-icon")
+      .classList.remove("d-block");
+    mobileExpandMenuIcon
+      .querySelector(".menu-open-icon")
+      .classList.add("d-none");
+    mobileExpandMenuIcon
+      .querySelector(".menu-close-icon")
+      .classList.remove("d-none");
+    mobileExpandMenuIcon
+      .querySelector(".menu-close-icon")
+      .classList.add("d-block");
   }
 
   expanded = !expanded;
@@ -76,7 +97,8 @@ function countryCodePrefixForPhone(hasCountry) {
   let country_code = "+229"; // default
 
   if (phonePrefixSelect) {
-    if (phonePrefixSelect.value !== null || phonePrefixSelect.value !== "") country_code = phonePrefixSelect.value;
+    if (phonePrefixSelect.value !== null || phonePrefixSelect.value !== "")
+      country_code = phonePrefixSelect.value;
   }
 
   if (hasCountry) {
@@ -154,7 +176,9 @@ function sidebarElementToggle(allMenuItems, allContent) {
   if (pse !== null) {
     prevSelectedContent = JSON.parse(pse).selectedContent;
     prevSelectedElement = JSON.parse(pse).selectedElement;
-    const pseItem = document.querySelector(`[data-item="${prevSelectedElement}"]`);
+    const pseItem = document.querySelector(
+      `[data-item="${prevSelectedElement}"]`
+    );
     const pseContent = document.querySelector(`.${prevSelectedContent}`);
     if (pseItem === null || pseContent === null) {
       return localStorage.clear();
@@ -204,8 +228,12 @@ function sidebarElementToggle(allMenuItems, allContent) {
       prevSelectedContent = JSON.parse(pse).selectedContent;
       prevSelectedElement = JSON.parse(pse).selectedElement;
     }
-    const prevItemElement = document.querySelector(`[data-item="${prevSelectedElement}"]`);
-    const prevContentElement = document.querySelector(`.${prevSelectedContent}`);
+    const prevItemElement = document.querySelector(
+      `[data-item="${prevSelectedElement}"]`
+    );
+    const prevContentElement = document.querySelector(
+      `.${prevSelectedContent}`
+    );
     if (prevItemElement.classList.contains("active")) {
       prevItemElement.classList.remove("active");
     }
@@ -213,9 +241,13 @@ function sidebarElementToggle(allMenuItems, allContent) {
       prevContentElement.classList.remove("d-block");
       prevContentElement.classList.add("d-none");
     }
-    const currentItemElement = document.querySelector(`[data-item="${selectedElement}"]`);
+    const currentItemElement = document.querySelector(
+      `[data-item="${selectedElement}"]`
+    );
 
-    const pseCurrentContentElement = document.querySelector(`.${selectedContent}`);
+    const pseCurrentContentElement = document.querySelector(
+      `.${selectedContent}`
+    );
 
     // Select proper menu item
     currentItemElement.classList.add("active");
@@ -226,7 +258,10 @@ function sidebarElementToggle(allMenuItems, allContent) {
     }
 
     localStorage.removeItem("pse");
-    localStorage.setItem("pse", JSON.stringify({ selectedElement, selectedContent }));
+    localStorage.setItem(
+      "pse",
+      JSON.stringify({ selectedElement, selectedContent })
+    );
   }
 }
 
@@ -265,7 +300,7 @@ function errorMessageElement(errMsg) {
 
 /**
  * @extra function 4
- * ==========================================================
+ * ====================================================================================================================
  */
 function textInputValidate(textVal, minLen = 1) {
   if (textVal === null || textVal === "" || textVal?.length < minLen) {
@@ -278,7 +313,7 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
   /**
    * @page 1
    * @page login
-   * ==========================================================
+   * ====================================================================================================================
    */
   if (
     window.location.pathname === "/login.php" ||
@@ -318,7 +353,7 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
    * @page 2
    * @page signup
    * Select mobile number
-   * ==========================================================
+   * ====================================================================================================================
    */
   if (
     window.location.pathname === "/signup.php" ||
@@ -331,6 +366,42 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     // });
 
     const signupForm = document.getElementById("signup-form");
+    const signupInputs = signupForm.getElementsByTagName("input");
+    const signupTextInputs = signupForm.getElementsByTagName("textarea");
+    const privacyPolicyInput = signupForm.querySelector("input[name='pp']");
+
+    // Set all previous values from localstorage
+    const prevSignupFields = window.localStorage.getItem("signupFields"); // Remove this from success redirect page that is login
+    if (prevSignupFields) {
+      const prevSignupFieldsVal = JSON.parse(prevSignupFields);
+      // console.log(prevSignupFieldsVal);
+      if (prevSignupFieldsVal.length > 0) {
+        for (const { key, val } of prevSignupFieldsVal) {
+          // console.log({key, val});
+          switch (key) {
+            case "phone":
+              break;
+            case "interest":
+              document.querySelector(`textarea[name="${key}"]`).value = val;
+              break;
+            case "source":
+              document.querySelector(`textarea[name="${key}"]`).value = val;
+              break;
+            case "pp":
+              document.querySelector(`input[name="${key}"]`).checked = val;
+              break;
+
+            default:
+              document.querySelector(`input[name="${key}"]`).value = val;
+              break;
+          }
+          if (key !== "phone") {
+          }
+        }
+      }
+    }
+
+    // console.log(signupInputs);
     signupForm.addEventListener("submit", (event) => {
       try {
         let valudationSucceed = true;
@@ -342,13 +413,14 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
         });
         if (!valudationSucceed) return event.preventDefault();
         */
-        const privacyPolicyInput = signupForm.querySelector("input[name='pp']");
         // console.log(privacyPolicyInput.checked);
         valudationSucceed = privacyPolicyInput.checked;
         // console.log({ valudationSucceed });
         if (valudationSucceed === false) {
           // Show error message
-          const msgElement = errorMessageElement("You must agree with our privacy policy.");
+          const msgElement = errorMessageElement(
+            "You must agree with our privacy policy."
+          );
           signupForm.parentElement.insertBefore(msgElement, signupForm);
           signupForm.parentElement.scrollIntoView();
           return event.preventDefault();
@@ -358,6 +430,28 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
         //   console.log(ipt.value);
         // });
         // return event.preventDefault();
+
+        // save data to local storage
+        const inputList = Array.from(signupInputs);
+        signupVal = [];
+        for (let i = 0; i < inputList.length; i++) {
+          if (inputList[i].name === "pp") {
+            signupVal.push({
+              key: inputList[i].name,
+              val: inputList[i].checked,
+            });
+          } else {
+            signupVal.push({ key: inputList[i].name, val: inputList[i].value });
+          }
+        }
+        const inputTextList = Array.from(signupTextInputs);
+        for (let i = 0; i < inputTextList.length; i++) {
+          signupVal.push({
+            key: inputTextList[i].name,
+            val: inputTextList[i].value,
+          });
+        }
+        window.localStorage.setItem("signupFields", JSON.stringify(signupVal));
       } catch (subErr) {
         console.log(subErr);
         event.preventDefault();
@@ -370,8 +464,13 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     const govtIdInput = document.querySelector("[name='govt_id']");
     if (govtIdInput) {
       // /(\.jpg|\.jpeg|\.png|\.gif)$/i
-      govtIdInput.addEventListener("change", (giie) => validateUploadedFile(giie, ["png", "jpg", "jpeg", "pdf"]));
+      govtIdInput.addEventListener("change", (giie) =>
+        validateUploadedFile(giie, ["png", "jpg", "jpeg", "pdf"])
+      );
     }
+  } else {
+    // Set signupFields from signup page
+    window.localStorage.removeItem("signupFields");
   }
 
   /**
@@ -385,10 +484,13 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     window.location.pathname === "/dashboard"
   ) {
     const generateLink = document.getElementById("generate-link");
-    const generateLinkDisplay = document.getElementById("generated-link-display");
+    const generateLinkDisplay = document.getElementById(
+      "generated-link-display"
+    );
     const allMenuItems = document.querySelectorAll(".menu-item");
     const allContent = document.querySelectorAll(".content");
-    if (allMenuItems && allContent) sidebarElementToggle(allMenuItems, allContent);
+    if (allMenuItems && allContent)
+      sidebarElementToggle(allMenuItems, allContent);
 
     countryCodePrefixForPhone(true);
 
@@ -397,13 +499,19 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     const addressInputProof = document.querySelector("[name='address_proof']");
     if (govtIdInput) {
       // /(\.jpg|\.jpeg|\.png|\.gif)$/i
-      govtIdInput.addEventListener("change", (giie) => validateUploadedFile(giie, ["png", "jpg", "jpeg", "pdf"]));
+      govtIdInput.addEventListener("change", (giie) =>
+        validateUploadedFile(giie, ["png", "jpg", "jpeg", "pdf"])
+      );
     }
     if (govtIdInputProof) {
-      govtIdInputProof.addEventListener("change", (gipe) => validateUploadedFile(gipe, ["png", "jpg", "jpeg", "pdf"]));
+      govtIdInputProof.addEventListener("change", (gipe) =>
+        validateUploadedFile(gipe, ["png", "jpg", "jpeg", "pdf"])
+      );
     }
     if (addressInputProof) {
-      addressInputProof.addEventListener("change", (aipe) => validateUploadedFile(aipe, ["png", "jpg", "jpeg", "pdf"]));
+      addressInputProof.addEventListener("change", (aipe) =>
+        validateUploadedFile(aipe, ["png", "jpg", "jpeg", "pdf"])
+      );
     }
 
     const agreement = document.getElementById("agreement");
@@ -433,7 +541,7 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     //   }
     // });
     // console.log({text: generateLinkDisplay.textContent.toString().trim()});
-    
+
     /*
     if (generateLinkDisplay) {
       if (generateLinkDisplay.textContent && generateLinkDisplay.textContent.toString().trim() !== "" && generateLinkDisplay.textContent.toString().trim() !== "null") {
@@ -464,14 +572,19 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     countryCodePrefixForPhone(true);
     const url = new URLSearchParams(window.location.search);
     if (url.get("stockvell_id")) {
-      const singleStockvellPack = document.getElementById("single-stockvell-pack");
-      const approvedStockvellList = document.getElementById("approved-stockvell-list");
+      const singleStockvellPack = document.getElementById(
+        "single-stockvell-pack"
+      );
+      const approvedStockvellList = document.getElementById(
+        "approved-stockvell-list"
+      );
     }
     const logedinContent = document.querySelector(".section-2");
     if (logedinContent) {
       const allMenuItems = document.querySelectorAll(".menu-item");
       const allContent = document.querySelectorAll(".content");
-      if (allMenuItems && allContent) sidebarElementToggle(allMenuItems, allContent);
+      if (allMenuItems && allContent)
+        sidebarElementToggle(allMenuItems, allContent);
     }
 
     const agreement = document.getElementById("agreement");
@@ -500,8 +613,12 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     const recoverEmailForm = document.querySelector(".email-form");
     const allFormContent = document.querySelectorAll(".form-content");
 
-    recoverBtnEmail.addEventListener("click", (rbee) => toggleForm(rbee, "email"));
-    recoverBtnPhone.addEventListener("click", (rbee) => toggleForm(rbee, "phone"));
+    recoverBtnEmail.addEventListener("click", (rbee) =>
+      toggleForm(rbee, "email")
+    );
+    recoverBtnPhone.addEventListener("click", (rbee) =>
+      toggleForm(rbee, "phone")
+    );
 
     function toggleForm(tfe, content) {
       tfe.preventDefault();
@@ -558,7 +675,9 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     const govtIdInput = document.querySelector("[name='govt_id']");
     if (govtIdInput) {
       // /(\.jpg|\.jpeg|\.png|\.gif)$/i
-      govtIdInput.addEventListener("change", (giie) => validateUploadedFile(giie, ["png", "jpg", "jpeg", "pdf"]));
+      govtIdInput.addEventListener("change", (giie) =>
+        validateUploadedFile(giie, ["png", "jpg", "jpeg", "pdf"])
+      );
     }
   }
 
@@ -575,7 +694,9 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     // Toggle content
     const leaderRequestBtn = document.getElementById("leader-request-btn");
     const leaderRequestForm = document.getElementById("leader-request-form");
-    const cancelLeaderRequest = document.getElementById("cancel-leader-request");
+    const cancelLeaderRequest = document.getElementById(
+      "cancel-leader-request"
+    );
 
     // Toggle form
     if (leaderRequestBtn) {
@@ -608,10 +729,14 @@ document.addEventListener("DOMContentLoaded", (dcle) => {
     const addressIdInput = document.querySelector("[name='address_proof']");
     if (govtIdInput) {
       // /(\.jpg|\.jpeg|\.png|\.gif)$/i
-      govtIdInput.addEventListener("change", (giie) => validateUploadedFile(giie, ["png", "jpg", "jpeg", "pdf"]));
+      govtIdInput.addEventListener("change", (giie) =>
+        validateUploadedFile(giie, ["png", "jpg", "jpeg", "pdf"])
+      );
     }
     if (addressIdInput) {
-      addressIdInput.addEventListener("change", (aiie) => validateUploadedFile(aiie, ["png", "jpg", "jpeg", "pdf"]));
+      addressIdInput.addEventListener("change", (aiie) =>
+        validateUploadedFile(aiie, ["png", "jpg", "jpeg", "pdf"])
+      );
     }
   }
 

@@ -306,15 +306,21 @@ $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $stockvel
                                         <?php
                                         $ml = __("Appoint leader");
                                         // rpl = requestd pack leader
+                                        // echo json_encode($rpl_result);
 
                                         foreach ($rpl_result as $rpl_key) {
 
 
                                             $member_id_hidden_input = $input_field->inputHidden("member_id", $rpl_key["member_id"]);
                                             $sm_id_hidden_input = $input_field->inputHidden("sm_id", $rpl_key["id"]);
+                                            $leader_btn = "";
+                                            // echo json_encode(array("rpl_key_id" => $rpl_key["id"], "leader_id" => $leader->id));
+                                            if($rpl_key["member_id"] !== $leader->id){
+                                                $leader_btn = "<button type='submit' name='make_leader_of_pack_submit' class='btn btn-primary'>$ml</button>";
+                                            }
                                             echo "
                                           <tr class='text-capitalize'>
-                                             <th>" . $rpl_key["id"] . "</th>
+                                             <th>" . $rpl_key["member_id"] . "</th>
                                              <td>" . $rpl_key["firstname"] . " " . $rpl_key["surname"]  . "</td>
                                              <td class='text-lowercase'>" . $rpl_key["email"] . "</td>
                                              <td><a class='btn btn-primary' href='/uploads/" . $rpl_key["govt_id_proof"] . "'>View</td>
@@ -324,7 +330,7 @@ $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $stockvel
                                                 $stockvell_id_hidden_input 
                                                 $member_id_hidden_input
                                                 $sm_id_hidden_input
-                                                <button type='submit' name='make_leader_of_pack_submit' class='btn btn-primary'>$ml</button>
+                                                $leader_btn
                                              </form>
                                              </td>
                                           </tr>
