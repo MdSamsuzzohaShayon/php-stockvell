@@ -39,13 +39,13 @@ class SendSMS
                     'body' => $smsBody
                 ]
             );
-            return true;
+            // return true;
         } catch (\Exception $e) {
             echo "Message could not be sent. Error: " . $e->getMessage() . " <br />";
-            echo $e->getMessage();
-            exit();
+            // echo $e->getMessage();
         }
-        return false;
+        return true;
+
     }
 }
 

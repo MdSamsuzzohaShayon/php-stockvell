@@ -39,7 +39,7 @@ if (isset($_POST["approve_stockvell_pack"])) {
     $stockvel_id = $_GET["stockvel_id"];
     $leader_id = $_GET["leader_id"];
     // update
-    $stockvell_form->approveStockvellByAdmin($stockvel_id);
+    $stockvell_form->approveStockvellByAdmin($stockvel_id, $leader_id);
 }
 
 // reject_stockvell_pack

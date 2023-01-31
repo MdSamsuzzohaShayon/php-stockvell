@@ -48,11 +48,13 @@ use Utils\ErrorHandler;
 
 $foundStockvell = new FetchStockvell(); // Variables getting from dashboard.php
 // echo $stockvel_id ;
+//getASingleApprovedStockvellWithMembers
 $ssr_result = $foundStockvell->getASingleApprovedStockvell($stockvel_id);
 if($ssr_result["status"] === "PENDING" && $ssr_result["leader_id"] === null){
     header("Location: /packs");
     exit();
 }
+
 // echo json_encode($ssr_result["members"]);
 $approved_members = [];
 $pending_members = [];
@@ -83,7 +85,7 @@ $cmosd_result = null; // current member of stockvell destail
 if ($is_admin === false) {
     $is_mos = $foundStockvell->isMemberBelongToStockvell($stockvel_id, $member_id); // This return boolean value
     $rtbl_result = $foundStockvell->memberWhoRequestToBeLeader($member_id, $stockvel_id); // rtbl = request to be leader
-    if ($rtbl_result->id) {
+    if ($rtbl_result) {
         $did_request = true;
     }
     $cmosd_result = $foundStockvell->getAMemberOfThePack($stockvel_id, $member_id);
@@ -112,6 +114,7 @@ $input_field = new InputField();
 $member_fetch = new FetchMember();
 $leader = $member_fetch->findMemberByID($ssr_result['leader_id'], '/pack_single');
 $withdraw_member = $member_fetch->findMemberByID($ssr_result['withdraw_member_id'], '/pack_single');
+$logged_member = $member_fetch->findMemberByID($member_id, '/pack_single');
 
 
 // $ssr_result
@@ -123,7 +126,9 @@ $today_date = date("Y-m-d");
 if ($today_date >= $ssr_result['withdraw_at']) {
     // if date meet update withdraw member id and date
     $stockvell_control = new StockvellForms();
-    $stockvell_control->setMemberToWithdrawFIFO($stockvel_id, $withdraw_member->id);
+    if($withdraw_member) {
+        $stockvell_control->setMemberToWithdrawFIFO($stockvel_id, $withdraw_member->id);
+    }
 }
 
 // echo json_encode($ssr_result['members']);
@@ -137,6 +142,10 @@ $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $stockvel
     <section class="section-1">
         <div class="container">
             <?php if ($has_error) echo $err_handler->displayErrors(); ?>
+            <!--
+            Pack overview start
+            ============================================================================================================
+            -->
             <div class="row">
                 <div class="col-md-6">
                     <p> <?php if ($leader) echo __("Leader") . " " . $leader->firstname . " " . $leader->surname;  ?> <?php
@@ -277,6 +286,16 @@ $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $stockvel
                     </div>
                 </div>
             </div>
+            <!--
+            Pack overview Ends
+            ============================================================================================================
+            -->
+
+
+            <!--
+            Leader request start
+            ============================================================================================================
+            -->
             <?php if ($is_admin) { ?>
                 <div class="row">
                     <p>
@@ -326,7 +345,7 @@ $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $stockvel
                                              <td><a class='btn btn-primary' href='/uploads/" . $rpl_key["govt_id_proof"] . "'>View</td>
                                              <td><a class='btn btn-primary' href='/uploads/" . $rpl_key["address_proof"] . "'>View</td>
                                              <td>
-                                             <form action='/includes/pack_single.inc.php' method='post'>
+                                             <form action='/includes/pack_single.inc.php' method='post' class='m-0 p-0'>
                                                 $stockvell_id_hidden_input 
                                                 $member_id_hidden_input
                                                 $sm_id_hidden_input
@@ -343,10 +362,20 @@ $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $stockvel
                         <?php }                  ?>
                     </div>
                 </div>
+                
             <?php }            ?>
+            <!--
+            Leader request ends
+            ============================================================================================================
+            -->
+
+ 
 
 
-            <!-- List of members start  -->
+            <!--
+            List of members start
+            ============================================================================================================
+            -->
             <?php
             if (!$sharelink) {
             ?>
@@ -356,9 +385,9 @@ $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $stockvel
                     </p>
                     <div class="collapse" id="collapseExample">
                         <?php
-                        // psr = pending stockvell result 
+                        // psr = pending stockvell result
                         // $psr_result - getting from dashboard.inc.php
-                        if (count($ssr_result['members']) <= 0) {
+                        if (count($approved_members) <= 0) {
                             $nmjy = __("No member joined yet");
                             echo "<div class='alert alert-warning'>$nmjy</div>";
                         } else { ?>
@@ -408,11 +437,17 @@ $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $stockvel
             <?php
             }
             ?>
-            <!-- List of members ends  -->
+            <!--
+            List of members ends
+            ============================================================================================================
+            -->
 
-            <!-- List of unapproved members start  -->
+            <!--
+            List of unapproved members start
+            ============================================================================================================
+            -->
             <?php
-            if ($leader && $member_id === $leader->id) {
+            if ($is_admin || ($leader && $member_id === $leader->id)) {
             ?>
                 <div class="row">
                     <p>
@@ -487,23 +522,44 @@ $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $stockvel
             <?php
             }
             ?>
-            <!-- List of unapproved members ends  -->
+            <!--
+            List of unapproved members ends
+            ============================================================================================================
+            -->
 
 
-            <!-- Agreement start  -->
+            <!--
+            Agreement start
+            ============================================================================================================
+            -->
             <div class="row">
                 <p>
                 <h2 class="h2" data-bs-toggle="collapse" href="#agreementCollapse" role="button" aria-expanded="false" aria-controls="agreementCollapse"> <span><img src="/public/icons/down-arrow.svg" height="30" alt=""></span> <?= __("Agreement") ?></h2>
                 </p>
                 <div class="collapse" id="agreementCollapse">
-                    <?php echo $ssr_result['agreement']; ?>
+                    <?php 
+                    $agreement_context = $ssr_result['agreement']; 
+                    if($member_id){
+                        $agreement_date = date('Y-m-d'); 
+                        $logged_member = $member_fetch->findMemberByID($member_id, '/pack_single');
+                        $agreement_context .=  "<p>" . $logged_member->firstname . ' ' . $logged_member->surname . "</p>";
+                        $agreement_context .= "<p>" . $agreement_date . "</p>";
+                    }
+                    echo $agreement_context;
+                    ?>
                 </div>
             </div>
-            <!-- Agreement end  -->
+            <!--
+            Agreement end
+            ============================================================================================================
+            -->
 
-            <!-- Share link to facebook start  -->
+            <!--
+            Share link to facebook start
+            ============================================================================================================
+            -->
             <?php
-            $backend_url = $_ENV['BACKEND_URL'];
+            $backend_url = $_ENV['FRONTEND_URL'];
             $shareable_link = "$backend_url/pack_single/?stockvel_id=$stockvel_id";
             ?>
             <div class="social-share d-flex justify-content-start align-items center">
@@ -520,6 +576,10 @@ $stockvell_id_hidden_input = $input_field->inputHidden("stockvell_id", $stockvel
                     <img src="/public/icons/linkedin.svg" alt="">
                 </a>
             </div>
+            <!--
+           Share link to facebook ends
+           ============================================================================================================
+           -->
     </section>
 </main>
 

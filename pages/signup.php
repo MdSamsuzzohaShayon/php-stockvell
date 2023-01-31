@@ -95,7 +95,7 @@ $input_field = new InputField();
         <div class="row mb-3">
           <?php
           echo $input_field->inputText("city", $cty, false, "text", true);
-          echo $input_field->inputSelect("gender", $gr, false, $cmr_result->gender, ["male", "female", "others"]);
+          echo $input_field->inputSelect("gender", $gr, false, null, ["male", "female", "others"]);
           ?>
         </div>
         <div class="row mb-3">

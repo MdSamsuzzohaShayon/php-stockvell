@@ -17,7 +17,7 @@ require_once($ROOT . '/layouts/header.php');
       <div class="row mx-0 flex-column-reverse flex-md-row">
         <div class="col-12 col-md-6">
           <h1 class="h1 text-primary heading"><?= __("Stockvel Makes Saving for Life Easy") ?></h1>
-          <p class="text-primary"><?= __("A platform for Income Generation and Wealth Creation. A platform where members share a common savings goal, such as a December party, New Year's Eve, or a wedding, or investing in real estate or the stock market.") ?></p>
+          <p class="text-primary"><?= __("Welcome to Stockvel, the premier money pooling and saving platform for all! Whether you are just starting out on your financial journey or are an experienced saver, we have something for everyone. Our platform is designed to be user-friendly and intuitive, with a range of saving options to choose from. Plus, with expert tools from our team,, educational resources to help you make informed decisions, and a supportive community of fellow savers, Stockvel has everything you need to achieve your financial goals. Join us today and start your path to financial success!") ?></p>
           <?php if ($is_member) { ?>
             <a href="/packs.php" class="btn btn-warning text-primary"><?= __("Join Now") ?></a>
           <?php } else { ?>

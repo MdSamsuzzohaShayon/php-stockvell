@@ -4,9 +4,12 @@ namespace Models\Member;
 
 use Config\Database;
 use Utils\SendEmail;
-
+use Utils\HTMLMessage;
 use Models\Member\Member;
+use Models\Member\FetchMember;
 use Models\Stockvell\StockvellForms;
+
+
 
 class MemberForms extends Member
 {
@@ -182,19 +185,17 @@ class MemberForms extends Member
             header("Location: /pack_single/?stockvel_id=$stockvell_id&error=emptyinput");
             exit();
         }
-        // echo json_encode(
-        //     array(
-        //         "member_id" => $member_id,
-        //         "stockvell_id" => $stockvell_id,
-        //         "govt_id_proof" => $govt_id_proof,
-        //         "address_proof" => $address_proof
-        //     )
-        // );
-        // exit();
+//         echo json_encode(
+//             array(
+//                 "member_id" => $member_id,
+//                 "stockvell_id" => $stockvell_id,
+//                 "govt_id_proof" => $govt_id_proof,
+//                 "address_proof" => $address_proof
+//             )
+//         );
+//         exit();
         $unique_govt_id_name = $this->uploadFileToServer($govt_id_proof, $this->ROOT, "/pack_single/?stockvel_id=$stockvell_id&");
         $unique_address_name = $this->uploadFileToServer($address_proof, $this->ROOT, "/pack_single/?stockvel_id=$stockvell_id&");
-        // echo json_encode(array($unique_govt_id_name, $unique_address_name));
-        // exit();
         if ($this->requestToBeTheLeader($member_id, $stockvell_id, $unique_govt_id_name, $unique_address_name)) {
             header("Location: /pack_single/?stockvel_id=$stockvell_id&error=none");
             exit();
@@ -263,6 +264,19 @@ class MemberForms extends Member
             $stmt = $this->connect()->prepare($sql);
             $new_status = "APPROVED";
             if ($stmt->execute(array('status' => $new_status, "member_id" => $member_id, "stockvell_id" => $stockvell_id))) {
+                // find email
+                $f_member = new FetchMember();
+                $find_member = $f_member->findMemberByID($member_id, null);
+                $member_email = $find_member->email;
+
+                // get message string
+                $html_msg = new HTMLMessage();
+                $msg_str = $html_msg->joinStockvelMessage($find_member->firstname . " " . $find_member->surname);
+
+
+                // send email
+                $send_email = new SendEmail();
+                $send_email->sendMessage($member_email, $msg_str, 'Joined a stockvel pack');
                 header("Location: $redirect_url/?stockvel_id=$stockvell_id&error=none");
                 exit();
             } else {

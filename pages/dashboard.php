@@ -31,15 +31,15 @@ require_once($ROOT . "/config/option-list.php");
 use Utils\ErrorHandler;
 use Utils\InputField;
 use Utils\PeriodConvert;
+use Utils\HTMLMessage;
 use Models\Member\FetchMember;
 use Models\Stockvell\FetchStockvell;
-
 
 
 $stockvell_control = new FetchStockvell(); // Variables getting from dashboard.php
 $stockvell_control->setMember($member_email, $member_id);
 $cmr_result = $stockvell_control->getCurrentMember(); // cm = current member result
-$psr_result = $stockvell_control->getAllPendingStockvell("PENDING", false, $member_id); // psr = pending search result
+$psr_result = $stockvell_control->getAllPendingStockvellOfAMember("PENDING", $member_id); // psr = pending search result
 $asr_result = $stockvell_control->getAllApprovedStockvellOfAMember($member_id); // asr = approved search result
 $csr_result = $stockvell_control->getAllCoseStockvellOfAMember($member_id); // csr = close search result
 
@@ -109,7 +109,6 @@ $npf =__("No pack found");
                   <p><?= __("Edit any details of a Stokvel pack!") ?></p>
                </div>
                <?php if ($has_error) echo $err_handler->displayErrors(); ?>
-               <!-- Signup Form start  -->
                <form action="/includes/dashboard.inc.php" method="POST" enctype="multipart/form-data">
                   <div class="row mb-3 mx-0">
                      <?php
@@ -178,7 +177,6 @@ $npf =__("No pack found");
 
                   <button type="submit" name="member_update_submit" class="btn btn-primary"><?= __("Update"); ?></button>
                </form>
-               <!-- Signup Form end  -->
             </div>
             <!-- profile content end  -->
 
@@ -225,7 +223,7 @@ $npf =__("No pack found");
                            <h5 class="card-title"><?= $ssr_result['category']; ?></h5>
                            <p class="card-text"><?php echo $ssr_result['description']; ?></p>
                            <p class="card-text"><?= __('Member limit:') . $ssr_result['max_member']; ?></p>
-                           <?php if ($leader->id === $member_id) {
+                           <?php if ($leader && $leader->id === $member_id) {
                               echo "<div class='d-flex flex-column'>
                                        <p class='card-text'>
                                           $lr $leader->firstname  $leader->surname
@@ -241,7 +239,7 @@ $npf =__("No pack found");
                   </div>
                   <?php
                   $withdraw_member = null;
-                  if ($leader->id === $member_id) {
+                  if ($leader && $leader->id === $member_id) {
                   ?>
                      <!-- widthdraw member selection start -->
                      <div class="row mb-3 mx-0">
@@ -442,7 +440,7 @@ $npf =__("No pack found");
                            ?>
                            <div class="d-flex justify-content-start">
                               <?php
-                              if ($leader->id === $member_id) {
+                              if ($leader && $leader->id === $member_id) {
                                  $leader_id_hidden_input = $input_field->inputHidden("leader_id", $member_id);
                                  echo "
                                        <form action='/includes/dashboard.inc.php' method='post'>
@@ -460,7 +458,7 @@ $npf =__("No pack found");
                   <!-- action one section end  -->
 
                   <!-- action two section start  -->
-                  <div class="row mb-3 mx-0">
+                  <!-- <div class="row mb-3 mx-0">
                      <div class="card p-0">
                         <div class="card-header">
                            <?= __("A tool for leader and members meeting"); ?>
@@ -468,7 +466,7 @@ $npf =__("No pack found");
                         <div class="card-body">
                            <div class="d-flex justify-content-start">
                               <?php
-                              if ($leader->id === $member_id) {
+                              if ($leader && $leader->id === $member_id) {
                                  $leader_id_hidden_input = $input_field->inputHidden("leader_id", $member_id);
                                  echo "
                                        <form action='/includes/dashboard.inc.php' method='post'>
@@ -482,13 +480,13 @@ $npf =__("No pack found");
                            </div>
                         </div>
                      </div>
-                  </div>
+                  </div> -->
                   <!-- action two section end  -->
 
                   <!-- action three section start  -->
                   <div class="row mb-3 mx-0 d-flex">
                      <?php
-                     if ($leader->id === $member_id) {
+                     if ($leader && $leader->id === $member_id) {
                         $leader_id_hidden_input = $input_field->inputHidden("leader_id", $member_id);
                         echo "
                                        <form action='/includes/dashboard.inc.php' method='post' class='w-fit'>
@@ -736,7 +734,10 @@ $npf =__("No pack found");
                   </div>
                   <div class="row mb-3 mx-0">
                      <?php
-                     $default_agreement = __("<h2>The&nbsp;goal&nbsp;of&nbsp;the&nbsp;pack&nbsp;</h2><p><strong>Rules&nbsp;and&nbsp;regulations</strong>&nbsp;</p><ul><li>rule1&nbsp;</li><li>rule2&nbsp;</li><li>rule3&nbsp;</li><li>rule4&nbsp;</li><li>rule5</li></ul>");
+                     $arg_str = new HTMLMessage();
+                     // $default_agreement = __("<h2>The&nbsp;goal&nbsp;of&nbsp;the&nbsp;pack&nbsp;</h2><p><strong>Rules&nbsp;and&nbsp;regulations</strong>&nbsp;</p><ul><li>rule1&nbsp;</li><li>rule2&nbsp;</li><li>rule3&nbsp;</li><li>rule4&nbsp;</li><li>rule5</li></ul>");
+                     $leader_name = $cmr_result->firstname . " " . $cmr_result->surname;
+                     $default_agreement = $arg_str->agreementDefault($leader_name);
                      echo $input_field->inputTextarea("agreement", $agmt, true, true, $default_agreement);
                      ?>
                   </div>

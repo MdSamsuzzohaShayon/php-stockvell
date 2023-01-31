@@ -50,6 +50,10 @@ if(isset($_POST["member_leader_request_pack"])){
     $govt_id_proof = $_FILES["govt_id_proof"];
     $address_proof = $_FILES["address_proof"];
 
+
+//    echo json_encode(array("member_id" => $member_id, "stockvel_id" => $stockvell_id, "govt_id_proof" => $govt_id_proof, "address_proof" => $address_proof));
+//    exit();
+
     $member_controler = new MemberForms();
     $member_controler->submitLeaderRequest($member_id,  $stockvell_id, $govt_id_proof, $address_proof);
 }

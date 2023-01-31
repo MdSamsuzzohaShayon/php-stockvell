@@ -28,7 +28,9 @@ $lang = [
     "Lang" => "Langue",
     "Logout" => "Se déconnecter",
     "Stockvel Makes Saving for Life Easy" => "Stockvel facilite l'épargne pour la vie",
-    "A platform for Income Generation and Wealth Creation. A platform where members share a common savings goal, such as a December party, New Year's Eve, or a wedding, or investing in real estate or the stock market." => "Une plateforme pour la Génération de Revenus et la Création de Richesse. Une plateforme où les membres partagent un objectif d'épargne commun, comme une fête de décembre, le réveillon du Nouvel An ou un mariage, ou encore un investissement dans l'immobilier ou en bourse.", //changed Stockvell to Stockvel
+
+    "Welcome to Stockvel, the premier money pooling and saving platform for all! Whether you are just starting out on your financial journey or are an experienced saver, we have something for everyone. Our platform is designed to be user-friendly and intuitive, with a range of saving options to choose from. Plus, with expert tools from our team,, educational resources to help you make informed decisions, and a supportive community of fellow savers, Stockvel has everything you need to achieve your financial goals. Join us today and start your path to financial success!" => "Bienvenue sur Stockvel, la première plateforme de mise en commun d'argent et d'épargne pour tous ! Que vous soyez au début de votre parcours financier ou un épargnant expérimenté, nous avons quelque chose pour chacun. Notre plateforme est conçue pour être conviviale et intuitive, avec une gamme d'options d'épargne à choisir. De plus, avec les outils experts de notre équipe, les ressources éducatives pour vous aider à prendre des décisions éclairées et une communauté d'épargnants qui vous soutient, Stockvel a tout ce dont vous avez besoin pour atteindre vos objectifs financiers. Rejoignez-nous dès aujourd'hui et commencez votre chemin vers la réussite financière.", //changed Stockvell to Stockvel
+    
     "Join Now" => "Adhérer maintenant",
     "How does it work?" => "Comment ça marche?",
     "Connect to your savings" => "Connectez-vous à votre épargne",

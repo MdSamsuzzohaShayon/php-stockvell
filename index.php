@@ -1,7 +1,8 @@
 <?php
 
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
-
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 $full_router = $_SERVER['REQUEST_URI'];
 $router = strtok($full_router, '?');
 
@@ -31,6 +32,8 @@ if ($router === '/' || $router === '/home' || $router === '/index.php' || $route
     include($ROOT . '/pages/forget_password.php');
 } elseif ($router === preg_match("/single\/[0-9]/i", $router)) {
     include('single-product-page.php');
+} elseif ($router === '/phpinfo' || $router === '/phpinfo.php'  || $router === '/phpinfo/') {
+    include('phpinfo.php');
 }
 // elseif ($router === '/includes/signup.inc.php') {
 //     include('/includes/signup.inc.php');

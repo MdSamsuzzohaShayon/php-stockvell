@@ -39,7 +39,7 @@ require_once($ROOT . "/includes/packs.inc.php");
                         foreach ($asr_result as $asr_key) { ?>
                             <div class="card pack-item mb-5">
                                 <div class="card-body text-bg-secondary text-primary">
-                                    <h4 class="h4">ID#<?= $asr_key['id'] ?></h4>
+                                    <h4 class="h4"><?= $asr_key['name'] ?></h4>
                                     <div class="d-flex justify-content-between w-full">
                                         <p><?= __("Monthly deposit"); ?></p>
                                         <?php
@@ -53,8 +53,8 @@ require_once($ROOT . "/includes/packs.inc.php");
                                         <p><?= $asr_key['category'] ?></p>
                                     </div>
                                     <div class="d-flex justify-content-between w-full">
-                                        <p><?= __("Goal"); ?></p>
-                                        <p><?= $asr_key['goal'] ?></p>
+                                        <p><?= __("ID"); ?></p>
+                                        <p><?= $asr_key['id'] ?></p>
                                     </div>
                                     <a href="/pack_single.php?stockvel_id=<?= $asr_key['id'] ?>" class="btn btn-warning text-decoration-none text-white"><?= __("Details"); ?></a>
                                 </div>

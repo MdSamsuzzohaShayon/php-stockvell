@@ -1,5 +1,13 @@
 ### MySQL Database
 
+ - [Create user in mysql](https://www.digitalocean.com/community/tutorials/how-to-create-a-new-user-and-grant-permissions-in-mysql)
+    ```
+    sudo mysql -u root
+    CREATE USER 'shayon'@'localhost' IDENTIFIED BY 'Test1234';
+    GRANT ALL PRIVILEGES ON *.* TO 'shayon'@'localhost' WITH GRANT OPTION;';
+    ```
+ - Create database `CREATE DATABASE stockvell_finance_db;`
+
   - [Many to many relationship](https://www.vultr.com/docs/using-many-to-many-sql-relationships-and-intermediate-tables/), [m-to-m](https://stackoverflow.com/questions/2923809/many-to-many-relationships-examples), [m-to-m](https://dba.stackexchange.com/questions/151904/mapping-many-to-many-relationship), 
 #### Stockvell relationship 
  - Insert a member and a stockvell (create a stockvell and add a member to it)

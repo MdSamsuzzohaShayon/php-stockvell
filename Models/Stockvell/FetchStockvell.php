@@ -130,7 +130,7 @@ class FetchStockvell extends Stockvell
             // WHERE sm.stockvell_id=:stockvell_id
             // GROUP BY sm.stockvell_id";
             $stockvell_sql = "SELECT sm.id, sm.stockvell_id, s.link, s.agreement, s.description, s.leader_id, s.withdraw_member_id, s.withdraw_at, s.category, s.max_member, s.payment, s.currency, s.payment_frequency, s.withdraw_frequency, s.name, s.status, s.start_at, s.end_at,
-            sm.member_id, sm.status AS m_status, m.firstname, m.surname, m.profession, m.country
+            sm.member_id, sm.status AS m_status, m.firstname, m.surname, m.profession, m.country, m.email
             FROM stockvell_to_member sm LEFT JOIN stockvells s ON sm.stockvell_id=s.id LEFT JOIN members m ON sm.member_id=m.id WHERE s.id=:stockvell_id;";
             $stockvell_stmt = $this->connect()->prepare($stockvell_sql);
             $stockvell_stmt->bindParam('stockvell_id', $stockvell_id);
@@ -142,8 +142,10 @@ class FetchStockvell extends Stockvell
 
 
 
+
             $total_members = count($stockvell_result);
             $members = [];
+            if($total_members <= 0)return null;
             $i = 0;
             while ($i < $total_members) {
                 $new_single_member = array(
@@ -152,11 +154,14 @@ class FetchStockvell extends Stockvell
                     "surname" => $stockvell_result[$i]['surname'],
                     "profession" => $stockvell_result[$i]['profession'],
                     "country" => $stockvell_result[$i]['country'],
+                    "email" => $stockvell_result[$i]['email'],
                     "m_status" => $stockvell_result[$i]['m_status'],
                 );
                 array_push($members, $new_single_member);
                 $i++;
             }
+
+
 
             $single_stockvell = $stockvell_result[0];
             $new_result = [
@@ -194,27 +199,24 @@ class FetchStockvell extends Stockvell
     }
 
 
-    public function getAllPendingStockvell($status, $is_admin, $member_id)
+
+
+    public function getAllPendingStockvellOfAMember($status, $member_id)
     {
 
         try {
-            if ($is_admin) {
-                // All stockvells
-                $sql = "SELECT * FROM stockvells s WHERE s.status=:status";
-                $stmt = $this->connect()->prepare($sql);
-                $stmt->bindParam('status', $status);
-            } else {
-                // All stockvell of a member
-                $sql = "SELECT sm.stockvell_id AS id, s.name, s.status, s.category,  s.max_member, s.payment, s.currency, s.payment_frequency, s.withdraw_frequency 
+            $sql = "SELECT sm.stockvell_id AS id, sm.member_id, s.name, s.status, s.category, s.agreement,  s.max_member, s.payment, s.currency, s.payment_frequency, s.withdraw_frequency 
                 FROM stockvell_to_member sm 
                 LEFT JOIN stockvells s ON sm.stockvell_id=s.id WHERE sm.member_id=:member_id AND s.status=:status";
 
-                $stmt = $this->connect()->prepare($sql);
-                $stmt->bindParam('status', $status);
-                $stmt->bindParam('member_id', $member_id, \PDO::PARAM_INT);
-            }
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam('status', $status);
+            $stmt->bindParam('member_id', $member_id, \PDO::PARAM_INT);
             $stmt->execute();
             $stockvell_result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+//            echo count( $stockvell_result) . "<br />";
+//            echo json_encode($stockvell_result);
+//            exit();
             return $stockvell_result;
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -228,12 +230,17 @@ class FetchStockvell extends Stockvell
 
     public function getStockvellByStatus($status)
     {
-        $sql = "SELECT * FROM stockvells WHERE status=:status";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam('status', $status);
-        $stmt->execute();
-        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        return $result;
+        try {
+            $sql = "SELECT * FROM stockvells WHERE status=:status";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam('status', $status);
+            $stmt->execute();
+            $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            return $result;
+        }catch (\Exception $e){
+            echo $e->getMessage();
+        }
+        return null;
     }
 
 

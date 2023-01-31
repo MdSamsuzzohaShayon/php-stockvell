@@ -19,6 +19,8 @@ class SendEmail
     {
         $this->mail = new PHPMailer(true);
         //Server settings
+        // echo json_encode(array("host" => $_ENV["EMAIL_SMTP_HOST"], "admin" => $_ENV["EMAIL_ADMIN"], "password" => $_ENV["EMAIL_PASSWORD"], "port" => intval($_ENV["EMAIL_SMTP_PORT"])));
+        // exit();
         // $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
         $this->mail->isSMTP();                                            //Send using SMTP
         $this->mail->Host       = $_ENV["EMAIL_SMTP_HOST"];                     //Set the SMTP server to send through
@@ -32,10 +34,17 @@ class SendEmail
     public function sendMessage($sendTo, $htmlBody, $subject)
     {
         try {
-
+            // echo json_encode(array("host" => $_ENV["EMAIL_SMTP_HOST"], "admin" => $_ENV["EMAIL_ADMIN"], "password" => $_ENV["EMAIL_PASSWORD"], "port" => intval($_ENV["EMAIL_SMTP_PORT"])));
+            // exit();
             //Recipients
             $this->mail->setFrom($_ENV["EMAIL_ADMIN"], 'Stockvel');
-            $this->mail->addAddress($sendTo, 'Md Shayon');     //Add a recipient
+            $this->mail->addAddress($sendTo);     //Add a recipient
+
+            /*
+            foreach ($sendTo as $key => $value) {
+                $this->mail->addAddress($value);     //Add a recipient
+            }
+            */
             // $this->mail->addAddress('ellen@example.com');               //Name is optional
             // $this->mail->addReplyTo('admin@thesportsanctum.com', 'Information');
             // $this->mail->addCC('cc@example.com');
@@ -57,7 +66,6 @@ class SendEmail
         } catch (Exception $e) {
             echo "Message could not be sent. Mailer Error: {$this->mail->ErrorInfo} <br />";
             echo $e->getMessage();
-            exit();
         }
         return false;
     }

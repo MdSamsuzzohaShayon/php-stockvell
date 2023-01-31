@@ -205,44 +205,51 @@ class Member extends Database
 
     public function uploadFileToServer($uploadedFile, $ROOT, $err_redirect)
     {
-        $target_dir = $ROOT . "/uploads/";
-        $uploaded_file_name = str_replace(' ', '_', $uploadedFile["name"]);
-        $unique_file_name = basename("m_" . date("Ymd_") . rand(100, 999) . '_' . $uploaded_file_name);
-        $imageFileType = strtolower(pathinfo($uploadedFile["name"], PATHINFO_EXTENSION));
-        $target_file = $target_dir . basename($unique_file_name);
+        try {
+            $target_dir = $ROOT . "/uploads/";
+            $uploaded_file_name = str_replace(' ', '_', $uploadedFile["name"]);
+            $unique_file_name = basename("m_" . date("Ymd_") . rand(100, 999) . '_' . $uploaded_file_name);
+            $imageFileType = strtolower(pathinfo($uploadedFile["name"], PATHINFO_EXTENSION));
+            $target_file = $target_dir . basename($unique_file_name);
 
-        // echo $target_dir . "</br>";
-        // echo $unique_file_name . "</br>";
-        // echo $imageFileType . "</br>";
-        // echo $target_file . "</br>";
-        // exit();
-        // $err_redirect = "/signup";
-        // if ($is_member === true) {
-        //     $err_redirect = '/dashboard';
-        // } else {
-        //     $err_redirect = "/signup";
-        // }
+//         echo $target_dir . "</br>";
+//         echo $unique_file_name . "</br>";
+//         echo $imageFileType . "</br>";
+//         echo $target_file . "</br>";
+//         exit();
+//         $err_redirect = "/signup";
+//         if ($is_member === true) {
+//             $err_redirect = '/dashboard';
+//         } else {
+//             $err_redirect = "/signup";
+//         }
 
-        // 1kb = 1000, 1 mb = 1000 kb
-        if ($uploadedFile['error'] === true || $uploadedFile['error'] === 1) {
-            header("Location: " . $err_redirect . "error=invalidfile");
+            // 1kb = 1000, 1 mb = 1000 kb
+            if ($uploadedFile['error'] === true || $uploadedFile['error'] === 1) {
+                header("Location: " . $err_redirect . "error=invalidfile");
+                exit();
+            }
+            // if ($uploadedFile['size'] > (1000 * 1000 * 2)) {
+            //     header("Location: " . $err_redirect . "error=invalidfile");
+            //     exit();
+            // }
+            if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "pdf") {
+                header("Location: " . $err_redirect . "error=invalidfile");
+                exit();
+            }
+//            echo json_encode($uploadedFile);
+//         echo $uploadedFile["tmp_name"] . $target_file . ' Uploaded';
+//            exit();
+            // Upload file
+             echo $target_file;
+//            copy($uploadedFile["tmp_name"], $target_file);
+            move_uploaded_file($uploadedFile["tmp_name"], $target_file);
+            return $unique_file_name;
+        }catch (\Exception $e){
+            echo $e->getMessage();
             exit();
         }
-        // if ($uploadedFile['size'] > (1000 * 1000 * 2)) {
-        //     header("Location: " . $err_redirect . "error=invalidfile");
-        //     exit();
-        // }
-        if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "pdf") {
-            header("Location: " . $err_redirect . "error=invalidfile");
-            exit();
-        }
-        // echo json_encode($uploadedFile);
-        // exit();
-        // echo $uploadedFile["tmp_name"] . $target_file . ' Uploaded';
-        // Upload file
-        // echo $target_file;
-        move_uploaded_file($uploadedFile["tmp_name"], $target_file);
-        // echo "uploads/" . $uploadedFile["name"];
-        return $unique_file_name;
+        return  null;
+
     }
 }
