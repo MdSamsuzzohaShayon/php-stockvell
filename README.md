@@ -1,130 +1,362 @@
-# Stockvell credit system
+# Stockvell Credit System
 
- - [Live Preview](http://stockvell.allinone-office.com)
+A multi-role financial group savings platform (Stokvel-style system) where users can create, join, and manage savings groups with defined financial goals, contributions, and withdrawals.
 
+🔗 Live Demo: http://stockvell.allinone-office.com
 
-### Deployment Instructions
- - All file owner change `sudo chown -R www-data:www-data project-name`
- - All file previlages change `sudo chmod -R 775 project-name`
- - Connect via SSH `ssh -p 2222 aiocel@ssh.web11.us.cloudlogin.co`
- - Install php curl `sudo apt-get install php7.4-curl`
- - Copy all file using file zilla, do not include bootstrap from `public/bootstrap`
- - Install all packages of Composer 
-    ```
-    composer install
-    composer update
-    composer show
-    // or
-    php composer.phar install
-    php composer.phar update
-    php composer.phar update "vendor/*"
-    ```
- - Change all `.env` variables
- - Run `database-migrations.php`
- - Setup `.htaccess` file for redirecting 
- - Database Migrations (Delete database and create database once again)
- - Remove `database-migrations.php`
- - Delete `phpinfo.php` file and remove inclution from `index.php`
- - Remove this 2 lines from index.php
-    ```
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-    ```
+---
 
-### Htaccess
- - [htaccess file not works in LAMP](https://stackoverflow.com/questions/28217272/htaccess-file-not-works-in-lamp)
- - [Redirect all to index.php using htaccess](https://stackoverflow.com/questions/18406156/redirect-all-to-index-php-using-htaccess)
- - [The server encountered an internal error or misconfiguration and was unable to complete your request](https://stackoverflow.com/questions/6438475/the-server-encountered-an-internal-error-or-misconfiguration-and-was-unable-to-c)
- - See logs - `cat /var/log/apache2/error.log`
- - Enable htaccess `systemctl restart apache2`
+## 📌 Table of Contents
 
- - Change some code in `sudo nano /etc/apache2/sites-available/000-default.conf` to use htaccess
+- Overview
+- Key Features
+- System Architecture
+- User Roles
+- Core Modules
+- Installation
+- Deployment Guide
+- Environment Setup
+- Database Setup
+- Apache Configuration
+- Composer
+- Security Notes
+- Business Rules
+- Roadmap / TODO
+- Known Issues
+- Configuration Notes
+
+---
+
+## 🧠 Overview
+
+Stockvell is a group-based credit and savings platform where:
+
+- Users form financial groups (Stockvell packs)
+- Each group has a defined savings goal
+- Members contribute periodically (weekly/monthly)
+- Leaders manage group operations
+- Admin oversees approvals, compliance, and governance
+
+The system supports multi-role workflows, identity verification, and financial group lifecycle management.
+
+---
+
+## ✨ Key Features
+
+- Role-based access control (Admin, Leader, Member)
+- Group savings (Stockvell packs)
+- Member invitation & join requests
+- Leader approval workflow
+- Admin governance & moderation
+- Contribution tracking system
+- Withdrawal scheduling system
+- Shareable group links
+- Document verification (ID, address proof)
+- Multi-language support (English / French ready)
+
+---
+
+## 🏗 System Architecture
+
+### Core Entities
+
+- Users
+- Members
+- Leaders
+- Admins
+- Stockvell Packs
+- Membership Requests
+- Withdrawal Schedule
+- Contributions
+
+### Relationships
+
+- One User → Many Packs (as member or leader role)
+- One Pack → Many Members
+- One Pack → One Active Leader (at a time)
+- Admin oversees all packs and users
+
+---
+
+## 👥 User Roles
+
+### 1. Admin
+- Approves/rejects packs
+- Assigns/revokes leaders
+- Manages users and documents
+- Controls platform configuration
+- Approves pack closure
+
+---
+
+### 2. Leader
+- Creates Stockvell packs
+- Defines pack rules (goal, amount, frequency, limits)
+- Manages members
+- Controls withdrawal order logic
+- Generates shareable invite links
+
+---
+
+### 3. Member
+- Joins available packs
+- Contributes funds
+- Requests to become leader (with verification)
+- Uploads identity documents (if required)
+- Views pack progress
+
+---
+
+## ⚙️ Core Modules
+
+### 📦 Stockvell Pack Module
+- Create pack (goal, amount, duration, currency)
+- Start/end date support
+- Member limit enforcement
+- Payment frequency configuration
+- Withdrawal frequency configuration
+
+---
+
+### 👤 Membership Module
+- Join request system
+- Admin approval workflow
+- Leader approval workflow
+- Member status tracking
+
+---
+
+### 🧾 Identity Verification
+- Government ID upload
+- Address proof upload
+- Admin review system
+
+---
+
+### 💰 Contribution System
+- Monthly/weekly payments
+- Payment tracking per member
+- Pack balance tracking
+
+---
+
+### 🔄 Withdrawal System
+- First-come-first-serve OR random selection
+- Admin override option
+- Scheduled withdrawal cycle
+
+---
+
+### 🔗 Sharing System
+- Shareable pack links
+- WhatsApp / social media sharing
+- Invite-based joining flow
+
+---
+
+## 🚀 Installation
+
+### 1. Clone / Upload Project
+
+Upload project to server directory:
+
+```
+
+/var/www/html/stockvell
+
+````
+
+---
+
+### 2. Set Permissions
+
+```bash
+sudo chown -R www-data:www-data stockvell
+sudo chmod -R 775 stockvell
+````
+
+---
+
+### 3. Install Dependencies
+
+```bash
+composer install
+```
+
+If needed:
+
+```bash
+composer update
+```
+
+---
+
+## 🌍 Environment Setup
+
+Create `.env` file:
+
+```env
+DB_HOST=
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
+
+APP_URL=
+MAIL_CONFIG=
+SMS_CONFIG=
+```
+
+---
+
+## 🗄 Database Setup
+
+1. Create fresh database
+2. Run migration script:
+
+```bash
+php database-migrations.php
+```
+
+3. After migration:
+
+* ❌ DELETE `database-migrations.php`
+
+---
+
+## 🌐 Apache Configuration
+
+Enable `.htaccess` support:
+
+```apache
+<Directory /var/www/html>
+    AllowOverride All
+</Directory>
+```
+
+Restart Apache:
+
+```bash
+sudo systemctl restart apache2
+```
+
+---
+
+## 📦 Composer
+
+```bash
+composer install
+composer update
+composer show
+```
+
+---
+
+## 🔐 Security Notes
+
+* Disable error display in production
+* Remove debug files:
+
+  * `phpinfo.php`
+  * migration scripts
+* Validate all uploads (max 2MB)
+* Secure `.env` file
+* Prevent direct script access
+
+---
+
+## 📌 Business Rules
+
+### Stockvell Creation Rules
+
+* Only Admin or Leader can create a pack
+* Member must request leader role with verification
+* Pack becomes active only after admin approval
+
+---
+
+### Membership Rules
+
+* Member must accept terms before joining
+* Pack cannot exceed member limit
+* Join requests require approval
+
+---
+
+### Leader Rules
+
+* Only one active leader per pack
+* Leader can be suspended by admin
+* Leader controls withdrawal order logic
+
+---
+
+### Withdrawal Rules
+
+* Modes:
+
+  * First come, first served
+  * Random selection (optional)
+* Admin can override selection
+
+---
+
+## 🛣 Roadmap / TODO
+
+* Add email + SMS notifications on events
+* Improve shareable invite system (WhatsApp integration)
+* Add pack review screen before creation
+* Add balance sheet per pack
+* Add scheduling tool (meetings)
+* Improve multilingual system (FR/EN)
+* Add admin staff roles
+* Add analytics dashboard
+
+---
+
+## 🐞 Known Issues
+
+* Signup form resets on validation error (needs localStorage fix)
+* Some admin pages return 404 on uploaded document view
+* Leader duplication issue in some packs
+* Payment frequency sometimes returns 0
+* Missing country options (e.g. USA)
+* UI inconsistencies in admin tables
+* Image upload validation incomplete in some flows
+
+---
+
+## ⚙️ Configuration Notes
+
+* Stockvell categories are defined in:
+
   ```
-    <VirtualHost *:80>
-      ServerAdmin webmaster@localhost
-      DocumentRoot /var/www/html
-      ErrorLog ${APACHE_LOG_DIR}/error.log
-      CustomLog ${APACHE_LOG_DIR}/access.log combined
-      <Directory /var/www/html>
-        AllowOverride All
-      </Directory>
-    </VirtualHost>
+  /config/option-list.php
   ```
 
+* Language system:
 
-### Planning
+  ```
+  /languages/fr.php
+  ```
 
- - [Design prototype](https://www.figma.com/file/4zCozjL5sxemgv3l5gzmrW/Stockvell-Finance?node-id=0%3A1) Color gold and blue
+* Admin seed:
 
- - For every stockvell they should have a goal (e.g. purchase a land)
- - Basically 2 types of user. 1, members and leaders (Seperated by roles), 2, administrator
- - Group of member save money (to purchase something for eid, new year or real estate properties)
- - Inviting people to the group to invest
- - Monthly contributions
- - Credit unions
- - Group members limit
+  ```
+  database-migrations.php
+  ```
 
-### Pages
- - Home / landing page
- - Register page
- - Login page
- - List all stockvell pack(user is able to choose a pack according to his goal)
- - Single stockvell pack (terms and conditions, detail, leader)
- - List all stockvell pack for an user
- - Individual stockvell pack(details of the pack, add monthly deposit, due date)
- - Admin panel (only accessable to admin), List all stockvell pack for admin(Unapproved and approved stockvell pack)(admin is able to close stockvell pack), see application, assign leader, add or delete member,
- - Single stockvell
- - Validate upload image with more than 2 maga byte 
+---
 
+## 📄 Notes
 
+* Rename “Stockvell” → “Stockvel” is planned
+* System supports both English and French translations
+* UI must remain responsive across all devices
 
+---
 
+## 👨‍💻 Author
 
-
-
-### Choose colors
- 1. Choosing a dominant color. [Understands meanings of colors](https://www.color-meanings.com/)
- 2. Add [two more colors](https://mycolor.space/) and take black and white as considerations/ [Select pallete, see their tutorial](https://coolors.co/c99127-0d1321-1d2d44-3e5c76-748cab)
-Dominant - #C99127, Complementary - #809130, Accent - #2F4858, white - #ffffff, black - #000000
- 3. Apply the 60/30/10 rule
-
-
-
-
-### Composer
- - [docs](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos), [tutorial](https://www.youtube.com/watch?v=xWgtKALpx9E)
- - [Packagist got get all packages](https://packagist.org/)
-
-
-### php functions
-   - filter_var
-   - [PHP Namespace Tutorial - Full PHP 8 Tutorial](https://www.youtube.com/watch?v=Jni9c0-NjrY), [Php OOP namespace](https://www.youtube.com/watch?v=YgUOSY581Wg)
-
-
-
-### Send message with twilio api using curl and twillio
- - [Twilio Send an SMS using the Programmable SMS API](https://www.twilio.com/docs/sms/api)
- - [URL Library ¶](https://www.php.net/manual/en/book.curl.php#book.curl)
- - [Request example](https://stackoverflow.com/questions/2138527/php-curl-and-http-post-example)
-
-
-
-### Left working on
- - Models/Stockvell/AdminStockvellForms.php -> closeStockvellByAdmin
- - Pending pack is not showing in admin panel
- - Use withdrawMemberMsg to send withdraw certificate message
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
+Stockvell Financial System
+Internal Group Savings Platform
 
