@@ -1,6 +1,7 @@
-virtual-env
-.gitignore
+.git
+node_modules
+.env
 docker-compose.yml
-README.md
 Dockerfile
+README.md
 /public/bootstrap

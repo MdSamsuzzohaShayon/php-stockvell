@@ -8,6 +8,7 @@ $dotenv = \Dotenv\Dotenv::createImmutable($ROOT);
 $dotenv->safeLoad();
 
 
+
 class Database{
   protected function connect(){
     try {

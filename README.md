@@ -1,239 +1,287 @@
-# Stockvell Credit System
+# Stockvel Credit System
 
-A multi-role financial group savings platform (Stokvel-style system) where users can create, join, and manage savings groups with defined financial goals, contributions, and withdrawals.
+![PHP](https://img.shields.io/badge/PHP-7.4-blue)
+![MySQL](https://img.shields.io/badge/MySQL-5.7-orange)
+![Apache](https://img.shields.io/badge/Apache-2.4-red)
+![Docker](https://img.shields.io/badge/Docker-Supported-2496ED)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-🔗 Live Demo: http://stockvell.allinone-office.com
+A multi-role community savings and credit platform inspired by the **Stockvel/Stokvel** financial model. Users can create savings groups, invite members, manage contributions, schedule withdrawals, and administer group activities through role-based dashboards.
 
----
+**Live Demo**
 
-## 📌 Table of Contents
-
-- Overview
-- Key Features
-- System Architecture
-- User Roles
-- Core Modules
-- Installation
-- Deployment Guide
-- Environment Setup
-- Database Setup
-- Apache Configuration
-- Composer
-- Security Notes
-- Business Rules
-- Roadmap / TODO
-- Known Issues
-- Configuration Notes
+http://stockvell.allinone-office.com
 
 ---
 
-## 🧠 Overview
+# Table of Contents
 
-Stockvell is a group-based credit and savings platform where:
-
-- Users form financial groups (Stockvell packs)
-- Each group has a defined savings goal
-- Members contribute periodically (weekly/monthly)
-- Leaders manage group operations
-- Admin oversees approvals, compliance, and governance
-
-The system supports multi-role workflows, identity verification, and financial group lifecycle management.
-
----
-
-## ✨ Key Features
-
-- Role-based access control (Admin, Leader, Member)
-- Group savings (Stockvell packs)
-- Member invitation & join requests
-- Leader approval workflow
-- Admin governance & moderation
-- Contribution tracking system
-- Withdrawal scheduling system
-- Shareable group links
-- Document verification (ID, address proof)
-- Multi-language support (English / French ready)
+* Overview
+* Tech Stack
+* Features
+* Project Structure
+* Quick Start
+* Running with Docker
+* Running without Docker
+* Environment Variables
+* Database Migration
+* Apache Configuration
+* Security Notes
+* Roadmap
+* Known Issues
 
 ---
 
-## 🏗 System Architecture
+# Overview
 
-### Core Entities
+Stockvel is a collaborative savings platform where multiple members contribute fixed amounts periodically and receive payouts according to predefined rules.
 
-- Users
-- Members
-- Leaders
-- Admins
-- Stockvell Packs
-- Membership Requests
-- Withdrawal Schedule
-- Contributions
+The application supports:
 
-### Relationships
-
-- One User → Many Packs (as member or leader role)
-- One Pack → Many Members
-- One Pack → One Active Leader (at a time)
-- Admin oversees all packs and users
+* User registration & authentication
+* Leader and admin roles
+* Group (Stockvel Pack) management
+* Member invitations
+* Identity verification
+* Contribution tracking
+* Withdrawal scheduling
+* Administrative approval workflows
 
 ---
 
-## 👥 User Roles
+# Tech Stack
 
-### 1. Admin
-- Approves/rejects packs
-- Assigns/revokes leaders
-- Manages users and documents
-- Controls platform configuration
-- Approves pack closure
+## Backend
 
----
+* PHP 7.4
+* Apache
+* PDO
+* MySQL 5.7
 
-### 2. Leader
-- Creates Stockvell packs
-- Defines pack rules (goal, amount, frequency, limits)
-- Manages members
-- Controls withdrawal order logic
-- Generates shareable invite links
+## Package Management
 
----
+* Composer
 
-### 3. Member
-- Joins available packs
-- Contributes funds
-- Requests to become leader (with verification)
-- Uploads identity documents (if required)
-- Views pack progress
+## Environment
 
----
+* PHP Dotenv
 
-## ⚙️ Core Modules
+## Containerization
 
-### 📦 Stockvell Pack Module
-- Create pack (goal, amount, duration, currency)
-- Start/end date support
-- Member limit enforcement
-- Payment frequency configuration
-- Withdrawal frequency configuration
+* Docker
+* Docker Compose
+
+## Database
+
+* MySQL
 
 ---
 
-### 👤 Membership Module
-- Join request system
-- Admin approval workflow
-- Leader approval workflow
-- Member status tracking
+# Features
+
+### Authentication
+
+* Login
+* Signup
+* Password recovery
+
+### Role Management
+
+* Admin
+* Leader
+* Member
+
+### Stockvel Packs
+
+* Create packs
+* Join packs
+* Share invite links
+* Configure contribution rules
+* Configure withdrawal rules
+
+### Administration
+
+* User management
+* Leader approval
+* Document verification
+* Pack moderation
+
+### Multi-language
+
+* English
+* French (ready)
 
 ---
 
-### 🧾 Identity Verification
-- Government ID upload
-- Address proof upload
-- Admin review system
-
----
-
-### 💰 Contribution System
-- Monthly/weekly payments
-- Payment tracking per member
-- Pack balance tracking
-
----
-
-### 🔄 Withdrawal System
-- First-come-first-serve OR random selection
-- Admin override option
-- Scheduled withdrawal cycle
-
----
-
-### 🔗 Sharing System
-- Shareable pack links
-- WhatsApp / social media sharing
-- Invite-based joining flow
-
----
-
-## 🚀 Installation
-
-### 1. Clone / Upload Project
-
-Upload project to server directory:
+# Project Structure
 
 ```
-
-/var/www/html/stockvell
-
-````
+.
+├── config/
+├── includes/
+├── layouts/
+├── Models/
+├── pages/
+├── public/
+├── uploads/
+├── utils/
+├── languages/
+├── index.php
+├── composer.json
+├── Dockerfile
+├── docker-compose.yml
+└── database-migrations.php
+```
 
 ---
 
-### 2. Set Permissions
+# Quick Start
+
+Clone the repository
 
 ```bash
-sudo chown -R www-data:www-data stockvell
-sudo chmod -R 775 stockvell
-````
+git clone <repository-url>
+
+cd php-stockvell
+```
+
+Create an environment file
+
+```bash
+cp .env.example .env
+```
+
+Update the database credentials and application settings.
 
 ---
 
-### 3. Install Dependencies
+# Running with Docker (Recommended)
+
+## Build the containers
+
+```bash
+docker compose build
+```
+
+## Start the application
+
+```bash
+docker compose up -d
+```
+
+## View running containers
+
+```bash
+docker compose ps
+```
+
+The application will be available at
+
+```
+http://localhost:8000
+```
+
+---
+
+## Install Composer Dependencies
+
+If dependencies are not already installed:
+
+```bash
+docker compose exec app composer install
+```
+
+or
+
+```bash
+docker exec -it php_finance_con composer install
+```
+
+---
+
+## Run Database Migration
+
+Open your browser:
+
+```
+http://localhost:8000/database-migrations.php
+```
+
+or execute inside the container:
+
+```bash
+docker exec -it php_finance_con php database-migrations.php
+```
+
+After all tables are created successfully:
+
+**Delete or disable**
+
+```
+database-migrations.php
+```
+
+before deploying to production.
+
+---
+
+## Stop Containers
+
+```bash
+docker compose down
+```
+
+Remove volumes
+
+```bash
+docker compose down -v
+```
+
+Remove images
+
+```bash
+docker rmi $(docker images -q)
+```
+
+---
+
+# Running without Docker
+
+## Requirements
+
+* PHP 7.4+
+* Apache
+* MySQL 5.7+
+* Composer
+
+---
+
+## Install Dependencies
 
 ```bash
 composer install
 ```
 
-If needed:
+---
+
+## Configure Apache
+
+Enable mod_rewrite
 
 ```bash
-composer update
+sudo a2enmod rewrite
 ```
 
----
-
-## 🌍 Environment Setup
-
-Create `.env` file:
-
-```env
-DB_HOST=
-DB_NAME=
-DB_USER=
-DB_PASSWORD=
-
-APP_URL=
-MAIL_CONFIG=
-SMS_CONFIG=
-```
-
----
-
-## 🗄 Database Setup
-
-1. Create fresh database
-2. Run migration script:
-
-```bash
-php database-migrations.php
-```
-
-3. After migration:
-
-* ❌ DELETE `database-migrations.php`
-
----
-
-## 🌐 Apache Configuration
-
-Enable `.htaccess` support:
+Allow .htaccess
 
 ```apache
 <Directory /var/www/html>
     AllowOverride All
+    Require all granted
 </Directory>
 ```
 
-Restart Apache:
+Restart Apache
 
 ```bash
 sudo systemctl restart apache2
@@ -241,122 +289,134 @@ sudo systemctl restart apache2
 
 ---
 
-## 📦 Composer
+## Configure Environment
 
-```bash
-composer install
-composer update
-composer show
+Create
+
+```
+.env
+```
+
+Example
+
+```env
+APP_NAME=Stockvel
+
+MYSQL_HOST=localhost
+MYSQL_DATABASE=stockvel_db
+MYSQL_USER=root
+MYSQL_PASSWORD=password
+
+JWT_SECRET_KEY=secret
+JWT_ALGORITHM=HS256
 ```
 
 ---
 
-## 🔐 Security Notes
+## Create Database
 
-* Disable error display in production
-* Remove debug files:
+```sql
+CREATE DATABASE stockvel_db;
+```
 
-  * `phpinfo.php`
-  * migration scripts
-* Validate all uploads (max 2MB)
-* Secure `.env` file
-* Prevent direct script access
+Run
 
----
+```
+http://localhost/database-migrations.php
+```
 
-## 📌 Business Rules
+or
 
-### Stockvell Creation Rules
+```bash
+php database-migrations.php
+```
 
-* Only Admin or Leader can create a pack
-* Member must request leader role with verification
-* Pack becomes active only after admin approval
-
----
-
-### Membership Rules
-
-* Member must accept terms before joining
-* Pack cannot exceed member limit
-* Join requests require approval
+After the migration succeeds, delete the migration file.
 
 ---
 
-### Leader Rules
+# Environment Variables
 
-* Only one active leader per pack
-* Leader can be suspended by admin
-* Leader controls withdrawal order logic
-
----
-
-### Withdrawal Rules
-
-* Modes:
-
-  * First come, first served
-  * Random selection (optional)
-* Admin can override selection
+| Variable       | Description       |
+| -------------- | ----------------- |
+| APP_NAME       | Application name  |
+| MYSQL_HOST     | MySQL server      |
+| MYSQL_DATABASE | Database name     |
+| MYSQL_USER     | Database username |
+| MYSQL_PASSWORD | Database password |
+| JWT_SECRET_KEY | JWT signing key   |
+| JWT_ALGORITHM  | JWT algorithm     |
 
 ---
 
-## 🛣 Roadmap / TODO
+# Security Notes
 
-* Add email + SMS notifications on events
-* Improve shareable invite system (WhatsApp integration)
-* Add pack review screen before creation
-* Add balance sheet per pack
-* Add scheduling tool (meetings)
-* Improve multilingual system (FR/EN)
-* Add admin staff roles
-* Add analytics dashboard
+Before deploying to production:
 
----
-
-## 🐞 Known Issues
-
-* Signup form resets on validation error (needs localStorage fix)
-* Some admin pages return 404 on uploaded document view
-* Leader duplication issue in some packs
-* Payment frequency sometimes returns 0
-* Missing country options (e.g. USA)
-* UI inconsistencies in admin tables
-* Image upload validation incomplete in some flows
+* Delete `database-migrations.php`
+* Delete `phpinfo.php`
+* Disable `display_errors`
+* Protect `.env`
+* Validate uploaded files
+* Restrict upload size
+* Enable HTTPS
+* Use strong database passwords
 
 ---
 
-## ⚙️ Configuration Notes
+# Roadmap
 
-* Stockvell categories are defined in:
-
-  ```
-  /config/option-list.php
-  ```
-
-* Language system:
-
-  ```
-  /languages/fr.php
-  ```
-
-* Admin seed:
-
-  ```
-  database-migrations.php
-  ```
+* Email notifications
+* SMS integration
+* Analytics dashboard
+* Pack scheduling
+* WhatsApp invitations
+* Better multilingual support
+* Payment gateway integration
+* Contribution history
 
 ---
 
-## 📄 Notes
+# Known Issues
 
-* Rename “Stockvell” → “Stockvel” is planned
-* System supports both English and French translations
-* UI must remain responsive across all devices
+* Signup validation can reset the form
+* Some admin image routes need improvement
+* Image validation needs additional checks
+* Minor UI inconsistencies on admin pages
 
 ---
 
-## 👨‍💻 Author
+# Development Notes
 
-Stockvell Financial System
-Internal Group Savings Platform
+This project uses a simple front-controller architecture.
 
+```
+index.php
+        │
+        ▼
+Route Detection
+        │
+        ▼
+pages/*.php
+        │
+        ▼
+Models / includes / layouts
+```
+
+Apache rewrites every request to `index.php`, where routing is handled manually.
+
+---
+
+# License
+
+This project is provided for educational and demonstration purposes.
+
+---
+
+# Author
+
+**Md Samsuzzoha Shayon**
+
+Full Stack Web Developer
+
+Node.js • PHP • Python • React • Docker • Linux

@@ -1,11 +1,9 @@
 <?php
 // Delete this file in production
-$ROOT = $_SERVER['DOCUMENT_ROOT'];
-require_once($ROOT . "/vendor/autoload.php");
+require_once __DIR__ . "/vendor/autoload.php";
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
-
 
 class Database
 {
@@ -293,7 +291,13 @@ class DatabaseMigrations extends Database
   }
 }
 
-$dbMigrate = new DatabaseMigrations();
+try {
+  new DatabaseMigrations();
+  echo "Migrations completed successfully\n";
+} catch (\Throwable $e) {
+  echo "Migration failed: " . $e->getMessage();
+  exit(1);
+}
 
 
 ?>

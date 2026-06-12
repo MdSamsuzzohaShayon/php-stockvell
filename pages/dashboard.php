@@ -16,7 +16,7 @@ $SITE_URL = "http://stockvell.allinone-office.com";
 $member_email = $_SESSION['member_email'];
 $member_id = $_SESSION['member_id'];
 
-$single_stockvel_id = $_GET["stockvel_id"];
+$single_stockvel_id = isset($_GET["stockvel_id"]) ? (int)$_GET["stockvel_id"] : null;
 
 
 require_once($ROOT . "/vendor/autoload.php");
